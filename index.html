@@ -1,1 +1,640 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <base target="_top">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สำนักงานสาธารณสุขอำเภอไทยเจริญ</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root { --primary-color: #0f5132; --accent-color: #ffc107; --border-color: #e2e8f0; }
+        body { font-family: 'Sarabun', sans-serif; background-color: #f4f6f9; min-height: 100vh; display: flex; flex-direction: column; color: #333; }
+        
+        .navbar-custom { background: linear-gradient(90deg, #0f5132 0%, #198754 100%); padding: 10px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+       /* 📌 ปรับปรุงเมนู Navbar ให้ตัวหนังสือไม่ตกบรรทัด และบังคับเป็นสีขาวทั้งหมด */
+        .navbar-custom .nav-link { 
+            color: #ffffff !important; /* บังคับสีขาวล้วน */
+            font-weight: 600; 
+            margin: 0 4px; 
+            transition: 0.2s; 
+            white-space: nowrap; /* ห้ามตกบรรทัด */
+            display: flex; 
+            align-items: center; 
+        }
+        .navbar-custom .nav-link:hover, 
+        .navbar-custom .nav-link:focus { 
+            color: #e9f7ef !important; /* ตอนเอาเมาส์ชี้ให้เป็นสีขาวอมเขียวนิดๆ */
+            transform: translateY(-2px); 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2); 
+        }
+        .navbar-custom .nav-icon { 
+            background: rgba(255,255,255,0.2); 
+            color: #ffffff !important; /* บังคับไอคอนสีขาว */
+            border-radius: 50%; 
+            margin-right: 6px; 
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 32px;  
+            height: 32px; 
+            font-size: 0.85rem;
+        }
+        .carousel-item img { height: 450px; object-fit: cover; width: 100%; object-position: center; background-color: #e9ecef; }
+        .placeholder-banner { height: 450px; background-color: #e9ecef; display: flex; align-items: center; justify-content: center; color: #6c757d; }
+        
+        /* ปรับสีหัวข้อให้ชัดเจน */
+        .section-header { border-bottom: 2px solid #198754; color: #0f5132; padding-bottom: 8px; font-weight: 700; margin-bottom: 20px; font-size: 1.3rem; display: flex; align-items: center; }
+        
+        .service-box { background: white; border-radius: 12px; padding: 15px 10px; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: all 0.3s ease; height: 100%; display: block; text-decoration: none; color: #444; }
+        .service-box:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(25, 135, 84, 0.15); border-color: #198754; color: var(--primary-color); }
+        .service-icon-bg { width: 50px; height: 50px; margin: 0 auto 10px; background: #e9f7ef; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        .service-box:hover .service-icon-bg { background: var(--primary-color); color: white; }
 
+        .news-card { transition: 0.3s; border-radius: 8px; border: 1px solid var(--border-color); cursor: pointer; }
+        .news-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important; border-color: #198754; }
+        .text-truncate-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; line-height: 1.4; height: 2.8em; color: #1e293b; transition: 0.2s; font-weight: 500;}
+        .news-card:hover .text-truncate-2 { color: #0f5132; }
+
+        .text-news-box { background: white; border-radius: 8px; border: 1px solid var(--border-color); border-top: 4px solid #198754; padding: 20px; height: 100%; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .text-news-item { border-bottom: 1px dashed #ddd; padding: 12px 0; transition: 0.2s; }
+        .text-news-item:last-child { border-bottom: none; }
+        .text-news-item:hover { background-color: #f8fffb; padding-left: 5px; }
+        .text-news-title { font-size: 0.95rem; font-weight: 500; color: #2d3748; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-decoration: none; margin-bottom: 5px; }
+        .text-news-title:hover { color: #198754; }
+        .news-meta { font-size: 0.8rem; color: #718096; display: flex; align-items: center; gap: 10px; }
+
+        .exec-card-small { border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; background: white; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .exec-img-small { width: 100%; height: auto; max-height: 350px; object-fit: contain; object-position: bottom; display: block; background-color: #e9ecef; }
+        .exec-card-full { border: none; border-radius: 15px; background: white; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: 0.3s; height: 100%; padding-bottom: 15px; position: relative; overflow: hidden; }
+        .exec-card-full::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 80px; background: linear-gradient(45deg, #198754, #20c997); }
+        .exec-card-full:hover { transform: translateY(-7px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+        .exec-img-full { width: 160px; height: 210px; object-fit: cover; object-position: top center; border-radius: 10px; border: 4px solid white; margin-top: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); background-color: #fff; position: relative; z-index: 1; }
+
+        .knowledge-wrapper { border: 1px solid #d1d5db; border-radius: 4px; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .knowledge-header-left { background-color: #0b4a46; color: white; font-weight: bold; padding: 12px 20px; text-align: center; }
+        .knowledge-header-right { background-color: #116a5e; color: white; font-weight: bold; padding: 12px 20px; text-align: center; flex-grow: 1; }
+        .knowledge-list-col { column-count: 2; column-gap: 40px; padding: 20px; }
+        @media (max-width: 768px) { .knowledge-list-col { column-count: 1; } }
+        .knowledge-item { margin-bottom: 12px; break-inside: avoid; font-size: 0.95rem; }
+        .knowledge-item a { color: #444; text-decoration: none; transition: 0.2s; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .knowledge-item a:hover { color: #198754; text-decoration: underline; }
+
+        .moit-badge { background: white; border: 1px solid var(--primary-color); color: var(--primary-color); padding: 4px 12px; border-radius: 20px; font-weight: bold; min-width: 80px; text-align: center; display: inline-block; }
+        #btn-back-to-top { position: fixed; bottom: 25px; right: 25px; display: none; z-index: 99; width: 50px; height: 50px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        footer { margin-top: auto; background-color: #212529; color: #aaa; padding: 40px 0; border-top: 5px solid #198754; }
+        footer h5, footer h6 { color: white; border-left: 3px solid var(--accent-color); padding-left: 10px; }
+        
+        /* -------------------------------------
+           CSS สำหรับหน้า ABOUT (ปรับสีให้สวยขึ้น) 
+        /* เมนูด้านซ้าย */
+        .about-nav-pills .nav-link { color: #000000 !important; border-radius: 8px; margin-bottom: 8px; font-weight: 600; text-align: left; padding: 14px 20px; border: 1px solid #e2e8f0; transition: all 0.3s ease; background-color: white;}
+        .about-nav-pills .nav-link:hover { background-color: #e9f7ef !important; color: #0f5132 !important; border-color: #198754;}
+        .about-nav-pills .nav-link.active { background-color: #198754 !important; color: white !important; box-shadow: 0 4px 10px rgba(25,135,84,0.25); border-color: #198754;}
+        
+        /* กล่องเนื้อหาด้านขวา */
+        .about-tab-content { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 35px; min-height: 400px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        .about-tab-content h4 { color: #000000; font-weight: 700; margin-bottom: 1.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;}
+
+        /* เมนูย่อยแนวนอน (Sub Tabs) */
+        .sub-nav-tabs { border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; padding-bottom: 10px; }
+        .sub-nav-tabs .nav-link { 
+            color: #0f5132 !important; /* ตัวอักษรสีเขียวเข้ม */
+            font-weight: 600; 
+            border: 1px solid #198754 !important; /* กรอบสีเขียว */
+            border-radius: 25px !important; /* ทำปุ่มขอบมนสวยๆ */
+            padding: 8px 20px; 
+            margin-right: 10px;
+            margin-bottom: 5px;
+            transition: 0.3s; 
+            font-size: 1rem;
+            background-color: white !important; 
+        }
+        .sub-nav-tabs .nav-link:hover { 
+            color: #ffffff !important; 
+            background-color: #198754 !important; /* เอาเมาส์ชี้แล้วพื้นหลังเป็นสีเขียว */
+        }
+        .sub-nav-tabs .nav-link.active { 
+            color: #ffffff !important; 
+            background-color: #0f5132 !important; /* เมนูที่เลือกอยู่จะเป็นสีเขียวเข้มสุด */
+            border-color: #0f5132 !important; 
+            font-weight: 700; 
+            box-shadow: 0 4px 8px rgba(15, 81, 50, 0.2);
+        }
+        /* รายการข้อมูล/ไฟล์แนบ */
+        .about-list-item { transition: 0.2s; border-radius: 8px; border: 1px solid transparent; margin-bottom: 5px;}
+        .about-list-item:hover { background-color: #f8fafc; border-color: #e2e8f0; padding-left: 20px;}
+        .about-item-title { font-weight: 600; color: #000000; font-size: 1.05rem;}
+        .about-item-note { color: #555555; font-size: 0.85rem; margin-top: 3px; display: block;}
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center py-2" href="javascript:void(0)" onclick="showPage('home-page')">
+                <div class="bg-white rounded-circle shadow-sm d-flex justify-content-center align-items-center me-3" style="width: 65px; height: 65px; flex-shrink: 0; border: 2px solid #e9f7ef;">
+                    <span style="color: #0f5132; font-size: 2.2rem; font-weight: 800; font-family: Arial, sans-serif; letter-spacing: -2px; margin-right: -2px;">TJ</span>
+                </div>
+                <div class="d-flex flex-column text-white justify-content-center" style="line-height: 1.1;">
+                    <span style="font-size: 0.9rem; font-weight: 400; color: rgba(255,255,255,0.9); margin-bottom: 2px;">สำนักงานสาธารณสุขอำเภอ</span>
+                    <span style="font-size: 1.7rem; font-weight: 700; text-shadow: 1px 1px 3px rgba(0,0,0,0.2); letter-spacing: 0.5px;">ไทยเจริญ</span>
+                    <span style="font-size: 0.65rem; font-weight: 300; color: rgba(255,255,255,0.7); letter-spacing: 1px; margin-top: 3px;">THAIJAROEN DISTRICT HEALTH OFFICE</span>
+                </div>
+            </a>
+            <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><i class="fas fa-bars fa-lg"></i></button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="showPage('home-page')"><span class="nav-icon"><i class="fas fa-home"></i></span> หน้าแรก</a></li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><span class="nav-icon"><i class="fas fa-info-circle"></i></span> เกี่ยวกับเรา</a>
+                        <ul class="dropdown-menu shadow-lg border-0 rounded-3 p-2" id="about-dropdown-menu">
+                            <li><span class="dropdown-item text-muted"><i class="fas fa-spinner fa-spin me-2"></i> กำลังโหลด...</span></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white fw-bold" href="#" id="navbarSystems" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-desktop me-1"></i> ระบบงานหลัก
+            </a>
+            <ul class="dropdown-menu shadow border-0 mt-2" aria-labelledby="navbarSystems" id="systems-dropdown-menu">
+                <li><a class="dropdown-item text-center text-muted py-2" href="#"><div class="spinner-border spinner-border-sm text-success me-2"></div>กำลังโหลด...</a></li>
+            </ul>
+        </li>
+
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="showPage('exec-page')"><span class="nav-icon"><i class="fas fa-users"></i></span> ผู้บริหาร</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><span class="nav-icon"><i class="fas fa-star"></i></span> ITA & ร้องเรียน</a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-3 p-2">
+                            <li><h6 class="dropdown-header text-success fw-bold">การประเมิน ITA</h6></li>
+                            <li><a class="dropdown-item rounded" href="javascript:void(0)" onclick="showPage('ita-page')"><i class="fas fa-search me-2"></i> ข้อมูล MOIT</a></li>
+                            <li><a class="dropdown-item rounded" href="javascript:void(0)" onclick="openComplaint('Q&A สอบถาม')"><i class="fas fa-comment-dots me-2"></i> Q&A ถาม-ตอบ</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header text-danger fw-bold">แจ้งเรื่องร้องเรียน</h6></li>
+                            <li><a class="dropdown-item rounded" href="javascript:void(0)" onclick="openComplaint('ร้องเรียนทั่วไป')"><i class="fas fa-bullhorn me-2 text-warning"></i> ร้องเรียนทั่วไป</a></li>
+                            <li><a class="dropdown-item rounded" href="javascript:void(0)" onclick="openComplaint('ร้องเรียนการทุจริต')"><i class="fas fa-user-shield me-2 text-danger"></i> ร้องเรียนการทุจริต</a></li>
+                            <li><a class="dropdown-item rounded" href="javascript:void(0)" onclick="openComplaint('ร้องเรียนการปฏิบัติงานของเจ้าหน้าที่')"><i class="fas fa-user-shield me-2 text-danger"></i> ร้องเรียนการปฏิบัติงานของเจ้าหน้าที่</a></li><li><hr class="dropdown-divider"></li>
+<li><h6 class="dropdown-header text-primary fw-bold">รายงานผลการดำเนินงาน</h6></li>
+<li><a class="dropdown-item rounded" href="javascript:void(0)" onclick="showPage('complaint-report-page'); loadComplaintsData();"><i class="fas fa-chart-pie me-2 text-primary"></i> สถิติและรายงานผลการร้องเรียน</a></li> 
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="showPage('downloads-page')"><span class="nav-icon"><i class="fas fa-download"></i></span> โหลดไฟล์</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="scrollToContact()"><span class="nav-icon"><i class="fas fa-phone"></i></span> ติดต่อเรา</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="home-page">
+        <div id="mainCarousel" class="carousel slide shadow-sm mb-5" data-bs-ride="carousel">
+            <div class="carousel-inner" id="banner-container"><div class="carousel-item active"><div class="placeholder-banner"><h5><div class="spinner-border spinner-border-sm me-2"></div> กำลังโหลด...</h5></div></div></div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+            <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+        </div>
+
+        <div class="container">
+            <div class="row g-4 mb-5">
+                <div class="col-lg-9">
+                    <h4 class="section-header"><i class="fas fa-laptop-medical me-2"></i> ระบบบริการออนไลน์</h4>
+                    <div class="row g-3">
+                        <div class="col-6 col-md-3"><a href="https://hdc.moph.go.th/yst/public/main" target="_blank" class="service-box"><div class="service-icon-bg"><i class="fas fa-database fa-lg text-primary"></i></div><span class="fw-bold">HDC</span></a></div>
+                        <div class="col-6 col-md-3"><a href="javascript:void(0)" onclick="showPage('ita-page')" class="service-box"><div class="service-icon-bg"><i class="fas fa-file-contract fa-lg text-success"></i></div><span class="fw-bold">ITA</span></a></div>
+                        <div class="col-6 col-md-3"><a href="https://e-sarabanyasothon.moph.go.th/web/saraban/docspending" target="_blank" class="service-box"><div class="service-icon-bg"><i class="fas fa-envelope fa-lg text-warning"></i></div><span class="fw-bold">e-Office</span></a></div>
+                        <div class="col-6 col-md-3"><a href="https://www.nhso.go.th/th/" target="_blank" class="service-box"><div class="service-icon-bg"><i class="fas fa-users fa-lg text-info"></i></div><span class="fw-bold">สปสช.</span></a></div>
+                        <div class="col-6 col-md-3"><a href="#" target="_blank" class="service-box"><div class="service-icon-bg"><i class="fas fa-chart-pie fa-lg text-danger"></i></div><span class="fw-bold">Cockpit</span></a></div>
+                        <div class="col-6 col-md-3"><a href="#" target="_blank" class="service-box"><div class="service-icon-bg"><i class="fas fa-coins fa-lg text-secondary"></i></div><span class="fw-bold">การเงิน</span></a></div>
+                        <div class="col-6 col-md-3"><a href="#" target="_blank" class="service-box"><div class="service-icon-bg"><i class="fas fa-calendar-check fa-lg text-primary"></i></div><span class="fw-bold">ประชุม</span></a></div>
+                        <div class="col-6 col-md-3"><a href="javascript:void(0)" onclick="showPage('downloads-page')" class="service-box"><div class="service-icon-bg"><i class="fas fa-cloud-download-alt fa-lg text-success"></i></div><span class="fw-bold">แบบฟอร์ม</span></a></div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <h4 class="section-header"><i class="fas fa-user-tie me-2"></i> สาธารณสุขอำเภอ</h4>
+                    <div id="executive-sidebar" class="text-center"><div class="exec-card-small p-5"><div class="spinner-border text-success"></div></div></div>
+                    <button class="btn btn-outline-success w-100 rounded-pill fw-bold" onclick="showPage('exec-page')">โครงสร้างบุคลากร <i class="fas fa-arrow-right ms-1"></i></button>
+                </div>
+            </div>
+
+            <div class="mb-5">
+                <h4 class="section-header d-flex justify-content-between">
+                    <span><i class="fas fa-images me-2"></i> ข่าวกิจกรรมและผลงาน</span>
+                    <select id="newsFilter" class="form-select form-select-sm shadow-sm" style="width:auto; font-size: 0.9rem;" onchange="filterImageNews()"><option value="all">ดูทุกหมวดหมู่</option></select>
+                </h4>
+                <div id="image-news-container"><div class="text-center p-5 bg-white rounded shadow-sm border"><div class="spinner-border text-success"></div></div></div>
+            </div>
+
+            <div class="mb-5">
+                <h4 class="section-header"><i class="fas fa-bullhorn me-2"></i> ข่าวประกาศ / จัดซื้อจัดจ้าง</h4>
+                <div id="text-news-container" class="row g-4"><div class="col-12 text-center p-5 bg-white rounded shadow-sm border"><div class="spinner-border text-success"></div></div></div>
+            </div>
+
+            <div class="mb-5">
+                <h4 class="section-header"><i class="fas fa-book-reader me-2"></i> แหล่งความรู้ สสจ.ยโสธร</h4>
+                <div class="knowledge-wrapper">
+                    <div class="d-flex"><div class="knowledge-header-left" style="min-width: 130px;">ความรู้</div><div class="knowledge-header-right">แหล่งความรู้ และหน่วยงานที่เกี่ยวข้อง</div></div>
+                    <div class="knowledge-list-col" id="knowledge-list-container"><div class="text-center p-4 w-100"><div class="spinner-border spinner-border-sm text-success"></div></div></div>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-5">
+                <div class="col-lg-8">
+                    <h4 class="section-header"><i class="far fa-calendar-alt me-2"></i> ปฏิทินกิจกรรม</h4>
+                    <div class="bg-white p-2 border rounded-3 shadow-sm"><iframe src="https://calendar.google.com/calendar/embed?height=400&wkst=1&bgcolor=%23ffffff&ctz=Asia%2FBangkok&src=th.th%23holiday%40group.v.calendar.google.com&color=%230B8043" style="border:0" width="100%" height="400" frameborder="0" scrolling="no"></iframe></div>
+                </div>
+                <div class="col-lg-4" id="contact-section">
+                    <h4 class="section-header"><i class="fas fa-address-book me-2"></i> ติดต่อเรา</h4>
+                    <div class="bg-white p-3 rounded-3 shadow-sm border">
+                        <div><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15335.832967268383!2d104.2372!3d16.0664!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31165a6e00000001%3A0x0!2z4Liq4Liz4LiZ4Lix4LiB4LiH4Liy4LiZ4Liq4Liy4LiY4Liy4Lij4LiT4Liq4Li44LiC4Lit4Liz4LmA4Lig4Lit4LmE4LiX4Lii4LmA4LiI4Lij4Li04LiN!5e0!3m2!1sth!2sth!4v1620000000000!5m2!1sth!2sth" width="100%" height="200" style="border:0; border-radius:8px;" allowfullscreen="" loading="lazy"></iframe></div>
+                        <ul class="list-unstyled mt-3 small text-secondary">
+                            <li class="mb-2"><i class="fas fa-map-marker-alt text-danger me-2 w-20"></i> อ.ไทยเจริญ จ.ยโสธร 35120</li>
+                            <li class="mb-2"><i class="fas fa-phone-alt text-success me-2 w-20"></i> <a href="tel:045718136" class="text-decoration-none text-dark fw-bold">045-718-136</a></li>
+                            <li class="mb-2"><i class="fas fa-envelope text-primary me-2 w-20"></i> ittcmoph@gmail.com</li>
+                            <li><i class="fab fa-facebook text-primary me-2 w-20"></i> <a href="https://www.facebook.com/profile.php?id=100066249590143&sk=about" target="_blank" class="text-decoration-none">เพจ สสอ.ไทยเจริญ</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="about-page" style="display: none; background-color: #f4f6f9; padding-bottom: 50px;">
+        <div class="bg-success text-white py-4 mb-4 shadow-sm" style="background: linear-gradient(90deg, #14532d 0%, #166534 100%);">
+            <div class="container d-flex justify-content-between align-items-center">
+                <h3 class="fw-bold m-0"><i class="fas fa-info-circle me-2 text-warning"></i> เกี่ยวกับหน่วยงาน</h3>
+                <button class="btn btn-light btn-sm rounded-pill px-4 fw-bold text-success shadow-sm" onclick="showPage('home-page')"><i class="fas fa-arrow-left me-1"></i> กลับหน้าหลัก</button>
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-3">
+                    <div class="nav flex-column nav-pills about-nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                        <div class="text-center p-4 bg-white rounded border shadow-sm text-muted"><span class="spinner-border spinner-border-sm text-success"></span> กำลังโหลดเมนู...</div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-9">
+                    <div class="tab-content about-tab-content" id="v-pills-tabContent">
+                        <div class="text-center p-5 text-muted"><span class="spinner-border spinner-border-sm text-success"></span> กำลังดึงข้อมูลจาก Google Sheet...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="news-detail-page" style="display: none; background-color: #f4f6f9; padding-bottom: 50px;"><div class="container my-5"><div class="row justify-content-center"><div class="col-lg-9"><button class="btn btn-outline-secondary btn-sm rounded-pill px-4 mb-4 shadow-sm" onclick="showPage('home-page')"><i class="fas fa-arrow-left me-2"></i> ย้อนกลับไปหน้าหลัก</button><div class="bg-white rounded-4 shadow-sm overflow-hidden border"><div class="bg-success text-white p-4 p-md-5"><span id="nd-category" class="badge bg-warning text-dark mb-3 px-3 py-2" style="font-size: 0.9rem;">หมวดหมู่</span><h3 id="nd-title" class="fw-bold mb-4" style="line-height: 1.5;">หัวข้อข่าว</h3><div class="d-flex flex-wrap gap-4 small opacity-75"><span><i class="far fa-calendar-alt me-2"></i><span id="nd-date">วันที่</span></span><span><i class="far fa-eye me-2"></i><span id="nd-views">ยอดเข้าชม</span> ครั้ง</span></div></div><div class="p-4 p-md-5 text-center bg-white"><img id="nd-image" src="" class="img-fluid rounded-3 shadow-sm mb-5" style="max-height: 600px; display: none; object-fit: contain;"><hr class="mb-5 text-muted"><h5 class="text-secondary mb-4">รายละเอียดเพิ่มเติม / เอกสารแนบ</h5><a id="nd-link" href="#" target="_blank" class="btn btn-success btn-lg px-5 rounded-pill shadow-sm" style="display: none;"><i class="fas fa-external-link-alt me-2"></i> เปิดอ่านข้อมูลฉบับเต็ม</a></div></div></div></div></div></div>
+    <div id="exec-page" style="display: none; background-color: #f0f2f5; padding-bottom: 50px;"><div class="container my-5"><div class="text-center mb-5"><span class="badge bg-success mb-2 px-3 py-2">PERSONNEL</span><h2 class="fw-bold text-dark">โครงสร้างบุคลากร</h2><button class="btn btn-secondary btn-sm rounded-pill px-4" onclick="showPage('home-page')"><i class="fas fa-arrow-left me-2"></i> กลับหน้าหลัก</button></div><div id="exec-full-container"><div class="text-center p-5"><div class="spinner-border text-success"></div></div></div></div></div>
+    <div id="ita-page" style="display: none;"><div class="container my-5"><div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3"><div><h3 class="text-success fw-bold m-0"><i class="fas fa-balance-scale me-2"></i> ITA 2569</h3></div><button class="btn btn-outline-secondary rounded-pill" onclick="showPage('home-page')"><i class="fas fa-arrow-left"></i> กลับ</button></div><div class="input-group mb-4 shadow-sm"><span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span><input type="text" id="itaSearchInput" class="form-control border-start-0" placeholder="พิมพ์ชื่อหัวข้อเพื่อค้นหา..." onkeyup="filterITA()"></div><div class="accordion shadow-sm rounded-3 overflow-hidden" id="itaAccordion"><div class="text-center p-5" id="ita-loading"><div class="spinner-border text-success"></div></div></div></div></div>
+    <div id="downloads-page" style="display: none;"><div class="container my-5"><div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3"><h3 class="text-success fw-bold m-0"><i class="fas fa-cloud-download-alt me-2"></i> ดาวน์โหลดแบบฟอร์ม</h3><button class="btn btn-outline-secondary rounded-pill" onclick="showPage('home-page')"><i class="fas fa-arrow-left"></i> กลับ</button></div><div class="card shadow border-0 rounded-3"><div class="card-body p-0"><div id="downloads-container"><div class="text-center text-muted p-5"><div class="spinner-border spinner-border-sm"></div></div></div></div></div></div></div>
+    <div id="complaint-report-page" style="display: none; background-color: #f4f6f9; min-height: 80vh;">
+        <div class="container my-5">
+            <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                <h3 class="text-primary fw-bold m-0"><i class="fas fa-chart-pie me-2"></i> รายงานผลการร้องเรียน</h3>
+                <button class="btn btn-outline-secondary rounded-pill" onclick="showPage('home-page')"><i class="fas fa-arrow-left"></i> กลับหน้าหลัก</button>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body bg-white rounded d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 text-dark fw-bold"><i class="fas fa-filter me-2 text-success"></i> กรองข้อมูลตามปี</h5>
+                    <select id="filter-year" class="form-select w-auto border-success text-success fw-bold shadow-sm" onchange="loadComplaintsData()">
+                        <option value="all">แสดงทั้งหมดทุกปี</option>
+                        <option value="2569">ปีงบประมาณ 2569</option>
+                        <option value="2568">ปีงบประมาณ 2568</option>
+                        <option value="2567">ปีงบประมาณ 2567</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="complaint-report-container">
+                <div class="text-center py-5"><div class="spinner-border text-primary" role="status"></div><div class="mt-2 text-muted">กำลังโหลดข้อมูล...</div></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ==========================================
+        // 🚀 1. ตั้งค่า API URL ตรงนี้เลยครับ!
+        // ==========================================
+        const API_URL = "https://script.google.com/macros/s/AKfycbyYUyHR230OgVutGkPt6o541E6HUG-tequrk3K_HXaZfzOuTr78e3Eh5VCBLo-cnrj7YA/exec"; 
+
+        // ==========================================
+        // 🚀 2. ฟังก์ชันหลักสำหรับคุยกับ Google Sheet (แทน google.script.run)
+        // ==========================================
+        async function fetchAPI(action, params = {}) {
+            let url = API_URL + "?action=" + action;
+            for (let key in params) { url += "&" + key + "=" + encodeURIComponent(params[key]); }
+            try {
+                let response = await fetch(url);
+                let json = await response.json();
+                if (json.status === "success") return json.data;
+                else throw new Error(json.message);
+            } catch (error) {
+                console.error("API Error (" + action + "):", error);
+                return null;
+            }
+        }
+
+        var allImageNews = [];
+
+        // ==========================================
+        // 🚀 3. สั่งโหลดข้อมูลทั้งหมดเมื่อเปิดหน้าเว็บ
+        // ==========================================
+        window.onload = async function() {
+            fetchAPI('getExecutiveData').then(data => { if(data) processExecutive(data); });
+            fetchAPI('getNewsData').then(data => { if(data) renderImageNews(data); });
+            fetchAPI('getAnnouncementData').then(data => { if(data) renderTextNews(data); });
+            fetchAPI('getKnowledgeData').then(data => { if(data) renderKnowledge(data); });
+            fetchAPI('getBannerData').then(data => { if(data) showBanner(data); });
+            fetchAPI('getITAData').then(data => { if(data) showITA(data); }); 
+            fetchAPI('getDownloadsData').then(data => { if(data) showDownloads(data); }); 
+            fetchAPI('getAboutData').then(data => { if(data) renderAboutTabsDynamic(data); }); 
+            fetchAPI('getVisitorCount').then(data => { if(data) showCount(data); }); 
+            fetchAPI('getPopupConfig').then(data => { if(data) handlePopup(data); });
+            loadSystemsDropdown(); // โหลดเมนูระบบงานหลัก
+        };
+      
+        window.onscroll = function () { var btn = document.getElementById("btn-back-to-top"); if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) { btn.style.display = "block"; } else { btn.style.display = "none"; } };
+
+        function showPage(pageId) { 
+            var pages = ['home-page', 'about-page', 'exec-page', 'ita-page', 'downloads-page', 'admin-login-page', 'admin-dashboard-page', 'news-detail-page', 'complaint-report-page'];
+            for (var i = 0; i < pages.length; i++) { document.getElementById(pages[i]).style.display = 'none'; } 
+            document.getElementById(pageId).style.display = 'block'; 
+            window.scrollTo(0, 0); 
+        }
+      
+        function openAboutTab(tabBtnId) { showPage('about-page'); var triggerEl = document.querySelector('#' + tabBtnId); if (triggerEl) { var tab = new bootstrap.Tab(triggerEl); tab.show(); } }
+        function scrollToContact() { showPage('home-page'); setTimeout(function() { document.getElementById('contact-section').scrollIntoView({ behavior: 'smooth' }); }, 100); }
+        function showCount(count) { var el = document.getElementById('visitor-count'); if(el) el.innerText = count.toLocaleString(); }
+        function handlePopup(data) { if(data && data[0] === 'เปิด' && data[1]) { document.getElementById('popupImage').src = convertDriveLink(data[1]); new bootstrap.Modal(document.getElementById('announcementModal')).show(); } }
+
+        // --- (โค้ดจัดการหน้า About) ---
+        function renderAboutTabsDynamic(data) {
+            if (!data || data.length === 0) { document.getElementById('v-pills-tabContent').innerHTML = '<div class="alert alert-warning text-center" style="color:#000;">ไม่พบข้อมูล กรุณาตรวจสอบ Google Sheet</div>'; return; }
+            var groupedData = {}; var lastMainCat = ""; var lastSubCat = "ทั่วไป";
+            for (var i = 0; i < data.length; i++) {
+                var rawMain = data[i][0] ? data[i][0].trim() : ""; var rawSub = data[i][1] ? data[i][1].trim() : "";
+                var text = data[i][2] ? data[i][2].trim() : ""; var link = data[i][3] ? data[i][3].trim() : ""; var note = data[i][4] ? data[i][4].trim() : "";         
+                if (rawMain !== "") { lastMainCat = rawMain; lastSubCat = rawSub !== "" ? rawSub : "ทั่วไป"; } else if (rawSub !== "") { lastSubCat = rawSub; }
+                var mainCat = lastMainCat; var subCat = lastSubCat;
+                if (!mainCat || (text === "" && link === "")) continue;
+                if (!groupedData[mainCat]) groupedData[mainCat] = {};
+                if (!groupedData[mainCat][subCat]) groupedData[mainCat][subCat] = [];
+                groupedData[mainCat][subCat].push({ text: text, link: link, note: note });
+            }
+            var tabsHtml = ''; var contentHtml = ''; var dropdownHtml = ''; var mainIndex = 0;
+            for (var mainCat in groupedData) {
+                var safeMainId = 'dynamic-main-' + mainIndex; var isMainActive = (mainIndex === 0) ? 'active' : ''; var isMainShow = (mainIndex === 0) ? 'show active' : '';
+                var icon = 'fas fa-folder-open text-secondary'; var tabIcon = 'fas fa-folder-open';
+                if(mainCat.indexOf('โครงสร้าง') > -1) { icon = 'fas fa-sitemap text-success'; tabIcon = 'fas fa-sitemap'; }
+                else if(mainCat.indexOf('หน้าที่') > -1) { icon = 'fas fa-tasks text-warning'; tabIcon = 'fas fa-tasks'; }
+                else if(mainCat.indexOf('แผน') > -1) { icon = 'fas fa-map-signs text-primary'; tabIcon = 'fas fa-map-signs'; }
+                else if(mainCat.indexOf('สาธารณสุข') > -1 || mainCat.indexOf('วิสัยทัศน์') > -1) { icon = 'fas fa-heartbeat text-danger'; tabIcon = 'fas fa-heartbeat'; }
+                else if(mainCat.indexOf('คู่มือ') > -1) { icon = 'fas fa-book-open text-info'; tabIcon = 'fas fa-book-open'; }
+                else if(mainCat.indexOf('นโยบาย') > -1) { icon = 'fas fa-shield-alt text-success'; tabIcon = 'fas fa-shield-alt'; }
+                else if(mainCat.indexOf('รายงาน') > -1) { icon = 'fas fa-chart-line text-primary'; tabIcon = 'fas fa-chart-line'; }
+                dropdownHtml += '<li><a class="dropdown-item rounded py-2" style="color:#000; font-weight:500;" href="javascript:void(0)" onclick="openAboutTab(\'v-pills-' + safeMainId + '-tab\')"><i class="' + icon + ' me-2"></i> ' + mainCat + '</a></li>';
+                tabsHtml += '<button class="nav-link ' + isMainActive + '" id="v-pills-' + safeMainId + '-tab" data-bs-toggle="pill" data-bs-target="#v-pills-' + safeMainId + '" type="button" role="tab"><i class="' + tabIcon + ' me-2"></i> ' + mainCat + '</button>';
+                contentHtml += '<div class="tab-pane fade ' + isMainShow + '" id="v-pills-' + safeMainId + '" role="tabpanel">';
+                contentHtml += '<h4 style="color:#000; font-weight:bold; border-bottom:2px solid #198754; padding-bottom:10px;">' + mainCat + '</h4>';
+                var subCategories = Object.keys(groupedData[mainCat]);
+                var hasSubTabs = (subCategories.length > 1 || (subCategories.length === 1 && subCategories[0] !== "ทั่วไป"));
+                if (hasSubTabs) {
+                    contentHtml += '<ul class="nav nav-tabs sub-nav-tabs" id="subtab-' + safeMainId + '" role="tablist">';
+                    for(var j=0; j<subCategories.length; j++) {
+                        var subCat = subCategories[j]; var safeSubId = safeMainId + '-sub-' + j; var isSubActive = (j === 0) ? 'active' : '';
+                        contentHtml += '<li class="nav-item" role="presentation"><button class="nav-link ' + isSubActive + '" id="' + safeSubId + '-tab" data-bs-toggle="tab" data-bs-target="#' + safeSubId + '" type="button" role="tab">' + subCat + '</button></li>';
+                    }
+                    contentHtml += '</ul><div class="tab-content" id="subcontent-' + safeMainId + '">';
+                }
+                for(var j=0; j<subCategories.length; j++) {
+                    var subCat = subCategories[j]; var items = groupedData[mainCat][subCat]; var safeSubId = safeMainId + '-sub-' + j; var isSubActive = (j === 0) ? 'show active' : '';
+                    if (hasSubTabs) { contentHtml += '<div class="tab-pane fade ' + isSubActive + '" id="' + safeSubId + '" role="tabpanel">'; }
+                    var innerHtml = '';
+                    if (mainCat.indexOf('สาธารณสุข') > -1 || mainCat.indexOf('วิสัยทัศน์') > -1) {
+                        innerHtml += '<div class="row g-4 mt-1">';
+                        for(var k=0; k<items.length; k++) {
+                            var vText = items[k].text; var vLink = items[k].link || ''; var vIcon = 'fa-heartbeat'; var vColor = 'text-primary';
+                            if(vText.indexOf('วิสัยทัศน์') > -1) { vIcon = 'fa-eye'; vColor = 'text-primary'; }
+                            if(vText.indexOf('พันธกิจ') > -1) { vIcon = 'fa-bullseye'; vColor = 'text-danger'; }
+                            if(vText.indexOf('ค่านิยม') > -1) { vIcon = 'fa-gem'; vColor = 'text-warning'; }
+                            if (vLink !== "") {
+                                if(!vLink.startsWith('http')) vLink = 'https://' + vLink;
+                                innerHtml += '<div class="col-md-6"><a href="' + vLink + '" target="_blank" class="text-decoration-none d-block h-100"><div class="bg-light p-4 rounded-4 border h-100 text-center shadow-sm" style="transition: 0.3s;" onmouseover="this.style.transform=\'translateY(-5px)\'" onmouseout="this.style.transform=\'translateY(0)\'"><i class="fas ' + vIcon + ' fa-3x ' + vColor + ' mb-3"></i><p style="color:#000; font-size:1.1rem; text-align:left; margin:0; font-weight:500;">' + vText.replace(/\n/g, '<br>') + '</p></div></a></div>';
+                            } else {
+                                innerHtml += '<div class="col-md-6"><div class="bg-light p-4 rounded-4 border h-100 text-center"><i class="fas ' + vIcon + ' fa-3x ' + vColor + ' mb-3"></i><p style="color:#000; font-size:1.1rem; text-align:left; margin:0;">' + vText.replace(/\n/g, '<br>') + '</p></div></div>';
+                            }
+                        }
+                        innerHtml += '</div>';
+                    } else {
+                        innerHtml += '<div class="d-flex flex-column gap-3 mt-3">';
+                        for(var k=0; k<items.length; k++) {
+                            var dText = items[k].text || ''; var dLink = items[k].link || ''; var dNote = items[k].note ? '<div style="color:#475569; font-size:0.9rem; margin-top:8px;"><i class="fas fa-info-circle me-1"></i>' + items[k].note + '</div>' : '';
+                            if (dLink !== "") {
+                                if(!dLink.startsWith('http')) dLink = 'https://' + dLink;
+                                var fIcon = 'fa-file-pdf text-danger'; 
+                                if(mainCat.indexOf('รายงาน') > -1) fIcon = 'fa-chart-bar text-primary';
+                                else if(mainCat.indexOf('นโยบาย') > -1) fIcon = 'fa-shield-alt text-success';
+                                else if(mainCat.indexOf('แผน') > -1) fIcon = 'fa-map text-warning'; 
+                                else if(mainCat.indexOf('โครงสร้าง') > -1) fIcon = 'fa-sitemap text-info'; 
+                                else if(mainCat.indexOf('หน้าที่') > -1) fIcon = 'fa-tasks text-secondary'; 
+                                innerHtml += '<a href="' + dLink + '" target="_blank" class="list-group-item list-group-item-action p-3 rounded border d-flex align-items-start shadow-sm bg-white" style="text-decoration:none; transition:0.2s;">';
+                                innerHtml += '<i class="fas ' + fIcon + ' fs-3 me-3 mt-1"></i><div><div style="color:#000; font-weight:bold; font-size:1.1rem;">' + (dText || 'เอกสารแนบ') + '</div>' + dNote + '</div></a>';
+                            } else if (dText !== "") {
+                                innerHtml += '<div class="p-4 rounded border bg-white shadow-sm"><div style="color:#000; font-size:1.1rem; line-height:1.7;">' + dText.replace(/\n/g, '<br>') + '</div>' + dNote + '</div>';
+                            }
+                        }
+                        innerHtml += '</div>';
+                    }
+                    contentHtml += innerHtml;
+                    if (hasSubTabs) { contentHtml += '</div>'; }
+                }
+                if (hasSubTabs) { contentHtml += '</div>'; }
+                contentHtml += '</div>';
+                mainIndex++;
+            }
+            document.getElementById('about-dropdown-menu').innerHTML = dropdownHtml;
+            document.getElementById('v-pills-tab').innerHTML = tabsHtml;
+            document.getElementById('v-pills-tabContent').innerHTML = contentHtml;
+        }
+
+        // --- (โค้ดจัดการข่าวสาร) ---
+        function openNewsDetail(originalIndex) { 
+            var newsData = allImageNews[originalIndex]; if(!newsData) return; 
+            var title = newsData[1];
+            
+            // เรียกผ่าน API แทน
+            fetchAPI('incrementViewCount', { sheetName: 'News', title: title });
+            
+            var currentViews = parseInt(newsData[5]) || 0; newsData[5] = currentViews + 1; 
+            document.getElementById('nd-views').innerText = newsData[5]; 
+            var imgEl = document.getElementById('nd-image'); var linkBtn = document.getElementById('nd-link'); 
+            document.getElementById('nd-category').innerText = newsData[3] || 'ข่าวกิจกรรม'; 
+            if(newsData[4]) { imgEl.src = convertDriveLink(newsData[4]); imgEl.style.display = 'inline-block'; } else { imgEl.style.display = 'none'; } 
+            document.getElementById('nd-title').innerText = title; document.getElementById('nd-date').innerText = newsData[0]; 
+            var rawLink = (newsData[2] && newsData[2] !== "") ? newsData[2].trim() : ""; 
+            if(rawLink !== "" && rawLink !== "-") { if (!rawLink.startsWith('http://') && !rawLink.startsWith('https://')) { rawLink = 'https://' + rawLink; } linkBtn.href = rawLink; linkBtn.style.display = 'inline-block'; } else { linkBtn.href = "#"; linkBtn.style.display = 'none'; } 
+            showPage('news-detail-page'); 
+        }
+
+        function renderImageNews(data) { 
+            allImageNews = data.map(function(item, idx) { var copy = item.slice(); copy.push(idx); return copy; }); 
+            var container = document.getElementById('image-news-container'); var filterSelect = document.getElementById('newsFilter'); 
+            if (!data || data.length === 0) { container.innerHTML = '<div class="alert alert-light border text-center p-4 w-100">ยังไม่มีข้อมูลข่าวกิจกรรม</div>'; return; } 
+            var sources = []; for(var i=0; i<data.length; i++) { var cat = data[i][3] || "ข่าวทั่วไป"; if(sources.indexOf(cat) === -1) sources.push(cat); } 
+            filterSelect.innerHTML = '<option value="all">ดูทุกหมวดหมู่</option>'; for(var s=0; s<sources.length; s++) { var opt = document.createElement('option'); opt.value = sources[s]; opt.innerHTML = sources[s]; filterSelect.appendChild(opt); } 
+            displayFilteredImageNews(); 
+        }
+
+        function filterImageNews() { displayFilteredImageNews(); }
+
+        function displayFilteredImageNews() { 
+            var container = document.getElementById('image-news-container'); var filterVal = document.getElementById('newsFilter').value; 
+            var displayData = (filterVal === 'all') ? allImageNews : allImageNews.filter(function(item) { return (item[3] || "ข่าวทั่วไป") === filterVal; }); 
+            var groups = {}; for(var i=0; i<displayData.length; i++) { var cat = displayData[i][3] || "ข่าวทั่วไป"; if(!groups[cat]) groups[cat] = []; groups[cat].push(displayData[i]); } 
+            var html = '<div class="row g-4">'; for(var cat in groups) { html += '<div class="col-12"><h5 class="text-success border-bottom pb-2 mt-2">' + cat + '</h5></div>'; var limit = (filterVal === 'all') ? 4 : groups[cat].length; for(var k=0; k < Math.min(groups[cat].length, limit); k++) { var r = groups[cat][k]; var imgLink = r[4] ? convertDriveLink(r[4]) : "https://via.placeholder.com/400x250?text=News"; var views = r[5] ? r[5] : "0"; var origIdx = r[6]; html += '<div class="col-sm-6 col-lg-3"><div class="card h-100 bg-white news-card" onclick="openNewsDetail(' + origIdx + ')"><img src="' + imgLink + '" class="card-img-top" style="height: 150px; object-fit: cover;"><div class="card-body p-3 d-flex flex-column"><span class="text-dark fw-bold text-truncate-2 mb-2">' + r[1] + '</span><div class="news-meta mb-3"><i class="far fa-calendar-alt text-dark"></i> ' + r[0] + ' <span class="ms-2"><i class="far fa-eye text-dark"></i> ' + views + ' ครั้ง</span></div><div class="mt-auto"><button class="btn btn-success btn-sm px-3" style="font-size:0.8rem;">อ่านต่อ... <i class="fas fa-arrow-right ms-1"></i></button></div></div></div></div>'; } } html += '</div>'; container.innerHTML = html; 
+        }
+
+        function renderTextNews(data) { 
+            var container = document.getElementById('text-news-container'); 
+            if (!data || data.length === 0) { container.innerHTML = '<div class="col-12 text-center text-muted p-4 border bg-white rounded">ยังไม่มีประกาศ/จัดซื้อจัดจ้าง ในขณะนี้</div>'; return; } 
+            var groups = {}; for(var i=0; i<data.length; i++) { var cat = data[i][3] || "ประกาศทั่วไป"; if(!groups[cat]) groups[cat] = []; groups[cat].push(data[i]); } 
+            var html = ''; for(var cat in groups) { html += '<div class="col-md-6 col-lg-4"><div class="text-news-box"><h5 class="text-success fw-bold border-bottom pb-2 mb-3">' + cat + '</h5>'; var items = groups[cat].slice(0, 5); for(var j=0; j<items.length; j++) { var r = items[j]; var views = r[4] ? r[4] : "0"; var rawLink = (r[2] && r[2] !== "") ? r[2].trim() : "#"; if(rawLink !== "#" && !rawLink.startsWith('http')) { rawLink = 'https://' + rawLink; } var safeTitle = r[1].replace(/'/g, "\\'").replace(/"/g, '"'); html += '<div class="text-news-item"><a href="javascript:void(0)" onclick="clickTextNews(\'' + rawLink + '\', \'' + safeTitle + '\', this)" class="text-news-title">' + r[1] + '</a><div class="news-meta mt-1"><i class="fas fa-calendar-day text-success"></i> ' + r[0] + ' <span class="ms-2"><i class="fas fa-eye"></i> <span class="view-count-num">' + views + '</span> ครั้ง</span></div></div>'; } html += '</div></div>'; } container.innerHTML = html; 
+        }
+
+        function clickTextNews(url, title, el) {
+            fetchAPI('incrementViewCount', { sheetName: 'Announcements', title: title });
+            var parent = el.parentElement; var numSpan = parent.querySelector('.view-count-num');
+            if(numSpan) { var current = parseInt(numSpan.innerText) || 0; numSpan.innerText = current + 1; }
+            if(url !== "#") window.open(url, '_blank');
+        }
+
+        function renderKnowledge(data) { var container = document.getElementById('knowledge-list-container'); if (!data || data.length === 0) { container.innerHTML = '<div class="text-center text-muted w-100 p-3">ยังไม่มีข้อมูลแหล่งความรู้</div>'; return; } var html = ''; for(var i=0; i<data.length; i++) { var title = data[i][0]; var rawLink = (data[i][1] && data[i][1] !== "") ? data[i][1].trim() : "#"; if(rawLink !== "#" && !rawLink.startsWith('http')) { rawLink = 'https://' + rawLink; } html += '<div class="knowledge-item"><a href="' + rawLink + '" target="_blank" title="' + title + '"><i class="fas fa-link text-success me-2" style="font-size: 0.8em;"></i>' + title + '</a></div>'; } container.innerHTML = html; }
+
+        // --- (โค้ดล็อกอิน) ---
+        function doAdminLogin() { 
+            var pass = document.getElementById('adminPass').value; 
+            if(!pass) { alert("กรุณาใส่รหัสผ่าน"); return; } 
+            document.getElementById('login-spin').classList.remove('d-none'); 
+            
+            fetchAPI('checkAdminLogin', { pass: pass }).then(res => {
+                document.getElementById('login-spin').classList.add('d-none'); 
+                if(res && res.success) { 
+                    document.getElementById('btn-open-sheet').href = res.sheetUrl; 
+                    showPage('admin-dashboard-page'); 
+                } else { 
+                    alert("❌ รหัสผ่านไม่ถูกต้อง"); 
+                }
+            });
+        }
+
+        // --- (โค้ดผู้บริหารและ ITA) ---
+        function processExecutive(data) { if (!data || data.length === 0) return; var sidebar = document.getElementById('executive-sidebar'); var chief = data.filter(function(r) { return r[3] == 1; })[0]; if (chief) { sidebar.innerHTML = '<div class="exec-card-small"><img src="' + convertDriveLink(chief[2]) + '" class="exec-img-small"><div class="p-3 bg-white border-top"><h6 class="fw-bold text-success mb-1 text-truncate">' + chief[0] + '</h6><small class="text-muted d-block text-truncate">' + chief[1] + '</small></div></div>'; } var container = document.getElementById('exec-full-container'); container.innerHTML = ""; var groups = [{id: 1, name: "สาธารณสุขอำเภอ"}, {id: 2, name: "ผู้ช่วย สาธารณสุขอำเภอ."}, {id: 3, name: "ผู้อำนวยการ รพ.สต."}, {id: 4, name: "พยาบาลวิชาชีพ"}, {id: 5, name: "นักวิชาการสาธารณสุข"}, {id: 6, name: "เจ้าพนักงานทันตสาธารณสุข"}, {id: 7, name: "เจ้าพนักงานสาธารณสุข"}, {id: 8, name: "ลูกจ้าง"}, {id: 9, name: "เจ้าพนักงานเภสัชกรรม"}, {id: 10, name: "พนักงานการเงินและบัญชี"},{id: 11, name: "พนักงานทำความสะอาดอาคาร"},]; for (var g = 0; g < groups.length; g++) { var members = data.filter(function(r) { return r[3] == groups[g].id; }); if(members.length > 0) renderExecGroup(container, groups[g].name, members); } }
+        function renderExecGroup(container, title, people) { var html = '<div class="text-center mb-5"><h4 class="d-inline-block border-bottom border-3 border-success pb-2 mb-4 text-secondary">' + title + '</h4><div class="row justify-content-center g-4">'; for (var i = 0; i < people.length; i++) { var p = people[i]; var p4 = p[4] ? p[4] : "-"; html += '<div class="col-6 col-md-4 col-lg-3"><div class="exec-card-full"><center><img src="' + convertDriveLink(p[2]) + '" class="exec-img-full"></center><div class="card-body text-center mt-2 px-2"><h6 class="fw-bold text-dark mb-1 text-truncate">' + p[0] + '</h6><p class="small text-success mb-1 text-truncate">' + p[1] + '</p><span class="badge bg-light text-secondary border fw-normal text-truncate" style="max-width:100%"><i class="fas fa-hospital-alt me-1"></i> ' + p4 + '</span></div></div></div>'; } html += '</div></div>'; container.innerHTML += html; }
+        function showBanner(data) { var c = document.getElementById('banner-container'); if(data && data.length > 0) { c.innerHTML = ""; for(var i=0; i<data.length; i++) { c.innerHTML += '<div class="carousel-item ' + (i==0?'active':'') + '"><img src="' + convertDriveLink(data[i][0]) + '" class="d-block w-100"></div>'; } } }
+        
+        function showITA(data) { 
+            var div = document.getElementById('itaAccordion'); document.getElementById('ita-loading').style.display = 'none'; 
+            if (!data || data.length == 0) { div.innerHTML = '<div class="alert alert-warning text-center">ไม่พบข้อมูล</div>'; return; } 
+            var groups = {}; for(var i=0; i<data.length; i++) { var r = data[i]; if(!groups[r[0]]) groups[r[0]]=[]; groups[r[0]].push(r); } 
+            var html = ""; var idx = 0; 
+            for (var cat in groups) { 
+                var cid = "cITA" + idx; 
+                html += '<div class="accordion-item border-0 mb-3 shadow-sm rounded overflow-hidden"><h2 class="accordion-header"><button class="accordion-button ' + (idx>0?'collapsed':'') + ' fw-bold text-success bg-white fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#' + cid + '"><i class="fas fa-check-circle me-2 text-success"></i> ' + cat + '</button></h2><div id="' + cid + '" class="accordion-collapse collapse ' + (idx==0?'show':'') + '" data-bs-parent="#itaAccordion"><div class="accordion-body bg-white p-0">'; 
+                for(var k=0; k<groups[cat].length; k++){ 
+                    var item = groups[cat][k]; var titleText = item[2] ? item[2] : "ไม่มีชื่อเอกสาร"; var linkUrl = item[4] ? item[4].trim() : "#"; 
+                    if (linkUrl !== "#" && !linkUrl.startsWith('http')) linkUrl = 'https://' + linkUrl;
+                    html += '<div class="d-flex justify-content-between align-items-start p-3 border-bottom hover-bg-light" style="transition: 0.2s;"><div class="pe-3"><span class="text-dark" style="font-size: 0.95rem; line-height: 1.5;">' + titleText + '</span></div>';
+                    if (linkUrl !== "#") { html += '<a href="' + linkUrl + '" target="_blank" class="text-decoration-none text-secondary d-flex align-items-center fw-medium mt-1" style="font-size: 0.9rem; white-space: nowrap;">Preview <i class="fas fa-external-link-alt ms-1"></i></a>';
+                    } else { html += '<span class="text-muted small mt-1" style="white-space: nowrap;"><i class="fas fa-times me-1"></i> ไม่มีไฟล์</span>'; }
+                    html += '</div>'; 
+                } 
+                html += '</div></div></div>'; idx++; 
+            } 
+            div.innerHTML = html; 
+        }
+
+        function toggleMoit(id) { var el = document.getElementById(id); el.style.display = (el.style.display === "block") ? "none" : "block"; }
+        function filterITA() { var filter = document.getElementById("itaSearchInput").value.toLowerCase(); var items = document.querySelectorAll(".accordion-body > div"); for(var i=0; i<items.length; i++) { if(items[i].innerText.toLowerCase().indexOf(filter) > -1) { items[i].style.display = ""; } else { items[i].style.display = "none"; } } if(filter !== "") { var collapses = document.querySelectorAll(".accordion-collapse"); for(var j=0; j<collapses.length; j++) { collapses[j].classList.add("show"); } } }
+        function showDownloads(data) { var c = document.getElementById('downloads-container'); if (!data || data.length === 0) { c.innerHTML = '<div class="alert alert-light text-center">ไม่พบเอกสาร</div>'; return; } var html = '<div class="list-group list-group-flush">'; for(var i=0; i<data.length; i++) { html += '<a href="' + (data[i][1] || "#") + '" target="_blank" class="list-group-item list-group-item-action py-3"><div class="d-flex align-items-center"><div class="flex-shrink-0 text-danger fs-4 me-3"><i class="fas fa-file-pdf"></i></div><div class="flex-grow-1"><h6 class="mb-0 text-dark fw-bold">' + data[i][0] + '</h6><small class="text-muted">คลิกเพื่อดาวน์โหลด</small></div><i class="fas fa-chevron-right text-muted"></i></div></a>'; } html += '</div>'; c.innerHTML = html; }
+        
+        // --- (โค้ดร้องเรียน) ---
+        function openComplaint(type) { document.getElementById('compType').value = type; document.getElementById('comp-title').innerText = " " + type; document.getElementById('complaintForm').reset(); new bootstrap.Modal(document.getElementById('complaintModal')).show(); }
+        function submitComplaint() { 
+            var topic = document.getElementById('compTopic').value; var detail = document.getElementById('compDetail').value; 
+            if(topic == "" || detail == "") { alert("กรุณากรอกข้อมูลให้ครบ"); return; } 
+            document.getElementById('btn-spin').classList.remove('d-none'); 
+            var payload = { type: document.getElementById('compType').value, topic: topic, detail: detail, name: document.getElementById('compName').value || "ไม่ระบุ", contact: document.getElementById('compContact').value || "-" }; 
+            
+            fetchAPI('saveComplaint', { data: JSON.stringify(payload) }).then(res => {
+                document.getElementById('btn-spin').classList.add('d-none'); 
+                if(res && res.success) { alert("✅ ส่งข้อมูลเรียบร้อย"); bootstrap.Modal.getInstance(document.getElementById('complaintModal')).hide(); loadComplaintsData(); } 
+                else { alert("❌ Error: ส่งข้อมูลไม่สำเร็จ"); }
+            });
+        }
+
+        // --- (โค้ดดึงข้อมูลระบบย่อยอื่นๆ) ---
+        function convertDriveLink(link) { if (!link) return "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png"; try { var id = ""; if (link.indexOf("/d/") !== -1) id = link.split('/d/')[1].split('/')[0]; else if (link.indexOf("id=") !== -1) id = link.split('id=')[1].split('&')[0]; if (id) return "https://drive.google.com/thumbnail?id=" + id + "&sz=w1000"; } catch (e) {} return "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png"; }
+        
+        function loadSystemsDropdown() {
+            var menu = document.getElementById('systems-dropdown-menu'); if(!menu) return; 
+            menu.innerHTML = '<li><a class="dropdown-item text-muted py-2 px-3" href="#"><div class="spinner-border spinner-border-sm text-success me-2"></div>กำลังโหลดข้อมูล...</a></li>';
+            fetchAPI('getSystemsData').then(data => {
+                if(data) renderSystemsDropdown(data);
+                else menu.innerHTML = '<li><a class="dropdown-item text-danger py-2 px-3" href="#"><i class="fas fa-exclamation-triangle me-2"></i>ดึงข้อมูลไม่สำเร็จ</a></li>';
+            });
+        }
+
+        function renderSystemsDropdown(data) {
+            var menu = document.getElementById('systems-dropdown-menu'); if (!menu) return;
+            if (!data || data.length === 0) { menu.innerHTML = '<li><a class="dropdown-item text-muted py-3 px-4" href="#">ไม่มีข้อมูลในระบบ</a></li>'; return; }
+            var grouped = {}; 
+            for(var i = 0; i < data.length; i++) {
+                var cat = data[i][0] ? data[i][0].trim() : "ระบบทั่วไป"; var subCat = data[i][1] ? data[i][1].trim() : "";        
+                var name = data[i][2] ? data[i][2].trim() : ""; var type = data[i][4] ? data[i][4].trim() : ""; var link = data[i][6] ? data[i][6].trim() : "#";         
+                var displayName = name !== "" ? name : subCat; if(!displayName) continue; 
+                if(!grouped[cat]) grouped[cat] = []; grouped[cat].push({ name: displayName, type: type, link: link });
+            }
+            var html = '';
+            for(var cat in grouped) {
+                html += '<li><h6 class="dropdown-header text-success fw-bold px-3 mt-2" style="font-size: 0.95rem;"><i class="fas fa-folder-open me-2"></i>' + cat + '</h6></li>';
+                for(var j = 0; j < grouped[cat].length; j++) {
+                    var item = grouped[cat][j]; var url = item.link; if(url !== "#" && !url.startsWith('http')) url = 'https://' + url;
+                    var typeBadge = item.type ? '<span class="badge bg-light text-success border ms-2" style="font-size: 0.75rem;">' + item.type + '</span>' : '';
+                    html += '<li><a class="dropdown-item py-2 px-4 d-flex align-items-center" href="' + url + '" target="_blank" style="transition: 0.2s; white-space: normal;"><i class="fas fa-angle-right text-muted me-2"></i><span class="text-dark fw-medium" style="font-size: 0.95rem;">' + item.name + '</span>' + typeBadge + '</a></li>';
+                }
+                html += '<li><hr class="dropdown-divider my-1"></li>'; 
+            }
+            menu.innerHTML = html;
+        }
+
+        function loadComplaintsData() {
+            document.getElementById('complaint-report-container').innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary"></div><div class="mt-2 text-muted">กำลังโหลดข้อมูล...</div></div>';
+            fetchAPI('getComplaintReport').then(data => { if(data) renderComplaintTable(data); });
+        }
+
+        function renderComplaintTable(data) {
+            var container = document.getElementById('complaint-report-container'); var selectedYear = document.getElementById('filter-year').value;
+            if (!data || data.length === 0) { container.innerHTML = '<div class="alert alert-warning text-center border-0 shadow-sm"><i class="fas fa-exclamation-circle me-2"></i>ไม่มีข้อมูลการร้องเรียนในระบบ</div>'; return; }
+            var html = '<div class="table-responsive bg-white rounded shadow-sm border-0"><table class="table table-hover table-borderless align-middle mb-0" style="min-width: 800px;"><thead class="bg-primary text-white"><tr><th class="py-3 px-4 rounded-top-start" width="15%">วันที่รับเรื่อง</th><th class="py-3" width="20%">หมวดหมู่</th><th class="py-3" width="35%">หัวข้อเรื่องร้องเรียน</th><th class="py-3 text-center" width="15%">สถานะ</th><th class="py-3 text-center rounded-top-end" width="15%">ปีงบฯ</th></tr></thead><tbody class="border-top border-light">';
+            var count = 0;
+            for (var i = 0; i < data.length; i++) {
+                var rawDate = data[i][0] || "-"; var category = data[i][1] || "-"; var topic = data[i][2] || "-"; var status = data[i][6] || "รับเรื่องแล้ว"; 
+                var calculatedYear = "-"; var dateMatch = rawDate.match(/(\d{4})/); 
+                if (dateMatch) { var yearInt = parseInt(dateMatch[1]); if (yearInt < 2500) yearInt += 543; calculatedYear = yearInt.toString(); }
+                if (selectedYear !== "all" && calculatedYear !== selectedYear) continue;
+                var statusBadge = '<span class="badge bg-secondary rounded-pill px-3 py-2 fw-normal">' + status + '</span>';
+                if (status.indexOf('เสร็จ') > -1 || status.indexOf('แล้ว') > -1 || status.indexOf('ยุติ') > -1) { statusBadge = '<span class="badge bg-success rounded-pill px-3 py-2 fw-normal">' + status + '</span>'; } 
+                else if (status.indexOf('กำลัง') > -1 || status.indexOf('ระหว่าง') > -1) { statusBadge = '<span class="badge bg-warning text-dark rounded-pill px-3 py-2 fw-normal">' + status + '</span>'; }
+                html += '<tr class="border-bottom border-light"><td class="px-4 text-muted small">' + rawDate + '</td><td class="text-secondary small">' + category + '</td><td class="fw-bold text-dark">' + topic + '</td><td class="text-center">' + statusBadge + '</td><td class="text-muted text-center fw-bold">' + calculatedYear + '</td></tr>';
+                count++;
+            }
+            html += '</tbody></table></div>';
+            if (count === 0) { container.innerHTML = '<div class="alert alert-info text-center border-0 shadow-sm"><i class="fas fa-info-circle me-2"></i>ยังไม่มีสถิติการร้องเรียนในปีงบประมาณ ' + selectedYear + '</div>'; } 
+            else { container.innerHTML = html; }
+        }
+    </script>
+</body>
+</html>
