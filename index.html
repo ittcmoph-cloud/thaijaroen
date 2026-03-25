@@ -15,25 +15,24 @@
         body { font-family: 'Sarabun', sans-serif; background-color: #f4f6f9; min-height: 100vh; display: flex; flex-direction: column; color: #333; }
         
         .navbar-custom { background: linear-gradient(90deg, #0f5132 0%, #198754 100%); padding: 10px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-       /* 📌 ปรับปรุงเมนู Navbar ให้ตัวหนังสือไม่ตกบรรทัด และบังคับเป็นสีขาวทั้งหมด */
         .navbar-custom .nav-link { 
-            color: #ffffff !important; /* บังคับสีขาวล้วน */
+            color: #ffffff !important; 
             font-weight: 600; 
             margin: 0 4px; 
             transition: 0.2s; 
-            white-space: nowrap; /* ห้ามตกบรรทัด */
+            white-space: nowrap; 
             display: flex; 
             align-items: center; 
         }
         .navbar-custom .nav-link:hover, 
         .navbar-custom .nav-link:focus { 
-            color: #e9f7ef !important; /* ตอนเอาเมาส์ชี้ให้เป็นสีขาวอมเขียวนิดๆ */
+            color: #e9f7ef !important; 
             transform: translateY(-2px); 
             text-shadow: 0 2px 4px rgba(0,0,0,0.2); 
         }
         .navbar-custom .nav-icon { 
             background: rgba(255,255,255,0.2); 
-            color: #ffffff !important; /* บังคับไอคอนสีขาว */
+            color: #ffffff !important; 
             border-radius: 50%; 
             margin-right: 6px; 
             display: inline-flex;
@@ -46,7 +45,6 @@
         .carousel-item img { height: 450px; object-fit: cover; width: 100%; object-position: center; background-color: #e9ecef; }
         .placeholder-banner { height: 450px; background-color: #e9ecef; display: flex; align-items: center; justify-content: center; color: #6c757d; }
         
-        /* ปรับสีหัวข้อให้ชัดเจน */
         .section-header { border-bottom: 2px solid #198754; color: #0f5132; padding-bottom: 8px; font-weight: 700; margin-bottom: 20px; font-size: 1.3rem; display: flex; align-items: center; }
         
         .service-box { background: white; border-radius: 12px; padding: 15px 10px; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: all 0.3s ease; height: 100%; display: block; text-decoration: none; color: #444; }
@@ -88,47 +86,18 @@
         footer { margin-top: auto; background-color: #212529; color: #aaa; padding: 40px 0; border-top: 5px solid #198754; }
         footer h5, footer h6 { color: white; border-left: 3px solid var(--accent-color); padding-left: 10px; }
         
-        /* -------------------------------------
-           CSS สำหรับหน้า ABOUT (ปรับสีให้สวยขึ้น) 
-        /* เมนูด้านซ้าย */
         .about-nav-pills .nav-link { color: #000000 !important; border-radius: 8px; margin-bottom: 8px; font-weight: 600; text-align: left; padding: 14px 20px; border: 1px solid #e2e8f0; transition: all 0.3s ease; background-color: white;}
         .about-nav-pills .nav-link:hover { background-color: #e9f7ef !important; color: #0f5132 !important; border-color: #198754;}
         .about-nav-pills .nav-link.active { background-color: #198754 !important; color: white !important; box-shadow: 0 4px 10px rgba(25,135,84,0.25); border-color: #198754;}
         
-        /* กล่องเนื้อหาด้านขวา */
         .about-tab-content { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 35px; min-height: 400px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
         .about-tab-content h4 { color: #000000; font-weight: 700; margin-bottom: 1.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;}
 
-        /* เมนูย่อยแนวนอน (Sub Tabs) */
         .sub-nav-tabs { border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; padding-bottom: 10px; }
-        .sub-nav-tabs .nav-link { 
-            color: #0f5132 !important; /* ตัวอักษรสีเขียวเข้ม */
-            font-weight: 600; 
-            border: 1px solid #198754 !important; /* กรอบสีเขียว */
-            border-radius: 25px !important; /* ทำปุ่มขอบมนสวยๆ */
-            padding: 8px 20px; 
-            margin-right: 10px;
-            margin-bottom: 5px;
-            transition: 0.3s; 
-            font-size: 1rem;
-            background-color: white !important; 
-        }
-        .sub-nav-tabs .nav-link:hover { 
-            color: #ffffff !important; 
-            background-color: #198754 !important; /* เอาเมาส์ชี้แล้วพื้นหลังเป็นสีเขียว */
-        }
-        .sub-nav-tabs .nav-link.active { 
-            color: #ffffff !important; 
-            background-color: #0f5132 !important; /* เมนูที่เลือกอยู่จะเป็นสีเขียวเข้มสุด */
-            border-color: #0f5132 !important; 
-            font-weight: 700; 
-            box-shadow: 0 4px 8px rgba(15, 81, 50, 0.2);
-        }
-        /* รายการข้อมูล/ไฟล์แนบ */
-        .about-list-item { transition: 0.2s; border-radius: 8px; border: 1px solid transparent; margin-bottom: 5px;}
-        .about-list-item:hover { background-color: #f8fafc; border-color: #e2e8f0; padding-left: 20px;}
-        .about-item-title { font-weight: 600; color: #000000; font-size: 1.05rem;}
-        .about-item-note { color: #555555; font-size: 0.85rem; margin-top: 3px; display: block;}
+        .sub-nav-tabs .nav-link { color: #0f5132 !important; font-weight: 600; border: 1px solid #198754 !important; border-radius: 25px !important; padding: 8px 20px; margin-right: 10px; margin-bottom: 5px; transition: 0.3s; font-size: 1rem; background-color: white !important; }
+        .sub-nav-tabs .nav-link:hover { color: #ffffff !important; background-color: #198754 !important; }
+        .sub-nav-tabs .nav-link.active { color: #ffffff !important; background-color: #0f5132 !important; border-color: #0f5132 !important; font-weight: 700; box-shadow: 0 4px 8px rgba(15, 81, 50, 0.2); }
+        .hover-bg-light:hover { background-color: #f8f9fa; }
     </style>
 </head>
 <body>
@@ -313,15 +282,35 @@
         </div>
     </div>
 
+    <div id="admin-login-page" style="display: none; background: #e9ecef; min-height: 80vh;"><div class="container py-5"><div class="row justify-content-center"><div class="col-md-5"><div class="admin-box"><div class="admin-header bg-dark p-4 text-center text-white"><i class="fas fa-lock fa-3x mb-3 text-warning"></i><h4 class="m-0">ระบบจัดการหลังบ้าน</h4></div><div class="p-4"><input type="password" id="adminPass" class="form-control form-control-lg mb-3" placeholder="••••••••"><button class="btn btn-success w-100 btn-lg" onclick="doAdminLogin()"><span id="login-spin" class="spinner-border spinner-border-sm d-none"></span> เข้าสู่ระบบ</button><div class="text-center mt-3"><a href="javascript:void(0)" onclick="showPage('home-page')" class="text-muted text-decoration-none"><i class="fas fa-arrow-left"></i> กลับหน้าหลัก</a></div></div></div></div></div></div></div>
+    <div id="admin-dashboard-page" style="display: none; background: #f4f6f9; min-height: 80vh;"><div class="container py-5"><div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom"><h3 class="fw-bold text-dark"><i class="fas fa-cogs text-success me-2"></i> Admin Dashboard</h3><button class="btn btn-danger btn-sm" onclick="showPage('home-page'); document.getElementById('adminPass').value='';"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</button></div><div class="row g-4"><div class="col-md-6"><div class="card h-100 shadow-sm border-0 rounded-3"><div class="card-body text-center p-4"><i class="fas fa-table fa-4x text-success mb-3"></i><h5 class="fw-bold">จัดการฐานข้อมูล (Google Sheet)</h5><a id="btn-open-sheet" href="#" target="_blank" class="btn btn-outline-success rounded-pill px-4 mt-2"><i class="fas fa-external-link-alt"></i> เปิด Google Sheet</a></div></div></div><div class="col-md-6"><div class="card h-100 shadow-sm border-0 rounded-3"><div class="card-body text-center p-4"><i class="fab fa-google-drive fa-4x text-primary mb-3"></i><h5 class="fw-bold">จัดการไฟล์ (Google Drive)</h5><a href="https://drive.google.com/" target="_blank" class="btn btn-outline-primary rounded-pill px-4 mt-2"><i class="fas fa-folder-open"></i> เปิด Google Drive</a></div></div></div></div></div></div>
+    
+    <div class="modal fade" id="complaintModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content border-0 shadow-lg"><div class="modal-header bg-success text-white"><h5 class="modal-title fw-bold"><span id="comp-title">ร้องเรียน</span></h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body p-4 bg-light"><form id="complaintForm"><input type="hidden" id="compType" name="type"><div class="mb-3"><input type="text" class="form-control shadow-sm" id="compTopic" placeholder="หัวข้อเรื่อง" required></div><div class="mb-3"><textarea class="form-control shadow-sm" id="compDetail" rows="5" placeholder="รายละเอียด" required></textarea></div><div class="row g-2"><div class="col-md-6 mb-3"><input type="text" class="form-control form-control-sm" id="compName" placeholder="ชื่อผู้แจ้ง"></div><div class="col-md-6 mb-3"><input type="text" class="form-control form-control-sm" id="compContact" placeholder="เบอร์โทร"></div></div></form></div><div class="modal-footer bg-white"><button type="button" class="btn btn-light" data-bs-dismiss="modal">ยกเลิก</button><button type="button" class="btn btn-success px-4" onclick="submitComplaint()"><span id="btn-spin" class="spinner-border spinner-border-sm d-none me-2"></span> ยืนยันส่งข้อมูล</button></div></div></div></div>
+    <div class="modal fade" id="announcementModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content border-0 bg-transparent"><div class="modal-header border-0 d-flex justify-content-end pb-0" style="position: absolute; right: 0; z-index: 10;"><button type="button" class="btn-close btn-close-white bg-dark rounded-circle p-2 m-2" data-bs-dismiss="modal" style="opacity: 0.8;"></button></div><div class="modal-body p-0 text-center relative"><img id="popupImage" src="" class="img-fluid rounded-3 shadow-lg" style="max-height: 85vh; border: 4px solid white;"></div></div></div></div>
+    
+    <button type="button" class="btn btn-success rounded-circle" id="btn-back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'});"><i class="fas fa-arrow-up"></i></button>
+
+    <footer class="mt-auto">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-5"><h5 class="mb-3">สสอ.ไทยเจริญ</h5><p class="small text-white-50">มุ่งมั่นพัฒนาคุณภาพชีวิตประชาชน ด้วยบริการสุขภาพที่ได้มาตรฐาน และการมีส่วนร่วมของภาคีเครือข่าย</p></div>
+                <div class="col-md-3"><h6 class="mb-3">เมนูลัด</h6><ul class="list-unstyled small"><li><a href="javascript:void(0)" onclick="showPage('home-page')" class="text-decoration-none text-white-50">หน้าแรก</a></li><li><a href="javascript:void(0)" onclick="showPage('admin-login-page')" class="text-decoration-none text-warning"><i class="fas fa-lock"></i> สำหรับเจ้าหน้าที่ (Admin)</a></li></ul></div>
+                <div class="col-md-4 text-center"><h6 class="mb-3">สถิติผู้เข้าชม</h6><div class="d-inline-block bg-dark border border-secondary rounded-3 p-3 px-5"><h2 id="visitor-count" class="text-success fw-bold m-0">-</h2><small class="text-white-50">VISITORS</small></div></div>
+            </div>
+            <hr class="border-secondary my-4">
+            <div class="text-center small text-white-50">© 2026 Thaijaroen District Health Office. All Rights Reserved.</div>
+        </div>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // ==========================================
-        // 🚀 1. ตั้งค่า API URL ตรงนี้เลยครับ!
+        // 🚀 1. ตั้งค่า API URL ของ Google Apps Script ตรงนี้เลยครับ!
         // ==========================================
-        const API_URL = "https://script.google.com/macros/s/AKfycbyYUyHR230OgVutGkPt6o541E6HUG-tequrk3K_HXaZfzOuTr78e3Eh5VCBLo-cnrj7YA/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbyYUyHR230OgVutGkPt6o541E6HUG-tequrk3K_HXaZfzOuTr78e3Eh5VCBLo-cnrj7YA/exec"; // <<<< เปลี่ยนเป็น URL ของคุณเองนะครับ
 
         // ==========================================
-        // 🚀 2. ฟังก์ชันหลักสำหรับคุยกับ Google Sheet (แทน google.script.run)
+        // 🚀 2. ฟังก์ชันหลักสำหรับคุยกับ Google Sheet 
         // ==========================================
         async function fetchAPI(action, params = {}) {
             let url = API_URL + "?action=" + action;
@@ -353,24 +342,38 @@
             fetchAPI('getAboutData').then(data => { if(data) renderAboutTabsDynamic(data); }); 
             fetchAPI('getVisitorCount').then(data => { if(data) showCount(data); }); 
             fetchAPI('getPopupConfig').then(data => { if(data) handlePopup(data); });
-            loadSystemsDropdown(); // โหลดเมนูระบบงานหลัก
+            loadSystemsDropdown(); 
         };
       
         window.onscroll = function () { var btn = document.getElementById("btn-back-to-top"); if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) { btn.style.display = "block"; } else { btn.style.display = "none"; } };
 
         function showPage(pageId) { 
             var pages = ['home-page', 'about-page', 'exec-page', 'ita-page', 'downloads-page', 'admin-login-page', 'admin-dashboard-page', 'news-detail-page', 'complaint-report-page'];
-            for (var i = 0; i < pages.length; i++) { document.getElementById(pages[i]).style.display = 'none'; } 
-            document.getElementById(pageId).style.display = 'block'; 
+            for (var i = 0; i < pages.length; i++) { 
+                var el = document.getElementById(pages[i]);
+                if(el) el.style.display = 'none'; 
+            } 
+            var target = document.getElementById(pageId);
+            if(target) target.style.display = 'block'; 
             window.scrollTo(0, 0); 
         }
       
         function openAboutTab(tabBtnId) { showPage('about-page'); var triggerEl = document.querySelector('#' + tabBtnId); if (triggerEl) { var tab = new bootstrap.Tab(triggerEl); tab.show(); } }
         function scrollToContact() { showPage('home-page'); setTimeout(function() { document.getElementById('contact-section').scrollIntoView({ behavior: 'smooth' }); }, 100); }
         function showCount(count) { var el = document.getElementById('visitor-count'); if(el) el.innerText = count.toLocaleString(); }
-        function handlePopup(data) { if(data && data[0] === 'เปิด' && data[1]) { document.getElementById('popupImage').src = convertDriveLink(data[1]); new bootstrap.Modal(document.getElementById('announcementModal')).show(); } }
+        
+        function handlePopup(data) { 
+            if(data && data[0] === 'เปิด' && data[1]) { 
+                var pImg = document.getElementById('popupImage');
+                var mEl = document.getElementById('announcementModal');
+                if(pImg && mEl) {
+                    pImg.src = convertDriveLink(data[1]); 
+                    new bootstrap.Modal(mEl).show(); 
+                }
+            } 
+        }
 
-        // --- (โค้ดจัดการหน้า About) ---
+        // --- (โค้ดหน้า About) ---
         function renderAboutTabsDynamic(data) {
             if (!data || data.length === 0) { document.getElementById('v-pills-tabContent').innerHTML = '<div class="alert alert-warning text-center" style="color:#000;">ไม่พบข้อมูล กรุณาตรวจสอบ Google Sheet</div>'; return; }
             var groupedData = {}; var lastMainCat = ""; var lastSubCat = "ทั่วไป";
@@ -460,14 +463,11 @@
             document.getElementById('v-pills-tabContent').innerHTML = contentHtml;
         }
 
-        // --- (โค้ดจัดการข่าวสาร) ---
+        // --- (โค้ดข่าวสาร) ---
         function openNewsDetail(originalIndex) { 
             var newsData = allImageNews[originalIndex]; if(!newsData) return; 
             var title = newsData[1];
-            
-            // เรียกผ่าน API แทน
             fetchAPI('incrementViewCount', { sheetName: 'News', title: title });
-            
             var currentViews = parseInt(newsData[5]) || 0; newsData[5] = currentViews + 1; 
             document.getElementById('nd-views').innerText = newsData[5]; 
             var imgEl = document.getElementById('nd-image'); var linkBtn = document.getElementById('nd-link'); 
@@ -513,24 +513,18 @@
 
         function renderKnowledge(data) { var container = document.getElementById('knowledge-list-container'); if (!data || data.length === 0) { container.innerHTML = '<div class="text-center text-muted w-100 p-3">ยังไม่มีข้อมูลแหล่งความรู้</div>'; return; } var html = ''; for(var i=0; i<data.length; i++) { var title = data[i][0]; var rawLink = (data[i][1] && data[i][1] !== "") ? data[i][1].trim() : "#"; if(rawLink !== "#" && !rawLink.startsWith('http')) { rawLink = 'https://' + rawLink; } html += '<div class="knowledge-item"><a href="' + rawLink + '" target="_blank" title="' + title + '"><i class="fas fa-link text-success me-2" style="font-size: 0.8em;"></i>' + title + '</a></div>'; } container.innerHTML = html; }
 
-        // --- (โค้ดล็อกอิน) ---
+        // --- (โค้ดผู้บริหาร และระบบอื่นๆ) ---
         function doAdminLogin() { 
             var pass = document.getElementById('adminPass').value; 
             if(!pass) { alert("กรุณาใส่รหัสผ่าน"); return; } 
             document.getElementById('login-spin').classList.remove('d-none'); 
-            
             fetchAPI('checkAdminLogin', { pass: pass }).then(res => {
                 document.getElementById('login-spin').classList.add('d-none'); 
-                if(res && res.success) { 
-                    document.getElementById('btn-open-sheet').href = res.sheetUrl; 
-                    showPage('admin-dashboard-page'); 
-                } else { 
-                    alert("❌ รหัสผ่านไม่ถูกต้อง"); 
-                }
+                if(res && res.success) { document.getElementById('btn-open-sheet').href = res.sheetUrl; showPage('admin-dashboard-page'); } 
+                else { alert("❌ รหัสผ่านไม่ถูกต้อง"); }
             });
         }
 
-        // --- (โค้ดผู้บริหารและ ITA) ---
         function processExecutive(data) { if (!data || data.length === 0) return; var sidebar = document.getElementById('executive-sidebar'); var chief = data.filter(function(r) { return r[3] == 1; })[0]; if (chief) { sidebar.innerHTML = '<div class="exec-card-small"><img src="' + convertDriveLink(chief[2]) + '" class="exec-img-small"><div class="p-3 bg-white border-top"><h6 class="fw-bold text-success mb-1 text-truncate">' + chief[0] + '</h6><small class="text-muted d-block text-truncate">' + chief[1] + '</small></div></div>'; } var container = document.getElementById('exec-full-container'); container.innerHTML = ""; var groups = [{id: 1, name: "สาธารณสุขอำเภอ"}, {id: 2, name: "ผู้ช่วย สาธารณสุขอำเภอ."}, {id: 3, name: "ผู้อำนวยการ รพ.สต."}, {id: 4, name: "พยาบาลวิชาชีพ"}, {id: 5, name: "นักวิชาการสาธารณสุข"}, {id: 6, name: "เจ้าพนักงานทันตสาธารณสุข"}, {id: 7, name: "เจ้าพนักงานสาธารณสุข"}, {id: 8, name: "ลูกจ้าง"}, {id: 9, name: "เจ้าพนักงานเภสัชกรรม"}, {id: 10, name: "พนักงานการเงินและบัญชี"},{id: 11, name: "พนักงานทำความสะอาดอาคาร"},]; for (var g = 0; g < groups.length; g++) { var members = data.filter(function(r) { return r[3] == groups[g].id; }); if(members.length > 0) renderExecGroup(container, groups[g].name, members); } }
         function renderExecGroup(container, title, people) { var html = '<div class="text-center mb-5"><h4 class="d-inline-block border-bottom border-3 border-success pb-2 mb-4 text-secondary">' + title + '</h4><div class="row justify-content-center g-4">'; for (var i = 0; i < people.length; i++) { var p = people[i]; var p4 = p[4] ? p[4] : "-"; html += '<div class="col-6 col-md-4 col-lg-3"><div class="exec-card-full"><center><img src="' + convertDriveLink(p[2]) + '" class="exec-img-full"></center><div class="card-body text-center mt-2 px-2"><h6 class="fw-bold text-dark mb-1 text-truncate">' + p[0] + '</h6><p class="small text-success mb-1 text-truncate">' + p[1] + '</p><span class="badge bg-light text-secondary border fw-normal text-truncate" style="max-width:100%"><i class="fas fa-hospital-alt me-1"></i> ' + p4 + '</span></div></div></div>'; } html += '</div></div>'; container.innerHTML += html; }
         function showBanner(data) { var c = document.getElementById('banner-container'); if(data && data.length > 0) { c.innerHTML = ""; for(var i=0; i<data.length; i++) { c.innerHTML += '<div class="carousel-item ' + (i==0?'active':'') + '"><img src="' + convertDriveLink(data[i][0]) + '" class="d-block w-100"></div>'; } } }
@@ -560,14 +554,12 @@
         function filterITA() { var filter = document.getElementById("itaSearchInput").value.toLowerCase(); var items = document.querySelectorAll(".accordion-body > div"); for(var i=0; i<items.length; i++) { if(items[i].innerText.toLowerCase().indexOf(filter) > -1) { items[i].style.display = ""; } else { items[i].style.display = "none"; } } if(filter !== "") { var collapses = document.querySelectorAll(".accordion-collapse"); for(var j=0; j<collapses.length; j++) { collapses[j].classList.add("show"); } } }
         function showDownloads(data) { var c = document.getElementById('downloads-container'); if (!data || data.length === 0) { c.innerHTML = '<div class="alert alert-light text-center">ไม่พบเอกสาร</div>'; return; } var html = '<div class="list-group list-group-flush">'; for(var i=0; i<data.length; i++) { html += '<a href="' + (data[i][1] || "#") + '" target="_blank" class="list-group-item list-group-item-action py-3"><div class="d-flex align-items-center"><div class="flex-shrink-0 text-danger fs-4 me-3"><i class="fas fa-file-pdf"></i></div><div class="flex-grow-1"><h6 class="mb-0 text-dark fw-bold">' + data[i][0] + '</h6><small class="text-muted">คลิกเพื่อดาวน์โหลด</small></div><i class="fas fa-chevron-right text-muted"></i></div></a>'; } html += '</div>'; c.innerHTML = html; }
         
-        // --- (โค้ดร้องเรียน) ---
         function openComplaint(type) { document.getElementById('compType').value = type; document.getElementById('comp-title').innerText = " " + type; document.getElementById('complaintForm').reset(); new bootstrap.Modal(document.getElementById('complaintModal')).show(); }
         function submitComplaint() { 
             var topic = document.getElementById('compTopic').value; var detail = document.getElementById('compDetail').value; 
             if(topic == "" || detail == "") { alert("กรุณากรอกข้อมูลให้ครบ"); return; } 
             document.getElementById('btn-spin').classList.remove('d-none'); 
             var payload = { type: document.getElementById('compType').value, topic: topic, detail: detail, name: document.getElementById('compName').value || "ไม่ระบุ", contact: document.getElementById('compContact').value || "-" }; 
-            
             fetchAPI('saveComplaint', { data: JSON.stringify(payload) }).then(res => {
                 document.getElementById('btn-spin').classList.add('d-none'); 
                 if(res && res.success) { alert("✅ ส่งข้อมูลเรียบร้อย"); bootstrap.Modal.getInstance(document.getElementById('complaintModal')).hide(); loadComplaintsData(); } 
@@ -575,7 +567,6 @@
             });
         }
 
-        // --- (โค้ดดึงข้อมูลระบบย่อยอื่นๆ) ---
         function convertDriveLink(link) { if (!link) return "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png"; try { var id = ""; if (link.indexOf("/d/") !== -1) id = link.split('/d/')[1].split('/')[0]; else if (link.indexOf("id=") !== -1) id = link.split('id=')[1].split('&')[0]; if (id) return "https://drive.google.com/thumbnail?id=" + id + "&sz=w1000"; } catch (e) {} return "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png"; }
         
         function loadSystemsDropdown() {
