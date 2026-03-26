@@ -525,8 +525,59 @@
             });
         }
 
-        function processExecutive(data) { if (!data || data.length === 0) return; var sidebar = document.getElementById('executive-sidebar'); var chief = data.filter(function(r) { return r[3] == 1; })[0]; if (chief) { sidebar.innerHTML = '<div class="exec-card-small"><img src="' + convertDriveLink(chief[2]) + '" class="exec-img-small"><div class="p-3 bg-white border-top"><h6 class="fw-bold text-success mb-1 text-truncate">' + chief[0] + '</h6><small class="text-muted d-block text-truncate">' + chief[1] + '</small></div></div>'; } var container = document.getElementById('exec-full-container'); container.innerHTML = ""; var groups = [{id: 1, name: "สาธารณสุขอำเภอ"}, {id: 2, name: "ผู้ช่วย สาธารณสุขอำเภอ."}, {id: 3, name: "ผู้อำนวยการ รพ.สต."}, {id: 4, name: "พยาบาลวิชาชีพ"}, {id: 5, name: "นักวิชาการสาธารณสุข"}, {id: 6, name: "เจ้าพนักงานทันตสาธารณสุข"}, {id: 7, name: "เจ้าพนักงานสาธารณสุข"}, {id: 8, name: "ลูกจ้าง"}, {id: 9, name: "เจ้าพนักงานเภสัชกรรม"}, {id: 10, name: "พนักงานการเงินและบัญชี"},{id: 11, name: "พนักงานทำความสะอาดอาคาร"},]; for (var g = 0; g < groups.length; g++) { var members = data.filter(function(r) { return r[3] == groups[g].id; }); if(members.length > 0) renderExecGroup(container, groups[g].name, members); } }
-        function renderExecGroup(container, title, people) { var html = '<div class="text-center mb-5"><h4 class="d-inline-block border-bottom border-3 border-success pb-2 mb-4 text-secondary">' + title + '</h4><div class="row justify-content-center g-4">'; for (var i = 0; i < people.length; i++) { var p = people[i]; var p4 = p[4] ? p[4] : "-"; html += '<div class="col-6 col-md-4 col-lg-3"><div class="exec-card-full"><center><img src="' + convertDriveLink(p[2]) + '" class="exec-img-full"></center><div class="card-body text-center mt-2 px-2"><h6 class="fw-bold text-dark mb-1 text-truncate">' + p[0] + '</h6><p class="small text-success mb-1 text-truncate">' + p[1] + '</p><span class="badge bg-light text-secondary border fw-normal text-truncate" style="max-width:100%"><i class="fas fa-hospital-alt me-1"></i> ' + p4 + '</span></div></div></div>'; } html += '</div></div>'; container.innerHTML += html; }
+        function processExecutive(data) { 
+            if (!data || data.length === 0) return; 
+            var sidebar = document.getElementById('executive-sidebar'); 
+            
+            // ดึงข้อมูล สสอ. (กลุ่มที่ 1) มาแสดงด้านข้าง
+            var chief = data.filter(function(r) { return r[3] == 1; })[0]; 
+            if (chief) { 
+                sidebar.innerHTML = '<div class="exec-card-small"><img src="' + convertDriveLink(chief[2]) + '" class="exec-img-small"><div class="p-3 bg-white border-top"><h6 class="fw-bold text-success mb-1 text-truncate">' + chief[0] + '</h6><small class="text-muted d-block text-truncate">' + chief[1] + '</small></div></div>'; 
+            } 
+            
+            var container = document.getElementById('exec-full-container'); 
+            container.innerHTML = ""; 
+            
+            var groups = [
+                {id: 1, name: "สาธารณสุขอำเภอ"}, {id: 2, name: "ผู้ช่วย สาธารณสุขอำเภอ."}, {id: 3, name: "ผู้อำนวยการ รพ.สต."}, 
+                {id: 4, name: "พยาบาลวิชาชีพ"}, {id: 5, name: "นักวิชาการสาธารณสุข"}, {id: 6, name: "เจ้าพนักงานทันตสาธารณสุข"}, 
+                {id: 7, name: "เจ้าพนักงานสาธารณสุข"}, {id: 8, name: "ลูกจ้าง"}, {id: 9, name: "เจ้าพนักงานเภสัชกรรม"}, 
+                {id: 10, name: "พนักงานการเงินและบัญชี"},{id: 11, name: "พนักงานทำความสะอาดอาคาร"},
+            ]; 
+            
+            for (var g = 0; g < groups.length; g++) { 
+                var members = data.filter(function(r) { return r[3] == groups[g].id; }); 
+                if(members.length > 0) renderExecGroup(container, groups[g].name, members); 
+            } 
+        }
+
+        function renderExecGroup(container, title, people) { 
+            var html = '<div class="text-center mb-5"><h4 class="d-inline-block border-bottom border-3 border-success pb-2 mb-4 text-secondary">' + title + '</h4><div class="row justify-content-center g-4">'; 
+            
+            for (var i = 0; i < people.length; i++) { 
+                var p = people[i]; 
+                var p4 = p[4] ? p[4] : "-"; // สังกัด / รพ.สต.
+                var p5 = p[5] ? p[5] : ""; // เบอร์โทรศัพท์ (คอลัมน์ที่ 6 หรือ Index 5)
+                
+                // โค้ดสร้างป้ายเบอร์โทรศัพท์ (ถ้ามีข้อมูลถึงจะแสดง)
+                var phoneBadge = '';
+                if (p5 !== "" && p5 !== "-") {
+                    phoneBadge = '<div class="mt-2"><span class="badge bg-success-subtle text-success border border-success-subtle fw-medium" style="font-size: 0.8rem;"><i class="fas fa-phone-alt me-1"></i> ' + p5 + '</span></div>';
+                }
+
+                html += '<div class="col-6 col-md-4 col-lg-3">';
+                html += '<div class="exec-card-full">';
+                html += '<center><img src="' + convertDriveLink(p[2]) + '" class="exec-img-full"></center>';
+                html += '<div class="card-body text-center mt-2 px-2 pb-3">'; // เพิ่ม padding-bottom เล็กน้อย
+                html += '<h6 class="fw-bold text-dark mb-1 text-truncate">' + p[0] + '</h6>';
+                html += '<p class="small text-success mb-1 text-truncate">' + p[1] + '</p>';
+                html += '<span class="badge bg-light text-secondary border fw-normal text-truncate mb-1" style="max-width:100%"><i class="fas fa-hospital-alt me-1"></i> ' + p4 + '</span>';
+                html += phoneBadge; // เอาป้ายเบอร์โทรศัพท์มาแปะตรงนี้
+                html += '</div></div></div>'; 
+            } 
+            html += '</div></div>'; 
+            container.innerHTML += html; 
+        }
         function showBanner(data) { var c = document.getElementById('banner-container'); if(data && data.length > 0) { c.innerHTML = ""; for(var i=0; i<data.length; i++) { c.innerHTML += '<div class="carousel-item ' + (i==0?'active':'') + '"><img src="' + convertDriveLink(data[i][0]) + '" class="d-block w-100"></div>'; } } }
         
         function showITA(data) { 
