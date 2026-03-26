@@ -605,19 +605,52 @@
         function showBanner(data) { var c = document.getElementById('banner-container'); if(data && data.length > 0) { c.innerHTML = ""; for(var i=0; i<data.length; i++) { c.innerHTML += '<div class="carousel-item ' + (i==0?'active':'') + '"><img src="' + convertDriveLink(data[i][0]) + '" class="d-block w-100"></div>'; } } }
         
         function showITA(data) { 
-            var div = document.getElementById('itaAccordion'); document.getElementById('ita-loading').style.display = 'none'; 
-            if (!data || data.length == 0) { div.innerHTML = '<div class="alert alert-warning text-center">ไม่พบข้อมูล</div>'; return; } 
-            var groups = {}; for(var i=0; i<data.length; i++) { var r = data[i]; if(!groups[r[0]]) groups[r[0]]=[]; groups[r[0]].push(r); } 
+            var div = document.getElementById('itaAccordion'); 
+            document.getElementById('ita-loading').style.display = 'none'; 
+            
+            if (!data || data.length == 0) { 
+                div.innerHTML = '<div class="alert alert-warning text-center">ไม่พบข้อมูล</div>'; 
+                return; 
+            } 
+            var groups = {}; 
+            for(var i=0; i<data.length; i++) { 
+                var r = data[i]; 
+                if(!groups[r[0]]) groups[r[0]]=[]; 
+                groups[r[0]].push(r); 
+            } 
+            
             var html = ""; var idx = 0; 
             for (var cat in groups) { 
                 var cid = "cITA" + idx; 
                 html += '<div class="accordion-item border-0 mb-3 shadow-sm rounded overflow-hidden"><h2 class="accordion-header"><button class="accordion-button ' + (idx>0?'collapsed':'') + ' fw-bold text-success bg-white fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#' + cid + '"><i class="fas fa-check-circle me-2 text-success"></i> ' + cat + '</button></h2><div id="' + cid + '" class="accordion-collapse collapse ' + (idx==0?'show':'') + '" data-bs-parent="#itaAccordion"><div class="accordion-body bg-white p-0">'; 
+                
                 for(var k=0; k<groups[cat].length; k++){ 
-                    var item = groups[cat][k]; var titleText = item[2] ? item[2] : "ไม่มีชื่อเอกสาร"; var linkUrl = item[4] ? item[4].trim() : "#"; 
-                    if (linkUrl !== "#" && !linkUrl.startsWith('http')) linkUrl = 'https://' + linkUrl;
+                    var item = groups[cat][k]; 
+                    var titleText = item[2] ? item[2] : "ไม่มีชื่อเอกสาร"; 
+                    var rawLink = item[4] ? item[4].trim() : ""; // ดึงข้อมูลลิงก์ดิบๆ มาก่อน
+                    
                     html += '<div class="d-flex justify-content-between align-items-start p-3 border-bottom hover-bg-light" style="transition: 0.2s;"><div class="pe-3"><span class="text-dark" style="font-size: 0.95rem; line-height: 1.5;">' + titleText + '</span></div>';
-                    if (linkUrl !== "#") { html += '<a href="' + linkUrl + '" target="_blank" class="text-decoration-none text-secondary d-flex align-items-center fw-medium mt-1" style="font-size: 0.9rem; white-space: nowrap;">Preview <i class="fas fa-external-link-alt ms-1"></i></a>';
-                    } else { html += '<span class="text-muted small mt-1" style="white-space: nowrap;"><i class="fas fa-times me-1"></i> ไม่มีไฟล์</span>'; }
+                    
+                    // 🚀 โค้ดส่วนที่เพิ่มความฉลาด: หั่นลิงก์และสร้างปุ่มหลายอัน
+                    if (rawLink !== "") { 
+                        html += '<div class="d-flex flex-wrap gap-2 justify-content-end">'; // กล่องใส่ปุ่มแบบยืดหยุ่น
+                        var links = rawLink.split(/[,\n ]+/); // สั่งหั่นด้วย ช่องว่าง, ลูกน้ำ, หรือขึ้นบรรทัดใหม่
+                        var linkCount = 1;
+                        
+                        for(var L=0; L<links.length; L++) {
+                            var singleLink = links[L].trim();
+                            if(singleLink !== "") {
+                                if (!singleLink.startsWith('http')) singleLink = 'https://' + singleLink;
+                                // ถ้ามีลิงก์เดียวให้ขึ้นคำว่า Preview ถ้ามีหลายลิงก์ให้ขึ้น ไฟล์ที่ 1, ไฟล์ที่ 2
+                                var btnText = links.length > 1 ? "ไฟล์ที่ " + linkCount : "Preview";
+                                html += '<a href="' + singleLink + '" target="_blank" class="text-decoration-none text-secondary d-flex align-items-center fw-medium mt-1 bg-light px-2 py-1 rounded border shadow-sm" style="font-size: 0.85rem; white-space: nowrap;">' + btnText + ' <i class="fas fa-external-link-alt ms-1 text-success"></i></a>';
+                                linkCount++;
+                            }
+                        }
+                        html += '</div>';
+                    } else { 
+                        html += '<span class="text-muted small mt-1" style="white-space: nowrap;"><i class="fas fa-times me-1"></i> ไม่มีไฟล์</span>'; 
+                    }
                     html += '</div>'; 
                 } 
                 html += '</div></div></div>'; idx++; 
