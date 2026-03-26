@@ -120,56 +120,37 @@
                     <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="showPage('home-page')"><span class="nav-icon"><i class="fas fa-home"></i></span> หน้าแรก</a></li>
                     
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><span class="nav-icon"><i class="fas fa-star"></i></span> ITA & ร้องเรียน</a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-3 p-2">
-                            <li><h6 class="dropdown-header text-success fw-bold">การประเมิน ITA</h6></li>
-                            <li><a class="dropdown-item rounded py-2" href="javascript:void(0)" onclick="showPage('ita-page')"><i class="fas fa-search me-2 text-success"></i> ข้อมูล MOIT</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><h6 class="dropdown-header text-primary fw-bold">ระบบร้องเรียน</h6></li>
-                            <li><a class="dropdown-item rounded py-2" href="javascript:void(0)" onclick="showPage('complaint-report-page'); loadComplaintsData();"><i class="fas fa-hands-helping me-2 text-primary"></i> ศูนย์รับเรื่องร้องเรียน</a></li>
-                            <li><a class="dropdown-item rounded py-2" href="javascript:void(0)" onclick="openComplaint('Q&A สอบถาม')"><i class="fas fa-comment-dots me-2 text-warning"></i> Q&A ถาม-ตอบ</a></li>
-                        </ul>
-                    </li><li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><span class="nav-icon"><i class="fas fa-star"></i></span> ITA & ร้องเรียน</a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-3 p-2">
-                            <li><h6 class="dropdown-header text-success fw-bold">การประเมิน ITA</h6></li>
-                            <li><a class="dropdown-item rounded py-2" href="javascript:void(0)" onclick="showPage('ita-page')"><i class="fas fa-search me-2 text-success"></i> ข้อมูล MOIT</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><h6 class="dropdown-header text-primary fw-bold">ระบบร้องเรียน</h6></li>
-                            <li><a class="dropdown-item rounded py-2" href="javascript:void(0)" onclick="showPage('complaint-report-page'); loadComplaintsData();"><i class="fas fa-hands-helping me-2 text-primary"></i> ศูนย์รับเรื่องร้องเรียน</a></li>
-                            <li><a class="dropdown-item rounded py-2" href="javascript:void(0)" onclick="openComplaint('Q&A สอบถาม')"><i class="fas fa-comment-dots me-2 text-warning"></i> Q&A ถาม-ตอบ</a></li>
-                        </ul>
-                    </li>
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><span class="nav-icon"><i class="fas fa-info-circle"></i></span> เกี่ยวกับเรา</a>
                         <ul class="dropdown-menu shadow-lg border-0 rounded-3 p-2" id="about-dropdown-menu">
                             <li><span class="dropdown-item text-muted"><i class="fas fa-spinner fa-spin me-2"></i> กำลังโหลด...</span></li>
                         </ul>
                     </li>
+
                     <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle text-white fw-bold" href="#" id="navbarSystems" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-desktop me-1"></i> ระบบงานหลัก
-            </a>
-            <ul class="dropdown-menu shadow border-0 mt-2" aria-labelledby="navbarSystems" id="systems-dropdown-menu">
-                <li><a class="dropdown-item text-center text-muted py-2" href="#"><div class="spinner-border spinner-border-sm text-success me-2"></div>กำลังโหลด...</a></li>
-            </ul>
-        </li>
+                        <a class="nav-link dropdown-toggle text-white fw-bold" href="#" id="navbarSystems" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-desktop me-1"></i> ระบบงานหลัก
+                        </a>
+                        <ul class="dropdown-menu shadow border-0 mt-2" aria-labelledby="navbarSystems" id="systems-dropdown-menu">
+                            <li><a class="dropdown-item text-center text-muted py-2" href="#"><div class="spinner-border spinner-border-sm text-success me-2"></div>กำลังโหลด...</a></li>
+                        </ul>
+                    </li>
+
                     <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="showPage('exec-page')"><span class="nav-icon"><i class="fas fa-users"></i></span> ผู้บริหาร</a></li>
+                    
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><span class="nav-icon"><i class="fas fa-star"></i></span> ITA & ร้องเรียน</a>
                         <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-3 p-2">
                             <li><h6 class="dropdown-header text-success fw-bold">การประเมิน ITA</h6></li>
-                            <li><a class="dropdown-item rounded" href="javascript:void(0)" onclick="showPage('ita-page')"><i class="fas fa-search me-2"></i> ข้อมูล MOIT</a></li>
-                            <li><a class="dropdown-item rounded" href="javascript:void(0)" onclick="openComplaint('Q&A สอบถาม')"><i class="fas fa-comment-dots me-2"></i> Q&A ถาม-ตอบ</a></li>
+                            <li><a class="dropdown-item rounded py-2" href="javascript:void(0)" onclick="showPage('ita-page')"><i class="fas fa-search me-2 text-success"></i> ข้อมูล MOIT</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><h6 class="dropdown-header text-danger fw-bold">แจ้งเรื่องร้องเรียน</h6></li>
-                            <li><a class="dropdown-item rounded" href="javascript:void(0)" onclick="openComplaint('ร้องเรียนทั่วไป')"><i class="fas fa-bullhorn me-2 text-warning"></i> ร้องเรียนทั่วไป</a></li>
-                            <li><a class="dropdown-item rounded" href="javascript:void(0)" onclick="openComplaint('ร้องเรียนการทุจริต')"><i class="fas fa-user-shield me-2 text-danger"></i> ร้องเรียนการทุจริต</a></li>
-                            <li><a class="dropdown-item rounded" href="javascript:void(0)" onclick="openComplaint('ร้องเรียนการปฏิบัติงานของเจ้าหน้าที่')"><i class="fas fa-user-shield me-2 text-danger"></i> ร้องเรียนการปฏิบัติงานของเจ้าหน้าที่</a></li><li><hr class="dropdown-divider"></li>
-<li><h6 class="dropdown-header text-primary fw-bold">รายงานผลการดำเนินงาน</h6></li>
-<li><a class="dropdown-item rounded" href="javascript:void(0)" onclick="showPage('complaint-report-page'); loadComplaintsData();"><i class="fas fa-chart-pie me-2 text-primary"></i> สถิติและรายงานผลการร้องเรียน</a></li> 
+                            <li><h6 class="dropdown-header text-primary fw-bold">ระบบร้องเรียน</h6></li>
+                            <li><a class="dropdown-item rounded py-2" href="javascript:void(0)" onclick="showPage('complaint-report-page'); loadComplaintsData();"><i class="fas fa-hands-helping me-2 text-primary"></i> ศูนย์รับเรื่องร้องเรียน</a></li>
+                            <li><a class="dropdown-item rounded py-2" href="javascript:void(0)" onclick="openComplaint('Q&A สอบถาม')"><i class="fas fa-comment-dots me-2 text-warning"></i> Q&A ถาม-ตอบ</a></li>
                         </ul>
                     </li>
+
                     <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="showPage('downloads-page')"><span class="nav-icon"><i class="fas fa-download"></i></span> โหลดไฟล์</a></li>
+                    
                     <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="scrollToContact()"><span class="nav-icon"><i class="fas fa-phone"></i></span> ติดต่อเรา</a></li>
                 </ul>
             </div>
