@@ -120,6 +120,26 @@
                     <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="showPage('home-page')"><span class="nav-icon"><i class="fas fa-home"></i></span> หน้าแรก</a></li>
                     
                     <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><span class="nav-icon"><i class="fas fa-star"></i></span> ITA & ร้องเรียน</a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-3 p-2">
+                            <li><h6 class="dropdown-header text-success fw-bold">การประเมิน ITA</h6></li>
+                            <li><a class="dropdown-item rounded py-2" href="javascript:void(0)" onclick="showPage('ita-page')"><i class="fas fa-search me-2 text-success"></i> ข้อมูล MOIT</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header text-primary fw-bold">ระบบร้องเรียน</h6></li>
+                            <li><a class="dropdown-item rounded py-2" href="javascript:void(0)" onclick="showPage('complaint-report-page'); loadComplaintsData();"><i class="fas fa-hands-helping me-2 text-primary"></i> ศูนย์รับเรื่องร้องเรียน</a></li>
+                            <li><a class="dropdown-item rounded py-2" href="javascript:void(0)" onclick="openComplaint('Q&A สอบถาม')"><i class="fas fa-comment-dots me-2 text-warning"></i> Q&A ถาม-ตอบ</a></li>
+                        </ul>
+                    </li><li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><span class="nav-icon"><i class="fas fa-star"></i></span> ITA & ร้องเรียน</a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-3 p-2">
+                            <li><h6 class="dropdown-header text-success fw-bold">การประเมิน ITA</h6></li>
+                            <li><a class="dropdown-item rounded py-2" href="javascript:void(0)" onclick="showPage('ita-page')"><i class="fas fa-search me-2 text-success"></i> ข้อมูล MOIT</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header text-primary fw-bold">ระบบร้องเรียน</h6></li>
+                            <li><a class="dropdown-item rounded py-2" href="javascript:void(0)" onclick="showPage('complaint-report-page'); loadComplaintsData();"><i class="fas fa-hands-helping me-2 text-primary"></i> ศูนย์รับเรื่องร้องเรียน</a></li>
+                            <li><a class="dropdown-item rounded py-2" href="javascript:void(0)" onclick="openComplaint('Q&A สอบถาม')"><i class="fas fa-comment-dots me-2 text-warning"></i> Q&A ถาม-ตอบ</a></li>
+                        </ul>
+                    </li>
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><span class="nav-icon"><i class="fas fa-info-circle"></i></span> เกี่ยวกับเรา</a>
                         <ul class="dropdown-menu shadow-lg border-0 rounded-3 p-2" id="about-dropdown-menu">
                             <li><span class="dropdown-item text-muted"><i class="fas fa-spinner fa-spin me-2"></i> กำลังโหลด...</span></li>
@@ -133,7 +153,6 @@
                 <li><a class="dropdown-item text-center text-muted py-2" href="#"><div class="spinner-border spinner-border-sm text-success me-2"></div>กำลังโหลด...</a></li>
             </ul>
         </li>
-
                     <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="showPage('exec-page')"><span class="nav-icon"><i class="fas fa-users"></i></span> ผู้บริหาร</a></li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><span class="nav-icon"><i class="fas fa-star"></i></span> ITA & ร้องเรียน</a>
@@ -257,17 +276,55 @@
     <div id="exec-page" style="display: none; background-color: #f0f2f5; padding-bottom: 50px;"><div class="container my-5"><div class="text-center mb-5"><span class="badge bg-success mb-2 px-3 py-2">PERSONNEL</span><h2 class="fw-bold text-dark">โครงสร้างบุคลากร</h2><button class="btn btn-secondary btn-sm rounded-pill px-4" onclick="showPage('home-page')"><i class="fas fa-arrow-left me-2"></i> กลับหน้าหลัก</button></div><div id="exec-full-container"><div class="text-center p-5"><div class="spinner-border text-success"></div></div></div></div></div>
     <div id="ita-page" style="display: none;"><div class="container my-5"><div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3"><div><h3 class="text-success fw-bold m-0"><i class="fas fa-balance-scale me-2"></i> ITA 2569</h3></div><button class="btn btn-outline-secondary rounded-pill" onclick="showPage('home-page')"><i class="fas fa-arrow-left"></i> กลับ</button></div><div class="input-group mb-4 shadow-sm"><span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span><input type="text" id="itaSearchInput" class="form-control border-start-0" placeholder="พิมพ์ชื่อหัวข้อเพื่อค้นหา..." onkeyup="filterITA()"></div><div class="accordion shadow-sm rounded-3 overflow-hidden" id="itaAccordion"><div class="text-center p-5" id="ita-loading"><div class="spinner-border text-success"></div></div></div></div></div>
     <div id="downloads-page" style="display: none;"><div class="container my-5"><div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3"><h3 class="text-success fw-bold m-0"><i class="fas fa-cloud-download-alt me-2"></i> ดาวน์โหลดแบบฟอร์ม</h3><button class="btn btn-outline-secondary rounded-pill" onclick="showPage('home-page')"><i class="fas fa-arrow-left"></i> กลับ</button></div><div class="card shadow border-0 rounded-3"><div class="card-body p-0"><div id="downloads-container"><div class="text-center text-muted p-5"><div class="spinner-border spinner-border-sm"></div></div></div></div></div></div></div>
-    <div id="complaint-report-page" style="display: none; background-color: #f4f6f9; min-height: 80vh;">
-        <div class="container my-5">
-            <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
-                <h3 class="text-primary fw-bold m-0"><i class="fas fa-chart-pie me-2"></i> รายงานผลการร้องเรียน</h3>
-                <button class="btn btn-outline-secondary rounded-pill" onclick="showPage('home-page')"><i class="fas fa-arrow-left"></i> กลับหน้าหลัก</button>
+    <div id="complaint-report-page" style="display: none; background-color: #f4f6f9; min-height: 80vh; padding-bottom: 50px;">
+        <div class="bg-primary text-white py-4 mb-4 shadow-sm" style="background: linear-gradient(90deg, #1e3a8a 0%, #1e40af 100%);">
+            <div class="container d-flex justify-content-between align-items-center">
+                <h3 class="fw-bold m-0"><i class="fas fa-hands-helping me-2 text-warning"></i> ศูนย์รับเรื่องร้องเรียน</h3>
+                <button class="btn btn-light btn-sm rounded-pill px-4 fw-bold text-primary shadow-sm" onclick="showPage('home-page')"><i class="fas fa-arrow-left me-1"></i> กลับหน้าหลัก</button>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row g-4 mb-5">
+                <div class="col-12">
+                    <h5 class="fw-bold text-dark border-bottom border-2 border-primary pb-2"><i class="fas fa-pen-square me-2 text-primary"></i> แจ้งเรื่องร้องเรียน (กรุณาเลือกประเภท)</h5>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-4 hover-bg-light" style="cursor: pointer; transition: 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'" onclick="openComplaint('ร้องเรียนทั่วไป')">
+                        <i class="fas fa-bullhorn fa-3x text-warning mb-3"></i>
+                        <h5 class="fw-bold text-dark">ร้องเรียนทั่วไป</h5>
+                        <p class="small text-muted mb-0">เรื่องร้องเรียนการให้บริการ, ข้อเสนอแนะ, หรือปัญหาทั่วไปที่พบเจอ</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-4 hover-bg-light" style="cursor: pointer; transition: 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'" onclick="openComplaint('ร้องเรียนการทุจริต')">
+                        <i class="fas fa-user-shield fa-3x text-danger mb-3"></i>
+                        <h5 class="fw-bold text-dark">ร้องเรียนการทุจริต</h5>
+                        <p class="small text-muted mb-0">แจ้งเบาะแสการทุจริตคอร์รัปชัน หรือการเรียกรับผลประโยชน์</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-4 hover-bg-light" style="cursor: pointer; transition: 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'" onclick="openComplaint('ร้องเรียนการปฏิบัติงานของเจ้าหน้าที่')">
+                        <i class="fas fa-user-times fa-3x text-secondary mb-3"></i>
+                        <h5 class="fw-bold text-dark">ร้องเรียนการปฏิบัติงาน</h5>
+                        <p class="small text-muted mb-0">การละเว้นการปฏิบัติหน้าที่ หรือพฤติกรรมที่ไม่เหมาะสมของเจ้าหน้าที่</p>
+                    </div>
+                </div>
             </div>
 
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-body bg-white rounded d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0 text-dark fw-bold"><i class="fas fa-filter me-2 text-success"></i> กรองข้อมูลตามปี</h5>
-                    <select id="filter-year" class="form-select w-auto border-success text-success fw-bold shadow-sm" onchange="loadComplaintsData()">
+            <div class="row">
+                <div class="col-12">
+                    <h5 class="fw-bold text-dark border-bottom border-2 border-primary pb-2"><i class="fas fa-chart-pie me-2 text-primary"></i> ข้อมูลสถิติและสถานะการร้องเรียน</h5>
+                </div>
+            </div>
+            
+            <div class="card border-0 shadow-sm mb-4 mt-3 rounded-4">
+                <div class="card-body bg-white rounded-4 d-flex justify-content-between align-items-center p-3 p-md-4">
+                    <h6 class="mb-0 text-dark fw-bold"><i class="fas fa-filter me-2 text-primary"></i> กรองข้อมูลตามปีงบประมาณ</h6>
+                    <select id="filter-year" class="form-select w-auto border-primary text-primary fw-bold shadow-sm rounded-pill px-4" onchange="loadComplaintsData()">
                         <option value="all">แสดงทั้งหมดทุกปี</option>
                         <option value="2569">ปีงบประมาณ 2569</option>
                         <option value="2568">ปีงบประมาณ 2568</option>
@@ -276,12 +333,11 @@
                 </div>
             </div>
 
-            <div id="complaint-report-container">
-                <div class="text-center py-5"><div class="spinner-border text-primary" role="status"></div><div class="mt-2 text-muted">กำลังโหลดข้อมูล...</div></div>
+            <div id="complaint-report-container" class="mb-5 border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="text-center py-5 bg-white"><div class="spinner-border text-primary" role="status"></div><div class="mt-2 text-muted">กำลังโหลดข้อมูล...</div></div>
             </div>
         </div>
     </div>
-
     <div id="admin-login-page" style="display: none; background: #e9ecef; min-height: 80vh;"><div class="container py-5"><div class="row justify-content-center"><div class="col-md-5"><div class="admin-box"><div class="admin-header bg-dark p-4 text-center text-white"><i class="fas fa-lock fa-3x mb-3 text-warning"></i><h4 class="m-0">ระบบจัดการหลังบ้าน</h4></div><div class="p-4"><input type="password" id="adminPass" class="form-control form-control-lg mb-3" placeholder="••••••••"><button class="btn btn-success w-100 btn-lg" onclick="doAdminLogin()"><span id="login-spin" class="spinner-border spinner-border-sm d-none"></span> เข้าสู่ระบบ</button><div class="text-center mt-3"><a href="javascript:void(0)" onclick="showPage('home-page')" class="text-muted text-decoration-none"><i class="fas fa-arrow-left"></i> กลับหน้าหลัก</a></div></div></div></div></div></div></div>
     <div id="admin-dashboard-page" style="display: none; background: #f4f6f9; min-height: 80vh;"><div class="container py-5"><div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom"><h3 class="fw-bold text-dark"><i class="fas fa-cogs text-success me-2"></i> Admin Dashboard</h3><button class="btn btn-danger btn-sm" onclick="showPage('home-page'); document.getElementById('adminPass').value='';"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</button></div><div class="row g-4"><div class="col-md-6"><div class="card h-100 shadow-sm border-0 rounded-3"><div class="card-body text-center p-4"><i class="fas fa-table fa-4x text-success mb-3"></i><h5 class="fw-bold">จัดการฐานข้อมูล (Google Sheet)</h5><a id="btn-open-sheet" href="#" target="_blank" class="btn btn-outline-success rounded-pill px-4 mt-2"><i class="fas fa-external-link-alt"></i> เปิด Google Sheet</a></div></div></div><div class="col-md-6"><div class="card h-100 shadow-sm border-0 rounded-3"><div class="card-body text-center p-4"><i class="fab fa-google-drive fa-4x text-primary mb-3"></i><h5 class="fw-bold">จัดการไฟล์ (Google Drive)</h5><a href="https://drive.google.com/" target="_blank" class="btn btn-outline-primary rounded-pill px-4 mt-2"><i class="fas fa-folder-open"></i> เปิด Google Drive</a></div></div></div></div></div></div>
     
