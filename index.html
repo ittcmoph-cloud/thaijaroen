@@ -604,7 +604,7 @@
         }
         function showBanner(data) { var c = document.getElementById('banner-container'); if(data && data.length > 0) { c.innerHTML = ""; for(var i=0; i<data.length; i++) { c.innerHTML += '<div class="carousel-item ' + (i==0?'active':'') + '"><img src="' + convertDriveLink(data[i][0]) + '" class="d-block w-100"></div>'; } } }
         
-        function showITA(data) { 
+       function showITA(data) { 
             var div = document.getElementById('itaAccordion'); 
             document.getElementById('ita-loading').style.display = 'none'; 
             
@@ -622,34 +622,54 @@
             var html = ""; var idx = 0; 
             for (var cat in groups) { 
                 var cid = "cITA" + idx; 
-                html += '<div class="accordion-item border-0 mb-3 shadow-sm rounded overflow-hidden"><h2 class="accordion-header"><button class="accordion-button ' + (idx>0?'collapsed':'') + ' fw-bold text-success bg-white fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#' + cid + '"><i class="fas fa-check-circle me-2 text-success"></i> ' + cat + '</button></h2><div id="' + cid + '" class="accordion-collapse collapse ' + (idx==0?'show':'') + '" data-bs-parent="#itaAccordion"><div class="accordion-body bg-white p-0">'; 
+                html += '<div class="accordion-item border-0 mb-3 shadow-sm rounded overflow-hidden"><h2 class="accordion-header"><button class="accordion-button ' + (idx>0?'collapsed':'') + ' fw-bold text-success bg-white fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#' + cid + '"><i class="fas fa-check-circle me-2 text-success"></i> ' + cat + '</button></h2><div id="' + cid + '" class="accordion-collapse collapse ' + (idx==0?'show':'') + '" data-bs-parent="#itaAccordion"><div class="accordion-body bg-light p-3">'; 
                 
                 for(var k=0; k<groups[cat].length; k++){ 
                     var item = groups[cat][k]; 
                     var titleText = item[2] ? item[2] : "ไม่มีชื่อเอกสาร"; 
-                    var rawLink = item[4] ? item[4].trim() : ""; // ดึงข้อมูลลิงก์ดิบๆ มาก่อน
+                    var descText = item[3] ? item[3].trim() : ""; 
+                    var rawLink = item[4] ? item[4].trim() : ""; 
                     
-                    html += '<div class="d-flex justify-content-between align-items-start p-3 border-bottom hover-bg-light" style="transition: 0.2s;"><div class="pe-3"><span class="text-dark" style="font-size: 0.95rem; line-height: 1.5;">' + titleText + '</span></div>';
+                    html += '<div class="bg-white p-3 rounded shadow-sm border mb-3">';
+                    html += '<div class="fw-bold text-dark mb-2" style="font-size: 1.05rem;">' + titleText + '</div>';
                     
-                    // 🚀 โค้ดส่วนที่เพิ่มความฉลาด: หั่นลิงก์และสร้างปุ่มหลายอัน
+                    if(descText !== "") {
+                        html += '<div class="text-secondary small mb-3 p-2 bg-light rounded border-start border-4 border-success" style="line-height: 1.6;">' + descText.replace(/\n/g, '<br>') + '</div>';
+                    }
+
                     if (rawLink !== "") { 
-                        html += '<div class="d-flex flex-wrap gap-2 justify-content-end">'; // กล่องใส่ปุ่มแบบยืดหยุ่น
-                        var links = rawLink.split(/[,\n ]+/); // สั่งหั่นด้วย ช่องว่าง, ลูกน้ำ, หรือขึ้นบรรทัดใหม่
+                        html += '<div class="d-flex flex-wrap gap-2 mb-2">'; 
+                        var links = rawLink.split(/[,\n ]+/); 
                         var linkCount = 1;
+                        var previewContainers = ""; // ตัวเก็บกล่องฉายภาพ
                         
                         for(var L=0; L<links.length; L++) {
                             var singleLink = links[L].trim();
                             if(singleLink !== "") {
                                 if (!singleLink.startsWith('http')) singleLink = 'https://' + singleLink;
-                                // ถ้ามีลิงก์เดียวให้ขึ้นคำว่า Preview ถ้ามีหลายลิงก์ให้ขึ้น ไฟล์ที่ 1, ไฟล์ที่ 2
-                                var btnText = links.length > 1 ? "ไฟล์ที่ " + linkCount : "Preview";
-                                html += '<a href="' + singleLink + '" target="_blank" class="text-decoration-none text-secondary d-flex align-items-center fw-medium mt-1 bg-light px-2 py-1 rounded border shadow-sm" style="font-size: 0.85rem; white-space: nowrap;">' + btnText + ' <i class="fas fa-external-link-alt ms-1 text-success"></i></a>';
+                                var btnText = links.length > 1 ? "ดูไฟล์ที่ " + linkCount : "Preview เอกสาร";
+                                var previewId = "prev-" + idx + "-" + k + "-" + L; // สร้าง ID ให้แต่ละไฟล์
+                                
+                                // 1. สร้างปุ่มกดเพื่อกางกล่อง
+                                html += '<button onclick="toggleInlinePreview(\'' + previewId + '\', \'' + singleLink + '\')" class="btn btn-outline-success btn-sm rounded-pill px-3 shadow-sm"><i class="fas fa-eye me-1"></i> ' + btnText + '</button>';
+                                
+                                // 2. สร้างกล่องฉายภาพ (ซ่อนไว้ก่อน)
+                                previewContainers += '<div id="' + previewId + '" class="mt-3" style="display:none; transition: 0.3s;">';
+                                previewContainers += '<div class="d-flex justify-content-between align-items-center bg-light p-2 border border-bottom-0 rounded-top">';
+                                previewContainers += '<span class="small fw-bold text-success"><i class="fas fa-file-alt me-1"></i> ตัวอย่างเอกสาร</span>';
+                                previewContainers += '<div><a href="' + singleLink + '" target="_blank" class="btn btn-sm btn-primary py-0 px-2 me-2" style="font-size:0.75rem;"><i class="fas fa-external-link-alt"></i> เปิดจอใหญ่</a>';
+                                previewContainers += '<button onclick="toggleInlinePreview(\'' + previewId + '\', \'' + singleLink + '\')" class="btn btn-sm btn-danger py-0 px-2" style="font-size:0.75rem;">ปิด X</button></div>';
+                                previewContainers += '</div>';
+                                previewContainers += '<iframe id="iframe-' + previewId + '" src="" style="width:100%; height:450px; border:1px solid #dee2e6; border-radius:0 0 4px 4px; background:#f8f9fa;"></iframe>';
+                                previewContainers += '</div>';
+
                                 linkCount++;
                             }
                         }
                         html += '</div>';
+                        html += previewContainers; // นำกล่องฉายภาพมาวางต่อท้ายปุ่ม
                     } else { 
-                        html += '<span class="text-muted small mt-1" style="white-space: nowrap;"><i class="fas fa-times me-1"></i> ไม่มีไฟล์</span>'; 
+                        html += '<span class="text-muted small"><i class="fas fa-times me-1"></i> ยังไม่มีไฟล์แนบ</span>'; 
                     }
                     html += '</div>'; 
                 } 
@@ -657,9 +677,36 @@
             } 
             div.innerHTML = html; 
         }
-
+        
         function toggleMoit(id) { var el = document.getElementById(id); el.style.display = (el.style.display === "block") ? "none" : "block"; }
         function filterITA() { var filter = document.getElementById("itaSearchInput").value.toLowerCase(); var items = document.querySelectorAll(".accordion-body > div"); for(var i=0; i<items.length; i++) { if(items[i].innerText.toLowerCase().indexOf(filter) > -1) { items[i].style.display = ""; } else { items[i].style.display = "none"; } } if(filter !== "") { var collapses = document.querySelectorAll(".accordion-collapse"); for(var j=0; j<collapses.length; j++) { collapses[j].classList.add("show"); } } }
+        // 📌 ฟังก์ชันสั่งเปิด-ปิด กล่องตัวอย่างเอกสาร
+        function toggleInlinePreview(previewId, fileUrl) {
+            var box = document.getElementById(previewId);
+            var iframe = document.getElementById('iframe-' + previewId);
+
+            if (box.style.display === "none") {
+                var embedUrl = fileUrl;
+
+                // ความฉลาดที่ 1: ถ้าเป็นลิงก์ Google Drive ให้แปลงเป็นโหมด Preview
+                if (fileUrl.includes('drive.google.com')) {
+                    var id = "";
+                    if (fileUrl.indexOf("/d/") !== -1) id = fileUrl.split('/d/')[1].split('/')[0];
+                    else if (fileUrl.indexOf("id=") !== -1) id = fileUrl.split('id=')[1].split('&')[0];
+                    if (id) embedUrl = "https://drive.google.com/file/d/" + id + "/preview";
+                } 
+                // ความฉลาดที่ 2: ถ้าเป็นลิงก์ PDF (บน GitHub) ให้ใช้ Google Docs Viewer ช่วยฉายภาพ (ป้องกันบัคมือถือ)
+                else if (fileUrl.toLowerCase().endsWith('.pdf')) {
+                    embedUrl = 'https://docs.google.com/viewer?url=' + encodeURIComponent(fileUrl) + '&embedded=true';
+                }
+
+                iframe.src = embedUrl; // โหลดไฟล์ใส่จอ
+                box.style.display = "block"; // กางกล่องออก
+            } else {
+                box.style.display = "none"; // ปิดกล่อง
+                iframe.src = ""; // ล้างข้อมูลออกจากจอเพื่อคืนหน่วยความจำเครื่อง
+            }
+        }
         function showDownloads(data) { var c = document.getElementById('downloads-container'); if (!data || data.length === 0) { c.innerHTML = '<div class="alert alert-light text-center">ไม่พบเอกสาร</div>'; return; } var html = '<div class="list-group list-group-flush">'; for(var i=0; i<data.length; i++) { html += '<a href="' + (data[i][1] || "#") + '" target="_blank" class="list-group-item list-group-item-action py-3"><div class="d-flex align-items-center"><div class="flex-shrink-0 text-danger fs-4 me-3"><i class="fas fa-file-pdf"></i></div><div class="flex-grow-1"><h6 class="mb-0 text-dark fw-bold">' + data[i][0] + '</h6><small class="text-muted">คลิกเพื่อดาวน์โหลด</small></div><i class="fas fa-chevron-right text-muted"></i></div></a>'; } html += '</div>'; c.innerHTML = html; }
         
         function openComplaint(type) { document.getElementById('compType').value = type; document.getElementById('comp-title').innerText = " " + type; document.getElementById('complaintForm').reset(); new bootstrap.Modal(document.getElementById('complaintModal')).show(); }
