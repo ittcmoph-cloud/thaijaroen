@@ -343,6 +343,18 @@
             fetchAPI('getVisitorCount').then(data => { if(data) showCount(data); }); 
             fetchAPI('getPopupConfig').then(data => { if(data) handlePopup(data); });
             loadSystemsDropdown(); 
+            // --- ระบบอ่านลิงก์จาก URL (Hash Routing) ---
+            setTimeout(function() {
+                var hash = window.location.hash;
+                if (hash === '#contact-section') {
+                    scrollToContact(); // ถ้าลิงก์คือติดต่อเรา ให้เลื่อนจอลงไป
+                } else if (hash && hash.length > 1) {
+                    var pageId = hash.substring(1); // ตัดตัว # ออก
+                    if (document.getElementById(pageId)) {
+                        showPage(pageId); // สั่งเปิดหน้าตามลิงก์
+                    }
+                }
+            }, 600); // หน่วงเวลาเล็กน้อยรอให้หน้าเว็บสร้างเสร็จก่อน
         };
       
         window.onscroll = function () { var btn = document.getElementById("btn-back-to-top"); if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) { btn.style.display = "block"; } else { btn.style.display = "none"; } };
@@ -355,11 +367,23 @@
             } 
             var target = document.getElementById(pageId);
             if(target) target.style.display = 'block'; 
+            
+            // สั่งให้ URL ด้านบนเปลี่ยนตามหน้าเว็บ (เพื่อก๊อปปี้ลิงก์ได้)
+            if(pageId !== 'home-page') {
+                history.pushState(null, null, '#' + pageId);
+            } else {
+                history.pushState(null, null, ' '); // ถ้าเป็นหน้าแรกให้ลบ # ออก
+            }
             window.scrollTo(0, 0); 
         }
       
         function openAboutTab(tabBtnId) { showPage('about-page'); var triggerEl = document.querySelector('#' + tabBtnId); if (triggerEl) { var tab = new bootstrap.Tab(triggerEl); tab.show(); } }
-        function scrollToContact() { showPage('home-page'); setTimeout(function() { document.getElementById('contact-section').scrollIntoView({ behavior: 'smooth' }); }, 100); }
+       function scrollToContact() { 
+            showPage('home-page'); 
+            setTimeout(function() { document.getElementById('contact-section').scrollIntoView({ behavior: 'smooth' }); }, 100); 
+            // สั่งให้ URL เปลี่ยนเป็น #contact-section
+            history.pushState(null, null, '#contact-section');
+        }
         function showCount(count) { var el = document.getElementById('visitor-count'); if(el) el.innerText = count.toLocaleString(); }
         
         function handlePopup(data) { 
