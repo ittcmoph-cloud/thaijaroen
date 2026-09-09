@@ -7,7 +7,7 @@
     {
       "binding": "DB",
       "database_name": "thaijaroen",
-      "database_id": "REPLACE_WITH_D1_DATABASE_ID",
+      "database_id": "6e9850a4-2dce-4286-9f97-9c9217854aa3",
       "migrations_dir": "migrations"
     }
   ],
