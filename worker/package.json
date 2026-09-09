@@ -1,0 +1,9 @@
+{
+  "name": "thaijaroen-worker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "import:excel": "python scripts/import_legacy_excel.py"
+  }
+}
