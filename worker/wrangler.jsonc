@@ -2,7 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "thaijaroen-api",
   "main": "src/index.js",
-  "compatibility_date": "2026-09-09",
+  "compatibility_date": "2026-09-01",
   "d1_databases": [
     {
       "binding": "DB",
@@ -12,8 +12,7 @@
     }
   ],
   "vars": {
-    "GITHUB_OWNER": "ittcmoph-cloud",
-    "GITHUB_REPO": "thaijaroen",
-    "GITHUB_REF": "main"
+    "ADMIN_SHEET_URL": "",
+    "ALLOWED_ORIGIN": ""
   }
 }

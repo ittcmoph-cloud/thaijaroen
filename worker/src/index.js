@@ -1,47 +1,26 @@
-import { route, error } from './router.js';
+import { corsHeaders, failure } from "./cors.js";
+import { D1Repository } from "./repository.js";
+import { routeRequest } from "./router.js";
 
-const ALLOWED_METHODS = 'GET,POST,OPTIONS';
-const PRODUCTION_ORIGIN = 'https://ittcmoph-cloud.github.io';
+export async function handleRequest(request, env, repoOverride = null) {
+  if (request.method === "OPTIONS") {
+    return new Response(null, {
+      status: 204,
+      headers: corsHeaders(env, request)
+    });
+  }
 
-function allowedOrigin(request, env) {
-  const origin = request.headers.get('Origin');
-  if (!origin) return PRODUCTION_ORIGIN;
-  const configured = [
-    env.ALLOWED_ORIGIN,
-    ...(env.ALLOWED_DEV_ORIGINS || '').split(',')
-  ].filter(Boolean).map(v => v.trim());
-  if (configured.includes(origin)) return origin;
-  if (origin === PRODUCTION_ORIGIN) return origin;
-  return '';
-}
-
-function corsHeaders(request, env) {
-  const origin = allowedOrigin(request, env);
-  return {
-    ...(origin ? { 'access-control-allow-origin': origin } : {}),
-    'access-control-allow-methods': ALLOWED_METHODS,
-    'access-control-allow-headers': 'Content-Type',
-    'access-control-max-age': '86400',
-    'vary': 'Origin'
-  };
-}
-
-function withCors(response, request, env) {
-  const headers = new Headers(response.headers);
-  for (const [k, v] of Object.entries(corsHeaders(request, env))) headers.set(k, v);
-  return new Response(response.body, { status: response.status, headers });
+  try {
+    const repo = repoOverride || new D1Repository(env.DB);
+    return await routeRequest(request, env, repo);
+  } catch (error) {
+    console.error("Worker error:", error);
+    return failure(env, request, "เกิดข้อผิดพลาดภายในระบบ", 500);
+  }
 }
 
 export default {
-  async fetch(request, env) {
-    try {
-      if (request.method === 'OPTIONS') return withCors(new Response(null, { status: 204 }), request, env);
-      const url = new URL(request.url);
-      if (url.pathname !== '/api' && url.pathname !== '/api/') return withCors(error('Not Found', 404), request, env);
-      return withCors(await route(request, env), request, env);
-    } catch (err) {
-      console.error(err);
-      return withCors(error(err?.message || String(err), 500), request, env);
-    }
+  fetch(request, env) {
+    return handleRequest(request, env);
   }
 };

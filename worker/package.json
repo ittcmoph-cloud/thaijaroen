@@ -1,9 +1,20 @@
 {
   "name": "thaijaroen-worker",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test tests/*.test.js",
-    "import:excel": "python scripts/import_legacy_excel.py"
+    "test": "node --test",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:migrate:local": "wrangler d1 migrations apply thaijaroen --local",
+    "db:migrate:remote": "wrangler d1 migrations apply thaijaroen --remote",
+    "import:build": "node scripts/import-xlsx.mjs"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
   }
 }
