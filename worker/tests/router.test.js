@@ -37,7 +37,7 @@ class Statement {
     return {results:[]};
   }
   async first() {
-    if (this.sql.includes("WHERE dataset = ? AND json_extract")) {
+    if (this.sql.includes("FROM legacy_rows lr") && this.sql.includes('json_extract')) {
       const [dataset,title]=this.args;
       return (this.db.rows.get(dataset)||[]).find(r=>JSON.parse(r.data_json)[1] == title) || null;
     }
@@ -66,10 +66,7 @@ async function adminHash(value) {
   const digest=await crypto.subtle.digest('SHA-256',bytes);
   return [...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,'0')).join('');
 }
-
-async function env() {
-  return {DB:new FakeDB(),ADMIN_PASSWORD_SHA256:await adminHash('test-password'),ADMIN_SHEET_URL:''};
-}
+async function env() { return {DB:new FakeDB(),ADMIN_PASSWORD_SHA256:await adminHash('test-password'),ADMIN_SHEET_URL:''}; }
 async function json(response) { return response.json(); }
 
 for (const action of ['getNewsData','getAnnouncementData','getExecutiveData','getKnowledgeData','getBannerData','getDownloadsData','getAboutData','getSystemsData']) {
