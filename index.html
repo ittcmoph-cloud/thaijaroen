@@ -253,7 +253,7 @@
                 
                 <div class="col-lg-9">
                     <div class="tab-content about-tab-content" id="v-pills-tabContent">
-                        <div class="text-center p-5 text-muted"><span class="spinner-border spinner-border-sm text-success"></span> กำลังดึงข้อมูลจาก Google Sheet...</div>
+                        <div class="text-center p-5 text-muted"><span class="spinner-border spinner-border-sm text-success"></span> กำลังดึงข้อมูลจากระบบ...</div>
                     </div>
                 </div>
             </div>
@@ -262,7 +262,44 @@
 
     <div id="news-detail-page" style="display: none; background-color: #f4f6f9; padding-bottom: 50px;"><div class="container my-5"><div class="row justify-content-center"><div class="col-lg-9"><button class="btn btn-outline-secondary btn-sm rounded-pill px-4 mb-4 shadow-sm" onclick="showPage('home-page')"><i class="fas fa-arrow-left me-2"></i> ย้อนกลับไปหน้าหลัก</button><div class="bg-white rounded-4 shadow-sm overflow-hidden border"><div class="bg-success text-white p-4 p-md-5"><span id="nd-category" class="badge bg-warning text-dark mb-3 px-3 py-2" style="font-size: 0.9rem;">หมวดหมู่</span><h3 id="nd-title" class="fw-bold mb-4" style="line-height: 1.5;">หัวข้อข่าว</h3><div class="d-flex flex-wrap gap-4 small opacity-75"><span><i class="far fa-calendar-alt me-2"></i><span id="nd-date">วันที่</span></span><span><i class="far fa-eye me-2"></i><span id="nd-views">ยอดเข้าชม</span> ครั้ง</span></div></div><div class="p-4 p-md-5 text-center bg-white"><img id="nd-image" src="" class="img-fluid rounded-3 shadow-sm mb-5" style="max-height: 600px; display: none; object-fit: contain;"><hr class="mb-5 text-muted"><h5 class="text-secondary mb-4">รายละเอียดเพิ่มเติม / เอกสารแนบ</h5><a id="nd-link" href="#" target="_blank" class="btn btn-success btn-lg px-5 rounded-pill shadow-sm" style="display: none;"><i class="fas fa-external-link-alt me-2"></i> เปิดอ่านข้อมูลฉบับเต็ม</a></div></div></div></div></div></div>
     <div id="exec-page" style="display: none; background-color: #f0f2f5; padding-bottom: 50px;"><div class="container my-5"><div class="text-center mb-5"><span class="badge bg-success mb-2 px-3 py-2">PERSONNEL</span><h2 class="fw-bold text-dark">โครงสร้างบุคลากร</h2><button class="btn btn-secondary btn-sm rounded-pill px-4" onclick="showPage('home-page')"><i class="fas fa-arrow-left me-2"></i> กลับหน้าหลัก</button></div><div id="exec-full-container"><div class="text-center p-5"><div class="spinner-border text-success"></div></div></div></div></div>
-    <div id="ita-page" style="display: none;"><div class="container my-5"><div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3"><div><h3 class="text-success fw-bold m-0"><i class="fas fa-balance-scale me-2"></i> ITA 2569</h3></div><button class="btn btn-outline-secondary rounded-pill" onclick="showPage('home-page')"><i class="fas fa-arrow-left"></i> กลับ</button></div><div class="input-group mb-4 shadow-sm"><span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span><input type="text" id="itaSearchInput" class="form-control border-start-0" placeholder="พิมพ์ชื่อหัวข้อเพื่อค้นหา..." onkeyup="filterITA()"></div><div class="accordion shadow-sm rounded-3 overflow-hidden" id="itaAccordion"><div class="text-center p-5" id="ita-loading"><div class="spinner-border text-success"></div></div></div></div></div>
+    <div id="ita-page" style="display: none;">
+        <div class="container my-5">
+            <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                <div>
+                    <h3 class="text-success fw-bold m-0"><i class="fas fa-balance-scale me-2"></i> ITA 2569</h3>
+                    <small class="text-muted">เอกสารประกอบการประเมินคุณธรรมและความโปร่งใส</small>
+                </div>
+                <button class="btn btn-outline-secondary rounded-pill" onclick="showPage('home-page')"><i class="fas fa-arrow-left"></i> กลับ</button>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <button id="ita-round-6m" class="btn btn-outline-primary w-100 p-3 rounded-4 shadow-sm fw-bold" onclick="setITARound('6m')">
+                        <i class="fas fa-calendar-check me-2"></i> รอบที่ 1 : 6 เดือน
+                        <div class="small fw-normal mt-1"><span id="ita-count-6m">-</span> รายการ</div>
+                    </button>
+                </div>
+                <div class="col-md-6">
+                    <button id="ita-round-12m" class="btn btn-success w-100 p-3 rounded-4 shadow-sm fw-bold" onclick="setITARound('12m')">
+                        <i class="fas fa-clipboard-check me-2"></i> รอบที่ 2 : 12 เดือน
+                        <div class="small fw-normal mt-1"><span id="ita-count-12m">-</span> รายการ</div>
+                    </button>
+                </div>
+            </div>
+
+            <div id="ita-round-note" class="alert alert-success border-0 shadow-sm mb-4">
+                <i class="fas fa-info-circle me-2"></i><strong>กำลังแสดงรอบที่ 2 : 12 เดือน</strong>
+            </div>
+
+            <div class="input-group mb-4 shadow-sm">
+                <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                <input type="text" id="itaSearchInput" class="form-control border-start-0" placeholder="พิมพ์ชื่อ MOIT หรือชื่อเอกสารเพื่อค้นหา..." onkeyup="filterITA()">
+            </div>
+            <div class="accordion shadow-sm rounded-3 overflow-hidden" id="itaAccordion">
+                <div class="text-center p-5" id="ita-loading"><div class="spinner-border text-success"></div><div class="mt-2 text-muted">กำลังโหลดข้อมูล ITA...</div></div>
+            </div>
+        </div>
+    </div>
     <div id="downloads-page" style="display: none;"><div class="container my-5"><div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3"><h3 class="text-success fw-bold m-0"><i class="fas fa-cloud-download-alt me-2"></i> ดาวน์โหลดแบบฟอร์ม</h3><button class="btn btn-outline-secondary rounded-pill" onclick="showPage('home-page')"><i class="fas fa-arrow-left"></i> กลับ</button></div><div class="card shadow border-0 rounded-3"><div class="card-body p-0"><div id="downloads-container"><div class="text-center text-muted p-5"><div class="spinner-border spinner-border-sm"></div></div></div></div></div></div></div>
     <div id="complaint-report-page" style="display: none; background-color: #f4f6f9; min-height: 80vh; padding-bottom: 50px;">
         <div class="bg-primary text-white py-4 mb-4 shadow-sm" style="background: linear-gradient(90deg, #1e3a8a 0%, #1e40af 100%);">
@@ -349,21 +386,36 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // ==========================================
-        // 🚀 1. ตั้งค่า API URL ของ Google Apps Script ตรงนี้เลยครับ!
+        // 🚀 Backend API — Cloudflare Worker + D1
         // ==========================================
-        const API_URL = "https://script.google.com/macros/s/AKfycbyYUyHR230OgVutGkPt6o541E6HUG-tequrk3K_HXaZfzOuTr78e3Eh5VCBLo-cnrj7YA/exec"; // <<<< เปลี่ยนเป็น URL ของคุณเองนะครับ
+        const API_URL = "https://thaijaroen-api.ittcmoph.workers.dev";
 
         // ==========================================
-        // 🚀 2. ฟังก์ชันหลักสำหรับคุยกับ Google Sheet 
+        // 🔌 ฟังก์ชันกลางสำหรับเรียก Backend API
         // ==========================================
         async function fetchAPI(action, params = {}) {
-            let url = API_URL + "?action=" + action;
-            for (let key in params) { url += "&" + key + "=" + encodeURIComponent(params[key]); }
             try {
-                let response = await fetch(url);
-                let json = await response.json();
+                const postActions = ["checkAdminLogin", "saveComplaint"];
+                let response;
+
+                if (postActions.includes(action)) {
+                    response = await fetch(API_URL + "?action=" + encodeURIComponent(action), {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(params)
+                    });
+                } else {
+                    let url = API_URL + "?action=" + encodeURIComponent(action);
+                    for (let key in params) {
+                        url += "&" + encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
+                    }
+                    response = await fetch(url);
+                }
+
+                if (!response.ok) throw new Error("HTTP " + response.status + " " + response.statusText);
+                const json = await response.json();
                 if (json.status === "success") return json.data;
-                else throw new Error(json.message);
+                throw new Error(json.message || "API request failed");
             } catch (error) {
                 console.error("API Error (" + action + "):", error);
                 return null;
@@ -443,7 +495,7 @@
 
         // --- (โค้ดหน้า About) ---
         function renderAboutTabsDynamic(data) {
-            if (!data || data.length === 0) { document.getElementById('v-pills-tabContent').innerHTML = '<div class="alert alert-warning text-center" style="color:#000;">ไม่พบข้อมูล กรุณาตรวจสอบ Google Sheet</div>'; return; }
+            if (!data || data.length === 0) { document.getElementById('v-pills-tabContent').innerHTML = '<div class="alert alert-warning text-center" style="color:#000;">ไม่พบข้อมูล กรุณาตรวจสอบฐานข้อมูล</div>'; return; }
             var groupedData = {}; var lastMainCat = ""; var lastSubCat = "ทั่วไป";
             for (var i = 0; i < data.length; i++) {
                 var rawMain = data[i][0] ? data[i][0].trim() : ""; var rawSub = data[i][1] ? data[i][1].trim() : "";
@@ -648,82 +700,156 @@
         }
         function showBanner(data) { var c = document.getElementById('banner-container'); if(data && data.length > 0) { c.innerHTML = ""; for(var i=0; i<data.length; i++) { c.innerHTML += '<div class="carousel-item ' + (i==0?'active':'') + '"><img src="' + convertDriveLink(data[i][0]) + '" class="d-block w-100"></div>'; } } }
         
-       function showITA(data) { 
-            var div = document.getElementById('itaAccordion'); 
-            document.getElementById('ita-loading').style.display = 'none'; 
-            
-            if (!data || data.length == 0) { 
-                div.innerHTML = '<div class="alert alert-warning text-center">ไม่พบข้อมูล</div>'; 
-                return; 
-            } 
-            var groups = {}; 
-            for(var i=0; i<data.length; i++) { 
-                var r = data[i]; 
-                if(!groups[r[0]]) groups[r[0]]=[]; 
-                groups[r[0]].push(r); 
-            } 
-            
-            var html = ""; var idx = 0; 
-            for (var cat in groups) { 
-                var cid = "cITA" + idx; 
-                html += '<div class="accordion-item border-0 mb-3 shadow-sm rounded overflow-hidden"><h2 class="accordion-header"><button class="accordion-button ' + (idx>0?'collapsed':'') + ' fw-bold text-success bg-white fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#' + cid + '"><i class="fas fa-check-circle me-2 text-success"></i> ' + cat + '</button></h2><div id="' + cid + '" class="accordion-collapse collapse ' + (idx==0?'show':'') + '" data-bs-parent="#itaAccordion"><div class="accordion-body bg-light p-3">'; 
-                
-                for(var k=0; k<groups[cat].length; k++){ 
-                    var item = groups[cat][k]; 
-                    var titleText = item[2] ? item[2] : "ไม่มีชื่อเอกสาร"; 
-                    var descText = item[3] ? item[3].trim() : ""; 
-                    var rawLink = item[4] ? item[4].trim() : ""; 
-                    
-                    html += '<div class="bg-white p-3 rounded shadow-sm border mb-3">';
-                    html += '<div class="fw-bold text-dark mb-2" style="font-size: 1.05rem;">' + titleText + '</div>';
-                    
-                    if(descText !== "") {
-                        html += '<div class="text-secondary small mb-3 p-2 bg-light rounded border-start border-4 border-success" style="line-height: 1.6;">' + descText.replace(/\n/g, '<br>') + '</div>';
+       var allITAData = [];
+        var currentITARound = '12m';
+
+        function isITA12MonthRow(item) {
+            var marker = item && item[0] ? String(item[0]) : '';
+            return marker.indexOf('รอบ 12 เดือน') !== -1;
+        }
+
+        function showITA(data) {
+            allITAData = Array.isArray(data) ? data : [];
+            var loading = document.getElementById('ita-loading');
+            if (loading) loading.style.display = 'none';
+
+            var count6 = allITAData.filter(function(item) { return !isITA12MonthRow(item); }).length;
+            var count12 = allITAData.filter(function(item) { return isITA12MonthRow(item); }).length;
+            var c6 = document.getElementById('ita-count-6m');
+            var c12 = document.getElementById('ita-count-12m');
+            if (c6) c6.innerText = count6;
+            if (c12) c12.innerText = count12;
+
+            // รอบ 12 เดือนเป็นค่าเริ่มต้น เพื่อใช้รายงานจังหวัดในรอบปัจจุบัน
+            setITARound('12m');
+        }
+
+        function setITARound(round) {
+            currentITARound = round;
+            var btn6 = document.getElementById('ita-round-6m');
+            var btn12 = document.getElementById('ita-round-12m');
+            var note = document.getElementById('ita-round-note');
+            var search = document.getElementById('itaSearchInput');
+            if (search) search.value = '';
+
+            if (round === '12m') {
+                if (btn12) btn12.className = 'btn btn-success w-100 p-3 rounded-4 shadow-sm fw-bold';
+                if (btn6) btn6.className = 'btn btn-outline-primary w-100 p-3 rounded-4 shadow-sm fw-bold';
+                if (note) {
+                    note.className = 'alert alert-success border-0 shadow-sm mb-4';
+                    note.innerHTML = '<i class="fas fa-info-circle me-2"></i><strong>รอบที่ 2 : 12 เดือน</strong> — แสดงเอกสารที่ต้องรายงานรอบ 12 เดือน';
+                }
+            } else {
+                if (btn6) btn6.className = 'btn btn-primary w-100 p-3 rounded-4 shadow-sm fw-bold';
+                if (btn12) btn12.className = 'btn btn-outline-success w-100 p-3 rounded-4 shadow-sm fw-bold';
+                if (note) {
+                    note.className = 'alert alert-primary border-0 shadow-sm mb-4';
+                    note.innerHTML = '<i class="fas fa-info-circle me-2"></i><strong>รอบที่ 1 : 6 เดือน</strong> — แสดงเอกสารรอบ 6 เดือนที่เผยแพร่ไว้เดิม';
+                }
+            }
+            renderITARound();
+        }
+
+        function renderITARound() {
+            var div = document.getElementById('itaAccordion');
+            if (!div) return;
+
+            var data = allITAData.filter(function(item) {
+                return currentITARound === '12m' ? isITA12MonthRow(item) : !isITA12MonthRow(item);
+            });
+
+            if (!data || data.length === 0) {
+                div.innerHTML = '<div class="alert alert-warning text-center m-0 p-4">ยังไม่มีข้อมูลในรอบนี้</div>';
+                return;
+            }
+
+            var groups = {};
+            for (var i = 0; i < data.length; i++) {
+                var r = data[i];
+                // รอบ 12 เดือนจัดกลุ่มตาม MOIT (คอลัมน์ 2); รอบ 6 เดือนใช้หัวข้อเดิม (คอลัมน์ 1)
+                var groupName = currentITARound === '12m' ? (r[1] || 'MOIT') : (r[0] || 'ข้อมูล ITA');
+                if (!groups[groupName]) groups[groupName] = [];
+                groups[groupName].push(r);
+            }
+
+            var groupNames = Object.keys(groups);
+            if (currentITARound === '12m') {
+                groupNames.sort(function(a, b) {
+                    var na = parseInt((a.match(/\d+/) || ['999'])[0]);
+                    var nb = parseInt((b.match(/\d+/) || ['999'])[0]);
+                    return na - nb;
+                });
+            }
+
+            var html = '';
+            for (var gi = 0; gi < groupNames.length; gi++) {
+                var cat = groupNames[gi];
+                var cid = 'cITA-' + currentITARound + '-' + gi;
+                var itemCount = groups[cat].length;
+                html += '<div class="accordion-item border-0 mb-3 shadow-sm rounded overflow-hidden">';
+                html += '<h2 class="accordion-header"><button class="accordion-button ' + (gi > 0 ? 'collapsed' : '') + ' fw-bold text-success bg-white fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#' + cid + '">';
+                html += '<i class="fas fa-check-circle me-2 text-success"></i> ' + cat + '<span class="badge bg-success-subtle text-success ms-2">' + itemCount + ' ไฟล์</span></button></h2>';
+                html += '<div id="' + cid + '" class="accordion-collapse collapse ' + (gi === 0 ? 'show' : '') + '" data-bs-parent="#itaAccordion"><div class="accordion-body bg-light p-3">';
+
+                for (var k = 0; k < groups[cat].length; k++) {
+                    var item = groups[cat][k];
+                    var titleText = item[2] ? item[2] : 'ไม่มีชื่อเอกสาร';
+                    var descText = item[3] ? String(item[3]).trim() : '';
+                    var rawLink = item[4] ? String(item[4]).trim() : '';
+
+                    html += '<div class="ita-document bg-white p-3 rounded shadow-sm border mb-3">';
+                    html += '<div class="fw-bold text-dark mb-2" style="font-size:1.05rem;">' + titleText + '</div>';
+                    if (descText !== '') {
+                        html += '<div class="text-secondary small mb-3 p-2 bg-light rounded border-start border-4 border-success" style="line-height:1.6;">' + descText.replace(/\n/g, '<br>') + '</div>';
                     }
 
-                    if (rawLink !== "") { 
-                        html += '<div class="d-flex flex-wrap gap-2 mb-2">'; 
-                        var links = rawLink.split(/[,\n ]+/); 
+                    if (rawLink !== '') {
+                        html += '<div class="d-flex flex-wrap gap-2 mb-2">';
+                        var links = rawLink.split(/[,\n ]+/);
                         var linkCount = 1;
-                        var previewContainers = ""; // ตัวเก็บกล่องฉายภาพ
-                        
-                        for(var L=0; L<links.length; L++) {
+                        var previewContainers = '';
+                        for (var L = 0; L < links.length; L++) {
                             var singleLink = links[L].trim();
-                            if(singleLink !== "") {
+                            if (singleLink !== '') {
                                 if (!singleLink.startsWith('http')) singleLink = 'https://' + singleLink;
-                                var btnText = links.length > 1 ? "ดูไฟล์ที่ " + linkCount : "Preview เอกสาร";
-                                var previewId = "prev-" + idx + "-" + k + "-" + L; // สร้าง ID ให้แต่ละไฟล์
-                                
-                                // 1. สร้างปุ่มกดเพื่อกางกล่อง
+                                var btnText = links.length > 1 ? 'ดูไฟล์ที่ ' + linkCount : 'Preview เอกสาร';
+                                var previewId = 'prev-' + currentITARound + '-' + gi + '-' + k + '-' + L;
                                 html += '<button onclick="toggleInlinePreview(\'' + previewId + '\', \'' + singleLink + '\')" class="btn btn-outline-success btn-sm rounded-pill px-3 shadow-sm"><i class="fas fa-eye me-1"></i> ' + btnText + '</button>';
-                                
-                                // 2. สร้างกล่องฉายภาพ (ซ่อนไว้ก่อน)
-                                previewContainers += '<div id="' + previewId + '" class="mt-3" style="display:none; transition: 0.3s;">';
-                                previewContainers += '<div class="d-flex justify-content-between align-items-center bg-light p-2 border border-bottom-0 rounded-top">';
-                                previewContainers += '<span class="small fw-bold text-success"><i class="fas fa-file-alt me-1"></i> ตัวอย่างเอกสาร</span>';
-                                previewContainers += '<div><a href="' + singleLink + '" target="_blank" class="btn btn-sm btn-primary py-0 px-2 me-2" style="font-size:0.75rem;"><i class="fas fa-external-link-alt"></i> เปิดจอใหญ่</a>';
-                                previewContainers += '<button onclick="toggleInlinePreview(\'' + previewId + '\', \'' + singleLink + '\')" class="btn btn-sm btn-danger py-0 px-2" style="font-size:0.75rem;">ปิด X</button></div>';
-                                previewContainers += '</div>';
-                                previewContainers += '<iframe id="iframe-' + previewId + '" src="" style="width:100%; height:450px; border:1px solid #dee2e6; border-radius:0 0 4px 4px; background:#f8f9fa;"></iframe>';
-                                previewContainers += '</div>';
-
+                                html += '<a href="' + singleLink + '" target="_blank" class="btn btn-success btn-sm rounded-pill px-3 shadow-sm"><i class="fas fa-external-link-alt me-1"></i> เปิดไฟล์</a>';
+                                previewContainers += '<div id="' + previewId + '" class="mt-3" style="display:none;">';
+                                previewContainers += '<div class="d-flex justify-content-between align-items-center bg-light p-2 border border-bottom-0 rounded-top"><span class="small fw-bold text-success"><i class="fas fa-file-alt me-1"></i> ตัวอย่างเอกสาร</span><button onclick="toggleInlinePreview(\'' + previewId + '\', \'' + singleLink + '\')" class="btn btn-sm btn-danger py-0 px-2">ปิด X</button></div>';
+                                previewContainers += '<iframe id="iframe-' + previewId + '" src="" style="width:100%;height:450px;border:1px solid #dee2e6;border-radius:0 0 4px 4px;background:#f8f9fa;"></iframe></div>';
                                 linkCount++;
                             }
                         }
-                        html += '</div>';
-                        html += previewContainers; // นำกล่องฉายภาพมาวางต่อท้ายปุ่ม
-                    } else { 
-                        html += '<span class="text-muted small"><i class="fas fa-times me-1"></i> ยังไม่มีไฟล์แนบ</span>'; 
+                        html += '</div>' + previewContainers;
+                    } else {
+                        html += '<span class="text-muted small"><i class="fas fa-times me-1"></i> ยังไม่มีไฟล์แนบ</span>';
                     }
-                    html += '</div>'; 
-                } 
-                html += '</div></div></div>'; idx++; 
-            } 
-            div.innerHTML = html; 
+                    html += '</div>';
+                }
+                html += '</div></div></div>';
+            }
+            div.innerHTML = html;
         }
-        
-        function toggleMoit(id) { var el = document.getElementById(id); el.style.display = (el.style.display === "block") ? "none" : "block"; }
-        function filterITA() { var filter = document.getElementById("itaSearchInput").value.toLowerCase(); var items = document.querySelectorAll(".accordion-body > div"); for(var i=0; i<items.length; i++) { if(items[i].innerText.toLowerCase().indexOf(filter) > -1) { items[i].style.display = ""; } else { items[i].style.display = "none"; } } if(filter !== "") { var collapses = document.querySelectorAll(".accordion-collapse"); for(var j=0; j<collapses.length; j++) { collapses[j].classList.add("show"); } } }
+
+        function toggleMoit(id) {
+            var el = document.getElementById(id);
+            if (el) el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function filterITA() {
+            var input = document.getElementById('itaSearchInput');
+            var filter = input ? input.value.toLowerCase() : '';
+            var docs = document.querySelectorAll('#itaAccordion .ita-document');
+            for (var i = 0; i < docs.length; i++) {
+                docs[i].style.display = docs[i].innerText.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
+            }
+            if (filter !== '') {
+                var collapses = document.querySelectorAll('#itaAccordion .accordion-collapse');
+                for (var j = 0; j < collapses.length; j++) collapses[j].classList.add('show');
+            }
+        }
         // 📌 ฟังก์ชันสั่งเปิด-ปิด กล่องตัวอย่างเอกสาร
         function toggleInlinePreview(previewId, fileUrl) {
             var box = document.getElementById(previewId);
