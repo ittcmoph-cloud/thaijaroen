@@ -105,6 +105,23 @@
         .sub-nav-tabs .nav-link:hover { color: #ffffff !important; background-color: #198754 !important; }
         .sub-nav-tabs .nav-link.active { color: #ffffff !important; background-color: #0f5132 !important; border-color: #0f5132 !important; font-weight: 700; box-shadow: 0 4px 8px rgba(15, 81, 50, 0.2); }
         .hover-bg-light:hover { background-color: #f8f9fa; }
+    
+        /* ===== ITA Full Detailed Criteria ===== */
+        .ita-indicator-group{border:1px solid #dbe5df;border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 4px 14px rgba(15,81,50,.06);margin-bottom:18px}
+        .ita-indicator-head{background:linear-gradient(90deg,#0f5132,#198754);color:#fff;padding:14px 18px;font-weight:700}
+        .ita-moit-card{border-top:1px solid #edf2ef;padding:18px}
+        .ita-moit-title{font-size:1.05rem;font-weight:700;color:#0f5132;margin-bottom:12px}
+        .ita-criterion{border:1px solid #e5e7eb;border-radius:12px;padding:14px;margin-bottom:10px;background:#fff;scroll-margin-top:110px}
+        .ita-criterion.level-2{margin-left:18px;background:#fbfdfc}
+        .ita-criterion.level-3{margin-left:36px;background:#f8fbf9}
+        .ita-criterion.flash{outline:3px solid #ffc107;background:#fff8db}
+        .ita-criterion-title{font-weight:600;color:#1f2937;line-height:1.6}
+        .ita-files{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+        .ita-file-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px}
+        .ita-file-name{flex:1;min-width:220px;font-size:.92rem}
+        .ita-status-wait{color:#a16207;font-size:.9rem;margin-top:8px}
+        .ita-admin-note{font-size:.82rem;color:#64748b;margin-top:6px}
+
     </style>
 </head>
 <body>
@@ -295,6 +312,7 @@
                 <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
                 <input type="text" id="itaSearchInput" class="form-control border-start-0" placeholder="พิมพ์ชื่อ MOIT หรือชื่อเอกสารเพื่อค้นหา..." onkeyup="filterITA()">
             </div>
+            <div id="itaDetailedContainer" class="mb-4"></div>
             <div class="accordion shadow-sm rounded-3 overflow-hidden" id="itaAccordion">
                 <div class="text-center p-5" id="ita-loading"><div class="spinner-border text-success"></div><div class="mt-2 text-muted">กำลังโหลดข้อมูล ITA...</div></div>
             </div>
@@ -402,7 +420,122 @@
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+        // ===== ITA Full Master Criteria =====
+        const ITA_FULL_MASTER = [{"indicator": "ตัวชี้วัดที่ 2 การจัดซื้อจัดจ้างและการจัดหาพัสดุ", "moits": [{"moit": 4, "title": "MOIT 4 หน่วยงานมีการวางระบบการจัดซื้อจัดจ้างและการจัดหาพัสดุรายเดือน ประจำปีงบประมาณ", "items": [{"code": "q1", "title": "ข้อ 1. ประกาศเผยแพร่แผนการจัดซื้อจัดจ้างและการจัดหาพัสดุ ประจำปีของหน่วยงาน", "level": 1}, {"code": "q1-1", "title": "1. มีบันทึกข้อความ ที่ผู้บริหารลงนามรับทราบแผนการจัดซื้อจัดจ้างประจำปีของหน่วยงานและมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์ของหน่วยงาน", "level": 2}, {"code": "q1-2", "title": "2. มีหนังสือจัดสรรงบประมาณของหน่วยงาน ประจำปีงบประมาณ พ.ศ. 2569", "level": 2}, {"code": "q1-3", "title": "3. มีแผนการจัดซื้อจัดจ้างและการจัดหาพัสดุของหน่วยงาน ประจำปีงบประมาณ พ.ศ. 2569 (งบดำเนินงาน และ งบลงทุน)", "level": 2}, {"code": "q1-4", "title": "4. มีคำสั่งมอบหมายการปิดประกาศ หรือปลดประกาศ", "level": 2}, {"code": "q1-5", "title": "5. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 2}, {"code": "q2", "title": "ข้อ 2. การป้องกันผู้ที่มีหน้าที่ดำเนินการในการจัดซื้อจัดจ้างเป็นผู้มีส่วนได้ส่วนเสียกับผู้ยื่นข้อเสนอหรือคู่สัญญา", "level": 1}, {"code": "q2-1", "title": "1. มีบันทึกข้อความแจ้งเวียนประกาศสำนักงานปลัดกระทรวงสาธารณสุข ว่าด้วยแนวทางปฏิบัติงานเพื่อตรวจสอบบุคลากรในหน่วยงานด้านการจัดซื้อจัดจ้าง พ.ศ. 2560 และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์", "level": 2}, {"code": "q2-2", "title": "2. มีประกาศสำนักงานปลัดกระทรวงสาธารณสุขว่าด้วยแนวทางปฏิบัติงานเพื่อตรวจสอบบุคลากรในหน่วยงานด้านการจัดซื้อจัดจ้าง พ.ศ. 2560 และแบบแสดงความบริสุทธิ์ใจในการจัดซื้อจัดจ้าง", "level": 2}, {"code": "q2-3", "title": "3. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 2}, {"code": "q3", "title": "ข้อ 3. รายงานผลของแผนการจัดซื้อจัดจ้างและการจัดหาพัสดุประจำปีของหน่วยงาน ตามรอบระยะเวลาที่กำหนด", "level": 1}, {"code": "q3-1", "title": "1. มีบันทึกข้อความ ที่ผู้บริหารรับทราบรายงานผลของแผนการจัดซื้อจัดจ้างประจำปี และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์", "level": 2}, {"code": "q3-2-1", "title": "2.1 รายงานผลการดำเนินการตามแผนการจัดซื้อจัดจ้างและการจัดหาพัสดุ — งบลงทุน", "level": 2}, {"code": "q3-2-2", "title": "2.2 รายงานผลการดำเนินการตามแผนการจัดซื้อจัดจ้างและการจัดหาพัสดุ — งบดำเนินงาน", "level": 2}, {"code": "q3-3", "title": "3. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 2}]}, {"moit": 5, "title": "MOIT 5 หน่วยงานมีการสรุปผลการจัดซื้อจัดจ้างและการจัดหาพัสดุรายเดือน ประจำปีงบประมาณ พ.ศ. 2569", "items": [{"code": "q1", "title": "1. มีบันทึกข้อความ ที่ผู้บริหารลงนามรับทราบแบบ สขร. 1 และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์ของหน่วยงาน", "level": 1}, {"code": "q2", "title": "2. มีแบบสรุปผลการดำเนินการจัดซื้อจัดจ้างในรอบเดือน (แบบ สขร. 1)", "level": 1}, {"code": "q2-item01", "title": "รายการย่อยที่ 1 (Admin แก้ชื่อเดือน/หัวข้อได้)", "level": 2}, {"code": "q2-item02", "title": "รายการย่อยที่ 2 (Admin แก้ชื่อเดือน/หัวข้อได้)", "level": 2}, {"code": "q2-item03", "title": "รายการย่อยที่ 3 (Admin แก้ชื่อเดือน/หัวข้อได้)", "level": 2}, {"code": "q2-item04", "title": "รายการย่อยที่ 4 (Admin แก้ชื่อเดือน/หัวข้อได้)", "level": 2}, {"code": "q2-item05", "title": "รายการย่อยที่ 5 (Admin แก้ชื่อเดือน/หัวข้อได้)", "level": 2}, {"code": "q2-item06", "title": "รายการย่อยที่ 6 (Admin แก้ชื่อเดือน/หัวข้อได้)", "level": 2}, {"code": "q3", "title": "3. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 1}]}]}, {"indicator": "ตัวชี้วัดที่ 3 การบริหารและพัฒนาทรัพยากรบุคคล", "moits": [{"moit": 7, "title": "MOIT 7 หน่วยงานมีการรายงานการประเมินผลการปฏิบัติราชการของบุคลากรในหน่วยงาน และเปิดเผยผลการปฏิบัติราชการ ระดับดีเด่น และระดับดีมาก", "items": [{"code": "q1", "title": "1. มีบันทึกข้อความ ที่ผู้บริหารลงนามในประกาศผลการปฏิบัติราชการประจำปีของบุคลากร ระดับดีเด่น และดีมาก และมีการขออนุญาตนำขึ้นเผยแพร่บนเว็บไซต์", "level": 1}, {"code": "q2", "title": "2. มีประกาศรายงานการประเมินผลการปฏิบัติราชการประจำปีของบุคลากรในหน่วยงาน ระดับดีเด่น และดีมาก", "level": 1}, {"code": "q3", "title": "3. มีหลักฐานประกาศรายงานการประเมินผลการปฏิบัติราชการประจำปีของบุคลากรในหน่วยงาน ระดับดีเด่น และดีมาก", "level": 1}, {"code": "q4", "title": "4. แบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 1}]}]}, {"indicator": "ตัวชี้วัดที่ 4 การส่งเสริมความโปร่งใส", "moits": [{"moit": 10, "title": "MOIT 10 หน่วยงานมีสรุปผลการดำเนินงานเรื่องร้องเรียนการปฏิบัติงานหรือการให้บริการของเจ้าหน้าที่ภายในหน่วยงาน และเรื่องร้องเรียนการทุจริตและประพฤติมิชอบ", "items": [{"code": "q1", "title": "1. มีบันทึกข้อความ ที่ผู้บริหารลงนามรับทราบรายงานสรุปผลการดำเนินงานเรื่องร้องเรียน พร้อมการวิเคราะห์ปัญหา / อุปสรรคและแนวทางแก้ไข และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์", "level": 1}, {"code": "q2", "title": "2. มีรายงานสรุปผลการดำเนินงานเรื่องร้องเรียน", "level": 1}, {"code": "q2-1", "title": "2.1 สรุปผลการดำเนินงานเรื่องร้องเรียนการปฏิบัติงานหรือการให้บริการของเจ้าหน้าที่ภายในหน่วยงาน", "level": 2}, {"code": "q2-2", "title": "2.2 สรุปผลการดำเนินงานเรื่องร้องเรียนการทุจริตและประพฤติมิชอบ", "level": 2}, {"code": "q3", "title": "3. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 1}]}]}, {"indicator": "ตัวชี้วัดที่ 5 การป้องกันการรับสินบน", "moits": [{"moit": 12, "title": "MOIT 12 หน่วยงานมีมาตรการ “การป้องกันการรับสินบน” ที่เป็นระบบ", "items": [{"code": "q1", "title": "1. มีประกาศเจตนารมณ์ No Gift Policy ของปีงบประมาณ พ.ศ. 2569", "level": 1}, {"code": "q2", "title": "2. มีบันทึกข้อความ ที่ผู้บริหารลงนามในคำสั่ง หรือประกาศ หรือข้อสั่งการ และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์", "level": 1}, {"code": "q3", "title": "3. มีคำสั่ง หรือประกาศ หรือข้อสั่งการ มาตรการการป้องกันการรับสินบนทุกรูปแบบ และระบุการกำหนดกลไกการกำกับติดตาม", "level": 1}, {"code": "q4", "title": "4. มีหลักฐานหนังสือแจ้งเวียน", "level": 1}, {"code": "q5", "title": "5. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 1}]}]}, {"indicator": "ตัวชี้วัดที่ 7 การดำเนินงานเพื่อป้องกันการทุจริต", "moits": [{"moit": 16, "title": "MOIT 16 หน่วยงานมีรายงานผลการดำเนินงานตามแผนปฏิบัติการป้องกัน ปราบปรามการทุจริต และประพฤติมิชอบ และแผนปฏิบัติการส่งเสริมคุณธรรมของชมรมจริยธรรม", "items": [{"code": "q1", "title": "1. รายงานผลการดำเนินงานตามแผนปฏิบัติการป้องกัน ปราบปรามการทุจริต และประพฤติมิชอบของหน่วยงาน", "level": 1}, {"code": "q1-1", "title": "1.1 มีบันทึกข้อความ ที่ผู้บริหารลงนามรับทราบรายงานผลการดำเนินงานตามแผนฯ และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์", "level": 2}, {"code": "q1-2", "title": "1.2 รายงานผลการดำเนินงานตามแผนปฏิบัติการป้องกัน ปราบปรามการทุจริต และประพฤติมิชอบของหน่วยงาน", "level": 2}, {"code": "q1-3", "title": "1.3 มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 2}, {"code": "q2", "title": "2. การรายงานผลตามแผนปฏิบัติการส่งเสริมคุณธรรมของชมรมจริยธรรมของหน่วยงาน", "level": 1}, {"code": "q2-1", "title": "2.1 บันทึกข้อความเสนอผู้บริหารสูงสุด เพื่อขอความเห็นชอบ อนุมัติและลงนามในรายงานผลตามแผนปฏิบัติการส่งเสริมคุณธรรม", "level": 2}, {"code": "q2-2", "title": "2.2 รายงานผลการปฏิบัติการส่งเสริมคุณธรรมของชมรมจริยธรรมของหน่วยงาน", "level": 2}, {"code": "q2-2-1", "title": "2.2.1 การขับเคลื่อนคุณธรรมพอเพียง “ชีวิตดีวิถีพอเพียง” ในองค์กร", "level": 3}, {"code": "q2-2-2", "title": "2.2.2 การดำเนินการ “ปฏิญญาคุณธรรม (Do & Don’t)”", "level": 3}, {"code": "q2-2-3", "title": "2.2.3 การดำเนินการ “กิจกรรมครอบครัวอบอุ่นสรรสร้างคุณธรรม”", "level": 3}, {"code": "q2-3", "title": "2.3 มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 2}]}, {"moit": 17, "title": "MOIT 17 หน่วยงานมีการประเมินความเสี่ยงการทุจริต ประจำปีงบประมาณ พ.ศ. 2569 อย่างเป็นระบบ", "items": [{"code": "q1", "title": "1. มีบันทึกข้อความ แสดงถึงการขออนุมัติจัดการประชุมการจัดทำแผนบริหารความเสี่ยงการทุจริต", "level": 1}, {"code": "q2", "title": "2. มีรายงานการประชุมการจัดทำแผนบริหารความเสี่ยงการทุจริต", "level": 1}, {"code": "q3", "title": "3. มีบันทึกข้อความ ที่ผู้บริหารลงนามรับทราบรายงานแผนบริหารความเสี่ยงการทุจริต และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์", "level": 1}, {"code": "q4", "title": "4. มีรายงานแผนบริหารความเสี่ยงการทุจริต โดยจัดทำเป็นรูปเล่มรายงานที่มีการวิเคราะห์ความเสี่ยงและจัดทำแผนบริหารความเสี่ยงการทุจริตทั้ง 8 ขั้นตอน", "level": 1}, {"code": "q5", "title": "5. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 1}]}, {"moit": 19, "title": "MOIT 19 หน่วยงานมีการรายงานผลการส่งเสริมการปฏิบัติตามประมวลจริยธรรมข้าราชการพลเรือน : กรณีการเรี่ยไรและกรณีการให้หรือรับของขวัญหรือประโยชน์อื่นใด", "items": [{"code": "q1", "title": "1. มีบันทึกข้อความ ที่ผู้บริหารรับทราบการรายงานการเรี่ยไรและการให้หรือรับของขวัญ หรือประโยชน์อื่นใด และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์", "level": 1}, {"code": "q2", "title": "2. มีรายงานการเรี่ยไรและการให้หรือรับของขวัญหรือประโยชน์อื่นใดที่พิมพ์ (Print) จากระบบ MSRS", "level": 1}, {"code": "q3", "title": "3. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 1}]}]}, {"indicator": "ตัวชี้วัดที่ 9 การเสริมสร้างวัฒนธรรมองค์กร", "moits": [{"moit": 22, "title": "MOIT 22 หน่วยงานมีแนวปฏิบัติที่เคารพสิทธิมนุษยชนและศักดิ์ศรีของผู้ปฏิบัติงาน และรายงานการป้องกันและแก้ไขปัญหาการล่วงละเมิดหรือคุกคามทางเพศในการทำงาน", "items": [{"code": "q1", "title": "1. มีบันทึกข้อความ ที่ผู้บริหารรับทราบคู่มือแนวปฏิบัติการป้องกันและแก้ไขปัญหาการล่วงละเมิดหรือคุกคามทางเพศในการทำงาน และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์", "level": 1}, {"code": "q2", "title": "2. คู่มือแนวปฏิบัติการป้องกันและแก้ไขปัญหาการล่วงละเมิดหรือคุกคามทางเพศในการทำงานของหน่วยงาน และมีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะ", "level": 1}, {"code": "q3", "title": "3. บันทึกข้อความแจ้งเวียนคู่มือแนวปฏิบัติการป้องกันและแก้ไขปัญหาการล่วงละเมิดหรือคุกคามทางเพศในการทำงาน และมีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะ", "level": 1}, {"code": "q4", "title": "4. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 1}]}]}];
+        let itaDetailedFileIndex = {};
+
+        function itaEsc(s) {
+            return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+        }
+        function itaSlug(round,moit,code) {
+            return 'ita-2569-' + (round === '12m' ? 'r2' : 'r1') + '-moit' + moit + '-' + code;
+        }
+        function buildItaFileIndex(data) {
+            itaDetailedFileIndex = {};
+            (Array.isArray(data)?data:[]).forEach(row => {
+                const mt = String(row?.[1] || row?.[0] || '');
+                const mm = mt.match(/MOIT\s*(\d+)/i);
+                if(!mm) return;
+                const moit = parseInt(mm[1],10);
+                const f = {title:String(row?.[2]||''), desc:String(row?.[3]||''), url:String(row?.[4]||'')};
+                if(!f.url) return;
+                (itaDetailedFileIndex[moit] ||= []).push(f);
+            });
+        }
+        function itaKeys(t) {
+            const keys=['บันทึก','แบบฟอร์ม','รายงาน','ประกาศ','หนังสือ','ความเสี่ยง','ร้องเรียน','สินบน','เรี่ยไร','ของขวัญ','ล่วงละเมิด','พอเพียง','ปฏิญญา','ครอบครัว','สขร','งบลงทุน','งบดำเนินงาน'];
+            return keys.filter(k => t.includes(k));
+        }
+        function guessItaFiles(moit,title) {
+            const keys=itaKeys(title);
+            if(!keys.length) return [];
+            return (itaDetailedFileIndex[moit]||[]).filter(f => keys.some(k => (f.title+' '+f.desc).includes(k)));
+        }
+        function copyITADeepLink(id) {
+            const url=location.origin+location.pathname+'#'+id;
+            if(navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(url).then(()=>alert('คัดลอก URL แล้ว\n'+url));
+            else {
+                const t=document.createElement('textarea'); t.value=url; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); alert('คัดลอก URL แล้ว\n'+url);
+            }
+        }
+        function openITAPreview(url,title,subtitle) {
+            const body=document.getElementById('itaPreviewBody');
+            const ext=(url.split('?')[0].split('.').pop()||'').toLowerCase();
+            document.getElementById('itaPreviewTitle').innerText=title||'เอกสารหลักฐาน ITA';
+            document.getElementById('itaPreviewSubtitle').innerText=subtitle||'';
+            document.getElementById('itaOpenFileBtn').href=url;
+            document.getElementById('itaDownloadFileBtn').href=url;
+            if(ext==='pdf') body.innerHTML='<iframe src="'+itaEsc(url)+'" style="width:100%;height:72vh;border:0;background:white;"></iframe>';
+            else if(['png','jpg','jpeg','webp','gif'].includes(ext)) body.innerHTML='<img src="'+itaEsc(url)+'" class="img-fluid rounded shadow-sm" style="max-height:72vh;">';
+            else body.innerHTML='<div class="p-5"><i class="fas fa-file-arrow-down fa-4x text-success mb-3"></i><h5>ไฟล์ชนิดนี้ Preview ในเบราว์เซอร์ไม่ได้โดยตรง</h5><p class="text-muted">กด “เปิดไฟล์” หรือ “ดาวน์โหลด” ด้านล่าง</p></div>';
+            new bootstrap.Modal(document.getElementById('itaPreviewModal')).show();
+        }
+        function renderFullItaDetails(round) {
+            const root=document.getElementById('itaDetailedContainer'); if(!root) return;
+            let h='';
+            ITA_FULL_MASTER.forEach(group => {
+                let body='';
+                group.moits.forEach(m => {
+                    body += '<div class="ita-moit-card"><div class="ita-moit-title">'+itaEsc(m.title)+'</div>';
+                    m.items.forEach(it => {
+                        const id=itaSlug(round,m.moit,it.code);
+                        const files=guessItaFiles(m.moit,it.title);
+                        body += '<div class="ita-criterion level-'+it.level+'" id="'+id+'"><div class="ita-criterion-title">'+itaEsc(it.title)+'</div>';
+                        body += '<div class="mt-2"><button class="btn btn-sm btn-outline-secondary" onclick="copyITADeepLink(\''+id+'\')"><i class="fas fa-link me-1"></i> คัดลอก URL ข้อนี้</button></div>';
+                        if(files.length) {
+                            body += '<div class="ita-files">';
+                            files.forEach(f => {
+                                body += '<div class="ita-file-row"><div class="ita-file-name"><i class="fas fa-file-lines text-success me-2"></i>'+itaEsc(f.title||'เอกสารหลักฐาน')+'</div>';
+                                body += '<button class="btn btn-sm btn-outline-success ita-preview-btn" data-url="'+encodeURIComponent(f.url)+'" data-title="'+encodeURIComponent(f.title||'เอกสารหลักฐาน')+'" data-subtitle="'+encodeURIComponent(it.title)+'"><i class="fas fa-eye me-1"></i> Preview</button></div>';
+                            });
+                            body += '</div>';
+                        } else body += '<div class="ita-status-wait"><i class="fas fa-triangle-exclamation me-1"></i> รอเพิ่ม/ยืนยันหลักฐาน</div>';
+                        if(m.moit===5 && it.code.startsWith('q2-item')) body += '<div class="ita-admin-note">รายการนี้ให้ Admin แก้ชื่อเดือน/หัวข้อได้ภายหลัง โดย URL ไม่เปลี่ยน</div>';
+                        body += '</div>';
+                    });
+                    body += '</div>';
+                });
+                if(body) h += '<section class="ita-indicator-group"><div class="ita-indicator-head"><i class="fas fa-layer-group me-2"></i>'+itaEsc(group.indicator)+'</div>'+body+'</section>';
+            });
+            root.innerHTML=h;
+            root.querySelectorAll('.ita-preview-btn').forEach(btn => btn.addEventListener('click',()=>openITAPreview(decodeURIComponent(btn.dataset.url),decodeURIComponent(btn.dataset.title),decodeURIComponent(btn.dataset.subtitle))));
+            setTimeout(handleITADeepLink,50);
+        }
+        function handleITADeepLink() {
+            const hash=location.hash.replace(/^#/,'');
+            const m=hash.match(/^ita-2569-r([12])-moit(\d+)-(.+)$/);
+            if(!m) return;
+            const round=m[1]==='2'?'12m':'6m';
+            if(typeof setITARound==='function' && typeof currentITARound!=='undefined' && currentITARound!==round) setITARound(round);
+            const el=document.getElementById(hash);
+            if(el) {
+                document.querySelectorAll('.ita-criterion.flash').forEach(x=>x.classList.remove('flash'));
+                el.classList.add('flash'); el.scrollIntoView({behavior:'smooth',block:'center'});
+                setTimeout(()=>el.classList.remove('flash'),2500);
+            }
+        }
+        window.addEventListener('hashchange',handleITADeepLink);
+
+        const __oldShowITA = (typeof showITA==='function') ? showITA : null;
+        if(__oldShowITA) {
+            showITA = function(data) {
+                buildItaFileIndex(data);
+                const r=__oldShowITA(data);
+                renderFullItaDetails(typeof currentITARound!=='undefined'?currentITARound:'12m');
+                return r;
+            };
+        }
+        const __oldSetITARound = (typeof setITARound==='function') ? setITARound : null;
+        if(__oldSetITARound) {
+            setITARound = function(round) {
+                const r=__oldSetITARound(round);
+                renderFullItaDetails(round);
+                return r;
+            };
+        }
+
+    </script>
     <script>
         // ==========================================
         // 🚀 Backend API — Cloudflare Worker + D1
@@ -469,9 +602,12 @@
                 } else if (hash === '#contact-section') {
                     scrollToContact(); // ถ้าลิงก์คือติดต่อเรา ให้เลื่อนจอลงไป
                 } else if (hash && hash.length > 1) {
-                    var pageId = hash.substring(1); // ตัดตัว # ออก
-                    if (document.getElementById(pageId)) {
-                        showPage(pageId); // สั่งเปิดหน้าตามลิงก์
+                    var pageId = hash.substring(1);
+                    if (pageId.indexOf('ita-2569-') === 0) {
+                        showPage('ita-page');
+                        setTimeout(handleITADeepLink, 200);
+                    } else if (document.getElementById(pageId)) {
+                        showPage(pageId);
                     }
                 }
             }, 600); // หน่วงเวลาเล็กน้อยรอให้หน้าเว็บสร้างเสร็จก่อน
