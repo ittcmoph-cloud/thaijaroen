@@ -1,12 +1,24 @@
-import { route, success, error } from './router.js';
+import { route, error } from './router.js';
 
 const ALLOWED_METHODS = 'GET,POST,OPTIONS';
+const PRODUCTION_ORIGIN = 'https://ittcmoph-cloud.github.io';
+
+function allowedOrigin(request, env) {
+  const origin = request.headers.get('Origin');
+  if (!origin) return PRODUCTION_ORIGIN;
+  const configured = [
+    env.ALLOWED_ORIGIN,
+    ...(env.ALLOWED_DEV_ORIGINS || '').split(',')
+  ].filter(Boolean).map(v => v.trim());
+  if (configured.includes(origin)) return origin;
+  if (origin === PRODUCTION_ORIGIN) return origin;
+  return '';
+}
 
 function corsHeaders(request, env) {
-  const origin = request.headers.get('Origin');
-  const allowed = env.ALLOWED_ORIGIN || '*';
+  const origin = allowedOrigin(request, env);
   return {
-    'access-control-allow-origin': allowed === '*' ? '*' : (origin === allowed ? origin : allowed),
+    ...(origin ? { 'access-control-allow-origin': origin } : {}),
     'access-control-allow-methods': ALLOWED_METHODS,
     'access-control-allow-headers': 'Content-Type',
     'access-control-max-age': '86400',
