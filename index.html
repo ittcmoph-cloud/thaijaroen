@@ -122,7 +122,14 @@
         .ita-status-wait{color:#a16207;font-size:.9rem;margin-top:8px}
         .ita-admin-note{font-size:.82rem;color:#64748b;margin-top:6px}
 
-    </style>
+    
+    /* V3.2 page isolation fix */
+    #ita-admin-manager-page ~ .admin-floating-section,
+    body:has(#ita-admin-manager-page[style*="display: block"]) .admin-floating-section {
+        display:none !important;
+    }
+
+</style>
 </head>
 <body>
 
@@ -505,7 +512,7 @@
       </div>
     </div>
   </div>
-</div><div class="col-md-6"><div class="card h-100 shadow-sm border-0 rounded-3"><div class="card-body text-center p-4"><i class="fab fa-google-drive fa-4x text-primary mb-3"></i><h5 class="fw-bold">จัดการไฟล์ (Google Drive)</h5><a href="https://drive.google.com/" target="_blank" class="btn btn-outline-primary rounded-pill px-4 mt-2"><i class="fas fa-folder-open"></i> เปิด Google Drive</a></div></div></div></div></div></div>
+</div><div class="col-md-6"><div class="card h-100 shadow-sm border-0 rounded-3"><div class="card-body text-center p-4" admin-floating-section"><i class="fab fa-google-drive fa-4x text-primary mb-3"></i><h5 class="fw-bold">จัดการไฟล์ (Google Drive)</h5><a href="https://drive.google.com/" target="_blank" class="btn btn-outline-primary rounded-pill px-4 mt-2"><i class="fas fa-folder-open"></i> เปิด Google Drive</a></div></div></div></div></div></div>
     
     <div class="modal fade" id="complaintModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content border-0 shadow-lg"><div class="modal-header bg-success text-white"><h5 class="modal-title fw-bold"><span id="comp-title">ร้องเรียน</span></h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body p-4 bg-light"><form id="complaintForm"><input type="hidden" id="compType" name="type"><div class="mb-3"><input type="text" class="form-control shadow-sm" id="compTopic" placeholder="หัวข้อเรื่อง" required></div><div class="mb-3"><textarea class="form-control shadow-sm" id="compDetail" rows="5" placeholder="รายละเอียด" required></textarea></div><div class="row g-2"><div class="col-md-6 mb-3"><input type="text" class="form-control form-control-sm" id="compName" placeholder="ชื่อผู้แจ้ง"></div><div class="col-md-6 mb-3"><input type="text" class="form-control form-control-sm" id="compContact" placeholder="เบอร์โทร"></div></div></form></div><div class="modal-footer bg-white"><button type="button" class="btn btn-light" data-bs-dismiss="modal">ยกเลิก</button><button type="button" class="btn btn-success px-4" onclick="submitComplaint()"><span id="btn-spin" class="spinner-border spinner-border-sm d-none me-2"></span> ยืนยันส่งข้อมูล</button></div></div></div></div>
     <div class="modal fade" id="announcementModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content border-0 bg-transparent"><div class="modal-header border-0 d-flex justify-content-end pb-0" style="position: absolute; right: 0; z-index: 10;"><button type="button" class="btn-close btn-close-white bg-dark rounded-circle p-2 m-2" data-bs-dismiss="modal" style="opacity: 0.8;"></button></div><div class="modal-body p-0 text-center relative"><img id="popupImage" src="" class="img-fluid rounded-3 shadow-lg" style="max-height: 85vh; border: 4px solid white;"></div></div></div></div>
@@ -780,12 +787,39 @@
       
         window.onscroll = function () { var btn = document.getElementById("btn-back-to-top"); if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) { btn.style.display = "block"; } else { btn.style.display = "none"; } };
 
-        function showPage(pageId) { 
-            var pages = ['home-page', 'about-page', 'exec-page', 'ita-page', 'downloads-page', 'admin-login-page', 'admin-dashboard-page', 'ita-admin-manager-page', 'news-detail-page', 'complaint-report-page'];
-            for (var i = 0; i < pages.length; i++) { 
-                var el = document.getElementById(pages[i]);
-                if(el) el.style.display = 'none'; 
-            } 
+        function showPage(pageId) {
+    var pageIds = [
+        'home-page',
+        'about-page',
+        'systems-page',
+        'executive-page',
+        'ita-page',
+        'complaint-page',
+        'downloads-page',
+        'contact-page',
+        'admin-login-page',
+        'admin-dashboard-page',
+        'ita-admin-manager-page',
+        'news-detail-page'
+    ];
+
+    pageIds.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+
+    // กัน section เก่าที่อาจลอยอยู่เพราะไม่ได้ถูกครอบใน page container
+    document.querySelectorAll(
+        '.admin-floating-section, .legacy-admin-card, [data-admin-only-page]'
+    ).forEach(function(el) {
+        el.style.display = 'none';
+    });
+
+    var target = document.getElementById(pageId);
+    if (target) target.style.display = 'block';
+
+    window.scrollTo({ top: 0, behavior: 'auto' });
+} 
             var target = document.getElementById(pageId);
             if(target) target.style.display = 'block'; 
             
