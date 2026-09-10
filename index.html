@@ -1870,5 +1870,74 @@ if (typeof escapeITAHtml !== 'function') {
 }
 </script>
 
+
+
+<!-- ===== V3.5 ROBUST ITA DEEP LINK PATCH ===== -->
+<script>
+(function () {
+  function itaDeepLinkTarget() {
+    var raw = (window.location.hash || '').replace(/^#/, '');
+    if (!raw) {
+      try { raw = new URLSearchParams(window.location.search).get('ita') || ''; } catch(e) {}
+    }
+    return raw;
+  }
+
+  window.copyITALink = function(anchorId) {
+    var url = window.location.origin + window.location.pathname + '?ita=' + encodeURIComponent(anchorId) + '#' + anchorId;
+    if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
+      navigator.clipboard.writeText(url).then(function(){
+        alert('คัดลอก URL ข้อนี้แล้ว');
+      }).catch(function(){ prompt('คัดลอก URL นี้', url); });
+    } else {
+      prompt('คัดลอก URL นี้', url);
+    }
+  };
+
+  window.openITAAnchorFromHash = function() {
+    var targetId = itaDeepLinkTarget();
+    if (targetId.indexOf('ita-2569-r2-moit') !== 0) return;
+
+    if (typeof showPage === 'function') showPage('ita-page');
+    if (typeof currentITARound !== 'undefined') currentITARound = '12m';
+    if (typeof setITARound === 'function') setITARound('12m');
+
+    var tries = 0;
+    function seek() {
+      tries++;
+      var id = targetId;
+      if (typeof resolveOldITASequentialAnchor === 'function') id = resolveOldITASequentialAnchor(id);
+      var target = document.getElementById(id);
+      if (!target) {
+        if (tries < 30) return setTimeout(seek, 200);
+        console.warn('ITA deep link target not found:', id);
+        return;
+      }
+      var collapse = target.closest('.accordion-collapse');
+      if (collapse && window.bootstrap && bootstrap.Collapse) {
+        bootstrap.Collapse.getOrCreateInstance(collapse, {toggle:false}).show();
+      }
+      setTimeout(function(){
+        target.scrollIntoView({behavior:'smooth', block:'center'});
+        target.style.outline = '3px solid #ffc107';
+        target.style.backgroundColor = '#fff8db';
+        setTimeout(function(){
+          target.style.outline = '';
+          target.style.backgroundColor = '';
+        }, 3000);
+      }, 250);
+    }
+    seek();
+  };
+
+  window.addEventListener('hashchange', function(){ setTimeout(window.openITAAnchorFromHash, 50); });
+  window.addEventListener('load', function(){
+    if (itaDeepLinkTarget().indexOf('ita-2569-r2-moit') === 0) {
+      setTimeout(window.openITAAnchorFromHash, 900);
+    }
+  });
+})();
+</script>
+<!-- ===== END V3.5 PATCH ===== -->
 </body>
 </html>
