@@ -318,7 +318,83 @@
             </div>
         </div>
     </div>
-    <div id="downloads-page" style="display: none;"><div class="container my-5"><div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3"><h3 class="text-success fw-bold m-0"><i class="fas fa-cloud-download-alt me-2"></i> ดาวน์โหลดแบบฟอร์ม</h3><button class="btn btn-outline-secondary rounded-pill" onclick="showPage('home-page')"><i class="fas fa-arrow-left"></i> กลับ</button></div><div class="card shadow border-0 rounded-3"><div class="card-body p-0"><div id="downloads-container"><div class="text-center text-muted p-5"><div class="spinner-border spinner-border-sm"></div></div></div></div></div></div></div>
+    
+<div id="ita-admin-manager-page" style="display:none; background:#f4f6f9; min-height:80vh;">
+  <div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4 pb-2 border-bottom">
+      <div>
+        <h3 class="fw-bold mb-1"><i class="fas fa-folder-tree text-success me-2"></i>จัดการหลักฐาน ITA V2</h3>
+        <div class="text-muted">Manual Upload — เลือกข้อด้วยตนเองก่อนอัปโหลดทุกครั้ง</div>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-secondary" onclick="showPage('admin-dashboard-page')"><i class="fas fa-arrow-left me-1"></i> กลับ Dashboard</button>
+        <button class="btn btn-outline-success" onclick="refreshITAEvidenceManager()"><i class="fas fa-rotate me-1"></i> รีเฟรช</button>
+      </div>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+      <div class="card-body p-4">
+        <div class="alert alert-success mb-4">
+          <strong>ขั้นตอน:</strong> ตัวชี้วัด → MOIT → ข้อ/ข้อย่อย → ตรวจชื่อเกณฑ์ → เลือกไฟล์ → อัปโหลด
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-3">
+            <label class="form-label fw-bold">ปีงบประมาณ</label>
+            <select class="form-select" id="itaMgrYear">
+              <option value="2569">2569</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-bold">รอบ</label>
+            <select class="form-select" id="itaMgrRound">
+              <option value="r2" selected>รอบ 12 เดือน</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-bold">MOIT</label>
+            <select class="form-select" id="itaMgrMoit" onchange="populateITAManagerCriteria()">
+              <option value="">— เลือก MOIT —</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-bold">ข้อ / ข้อย่อย</label>
+            <select class="form-select" id="itaMgrCriterion" onchange="updateITAManagerTarget()">
+              <option value="">— เลือกข้อ —</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="itaMgrTargetBox" class="alert alert-warning mt-4 mb-0">
+          กรุณาเลือก MOIT และข้อที่ต้องการอัปโหลดหลักฐาน
+        </div>
+
+        <div class="mt-3 d-flex flex-wrap gap-2">
+          <button id="itaMgrUploadBtn" class="btn btn-success" disabled onclick="uploadFromITAManager()">
+            <i class="fas fa-cloud-arrow-up me-1"></i> เพิ่มหลักฐานในข้อนี้
+          </button>
+          <button id="itaMgrGoPublicBtn" class="btn btn-outline-secondary" disabled onclick="openSelectedCriterionPublic()">
+            <i class="fas fa-up-right-from-square me-1"></i> เปิดหน้าข้อนี้
+          </button>
+          <button id="itaMgrCopyBtn" class="btn btn-outline-secondary" disabled onclick="copySelectedCriterionURL()">
+            <i class="fas fa-link me-1"></i> คัดลอก URL ข้อนี้
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4">
+      <div class="card-header bg-white py-3">
+        <h5 class="fw-bold mb-0"><i class="fas fa-paperclip text-success me-2"></i>หลักฐานที่อัปโหลดผ่าน V2</h5>
+      </div>
+      <div class="card-body p-0">
+        <div id="itaMgrEvidenceList" class="p-3 text-muted">เลือก MOIT และข้อเพื่อดูหลักฐาน</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="downloads-page" style="display: none;"><div class="container my-5"><div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3"><h3 class="text-success fw-bold m-0"><i class="fas fa-cloud-download-alt me-2"></i> ดาวน์โหลดแบบฟอร์ม</h3><button class="btn btn-outline-secondary rounded-pill" onclick="showPage('home-page')"><i class="fas fa-arrow-left"></i> กลับ</button></div><div class="card shadow border-0 rounded-3"><div class="card-body p-0"><div id="downloads-container"><div class="text-center text-muted p-5"><div class="spinner-border spinner-border-sm"></div></div></div></div></div></div></div>
     <div id="complaint-report-page" style="display: none; background-color: #f4f6f9; min-height: 80vh; padding-bottom: 50px;">
         <div class="bg-primary text-white py-4 mb-4 shadow-sm" style="background: linear-gradient(90deg, #1e3a8a 0%, #1e40af 100%);">
             <div class="container d-flex justify-content-between align-items-center">
@@ -382,7 +458,54 @@
         </div>
     </div>
     <div id="admin-login-page" style="display: none; background: #e9ecef; min-height: 80vh;"><div class="container py-5"><div class="row justify-content-center"><div class="col-md-5"><div class="admin-box"><div class="admin-header bg-dark p-4 text-center text-white"><i class="fas fa-lock fa-3x mb-3 text-warning"></i><h4 class="m-0">ระบบจัดการหลังบ้าน</h4></div><div class="p-4"><input type="password" id="adminPass" class="form-control form-control-lg mb-3" placeholder="••••••••"><button class="btn btn-success w-100 btn-lg" onclick="doAdminLogin()"><span id="login-spin" class="spinner-border spinner-border-sm d-none"></span> เข้าสู่ระบบ</button><div class="text-center mt-3"><a href="javascript:void(0)" onclick="showPage('home-page')" class="text-muted text-decoration-none"><i class="fas fa-arrow-left"></i> กลับหน้าหลัก</a></div></div></div></div></div></div></div>
-    <div id="admin-dashboard-page" style="display: none; background: #f4f6f9; min-height: 80vh;"><div class="container py-5"><div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom"><h3 class="fw-bold text-dark"><i class="fas fa-cogs text-success me-2"></i> Admin Dashboard</h3><button class="btn btn-danger btn-sm" onclick="showPage('home-page'); document.getElementById('adminPass').value='';"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</button></div><div class="row g-4"><div class="col-md-6"><div class="card h-100 shadow-sm border-0 rounded-3"><div class="card-body text-center p-4"><i class="fas fa-table fa-4x text-success mb-3"></i><h5 class="fw-bold">จัดการฐานข้อมูล (Google Sheet)</h5><a id="btn-open-sheet" href="#" target="_blank" class="btn btn-outline-success rounded-pill px-4 mt-2"><i class="fas fa-external-link-alt"></i> เปิด Google Sheet</a></div></div></div><div class="col-md-6"><div class="card h-100 shadow-sm border-0 rounded-3"><div class="card-body text-center p-4"><i class="fab fa-google-drive fa-4x text-primary mb-3"></i><h5 class="fw-bold">จัดการไฟล์ (Google Drive)</h5><a href="https://drive.google.com/" target="_blank" class="btn btn-outline-primary rounded-pill px-4 mt-2"><i class="fas fa-folder-open"></i> เปิด Google Drive</a></div></div></div></div></div></div>
+    <div id="admin-dashboard-page" style="display: none; background: #f4f6f9; min-height: 80vh;">
+  <div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+      <h3 class="fw-bold text-dark"><i class="fas fa-cogs text-success me-2"></i> Admin Dashboard</h3>
+      <button class="btn btn-danger btn-sm" onclick="logoutAdminV2()"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</button>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0 rounded-3">
+          <div class="card-body text-center p-4">
+            <i class="fas fa-table fa-4x text-success mb-3"></i>
+            <h5 class="fw-bold">จัดการฐานข้อมูล</h5>
+            <p class="text-muted small">เปิดฐานข้อมูลเดิม</p>
+            <a id="btn-open-sheet" href="#" target="_blank" class="btn btn-outline-success rounded-pill px-4 mt-2">
+              <i class="fas fa-external-link-alt"></i> เปิด Google Sheet
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0 rounded-3">
+          <div class="card-body text-center p-4">
+            <i class="fab fa-google-drive fa-4x text-primary mb-3"></i>
+            <h5 class="fw-bold">จัดการไฟล์เดิม</h5>
+            <p class="text-muted small">ใช้สำหรับเอกสารเดิมเท่านั้น</p>
+            <a href="https://drive.google.com/" target="_blank" class="btn btn-outline-primary rounded-pill px-4 mt-2">
+              <i class="fas fa-folder-open"></i> เปิด Google Drive
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0 rounded-3 border border-warning">
+          <div class="card-body text-center p-4">
+            <i class="fas fa-folder-tree fa-4x text-warning mb-3"></i>
+            <h5 class="fw-bold">จัดการหลักฐาน ITA V2</h5>
+            <p class="text-muted small">เลือก MOIT และข้อก่อนอัปโหลด ป้องกันไฟล์ผิดหัวข้อ</p>
+            <button class="btn btn-warning rounded-pill px-4 mt-2 fw-bold" onclick="openITAEvidenceManager()">
+              <i class="fas fa-cloud-arrow-up me-1"></i> เปิดระบบหลักฐาน
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="col-md-6"><div class="card h-100 shadow-sm border-0 rounded-3"><div class="card-body text-center p-4"><i class="fab fa-google-drive fa-4x text-primary mb-3"></i><h5 class="fw-bold">จัดการไฟล์ (Google Drive)</h5><a href="https://drive.google.com/" target="_blank" class="btn btn-outline-primary rounded-pill px-4 mt-2"><i class="fas fa-folder-open"></i> เปิด Google Drive</a></div></div></div></div></div></div>
     
     <div class="modal fade" id="complaintModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content border-0 shadow-lg"><div class="modal-header bg-success text-white"><h5 class="modal-title fw-bold"><span id="comp-title">ร้องเรียน</span></h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body p-4 bg-light"><form id="complaintForm"><input type="hidden" id="compType" name="type"><div class="mb-3"><input type="text" class="form-control shadow-sm" id="compTopic" placeholder="หัวข้อเรื่อง" required></div><div class="mb-3"><textarea class="form-control shadow-sm" id="compDetail" rows="5" placeholder="รายละเอียด" required></textarea></div><div class="row g-2"><div class="col-md-6 mb-3"><input type="text" class="form-control form-control-sm" id="compName" placeholder="ชื่อผู้แจ้ง"></div><div class="col-md-6 mb-3"><input type="text" class="form-control form-control-sm" id="compContact" placeholder="เบอร์โทร"></div></div></form></div><div class="modal-footer bg-white"><button type="button" class="btn btn-light" data-bs-dismiss="modal">ยกเลิก</button><button type="button" class="btn btn-success px-4" onclick="submitComplaint()"><span id="btn-spin" class="spinner-border spinner-border-sm d-none me-2"></span> ยืนยันส่งข้อมูล</button></div></div></div></div>
     <div class="modal fade" id="announcementModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content border-0 bg-transparent"><div class="modal-header border-0 d-flex justify-content-end pb-0" style="position: absolute; right: 0; z-index: 10;"><button type="button" class="btn-close btn-close-white bg-dark rounded-circle p-2 m-2" data-bs-dismiss="modal" style="opacity: 0.8;"></button></div><div class="modal-body p-0 text-center relative"><img id="popupImage" src="" class="img-fluid rounded-3 shadow-lg" style="max-height: 85vh; border: 4px solid white;"></div></div></div></div>
@@ -658,7 +781,7 @@
         window.onscroll = function () { var btn = document.getElementById("btn-back-to-top"); if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) { btn.style.display = "block"; } else { btn.style.display = "none"; } };
 
         function showPage(pageId) { 
-            var pages = ['home-page', 'about-page', 'exec-page', 'ita-page', 'downloads-page', 'admin-login-page', 'admin-dashboard-page', 'news-detail-page', 'complaint-report-page'];
+            var pages = ['home-page', 'about-page', 'exec-page', 'ita-page', 'downloads-page', 'admin-login-page', 'admin-dashboard-page', 'ita-admin-manager-page', 'news-detail-page', 'complaint-report-page'];
             for (var i = 0; i < pages.length; i++) { 
                 var el = document.getElementById(pages[i]);
                 if(el) el.style.display = 'none'; 
@@ -1520,6 +1643,198 @@
           }
       }
     </script>
+
+
+<script>
+function logoutAdminV2() {
+  sessionStorage.removeItem('itaAdminPass');
+  itaAdminUnlocked = false;
+  var p = document.getElementById('adminPass');
+  if (p) p.value = '';
+  showPage('home-page');
+}
+
+function openITAEvidenceManager() {
+  if (!sessionStorage.getItem('itaAdminPass')) {
+    alert('กรุณาเข้าสู่ระบบ Admin ก่อน');
+    showPage('admin-login-page');
+    return;
+  }
+  itaAdminUnlocked = true;
+  showPage('ita-admin-manager-page');
+  populateITAManagerMoits();
+  refreshITAEvidenceManager();
+}
+
+function populateITAManagerMoits() {
+  var select = document.getElementById('itaMgrMoit');
+  if (!select) return;
+  var current = select.value;
+  var moits = Object.keys(ITA_MASTER_12M).map(Number).sort(function(a,b){ return a-b; });
+  select.innerHTML = '<option value="">— เลือก MOIT —</option>';
+  moits.forEach(function(moit) {
+    var opt = document.createElement('option');
+    opt.value = moit;
+    opt.textContent = 'MOIT ' + moit + ' — ' + (ITA_INDICATOR_BY_MOIT[moit] || '');
+    select.appendChild(opt);
+  });
+  if (current && moits.includes(Number(current))) select.value = current;
+}
+
+function populateITAManagerCriteria() {
+  var moit = Number(document.getElementById('itaMgrMoit').value || 0);
+  var select = document.getElementById('itaMgrCriterion');
+  select.innerHTML = '<option value="">— เลือกข้อ —</option>';
+
+  var criteria = ITA_MASTER_12M[String(moit)] || [];
+  criteria.forEach(function(c, idx) {
+    if (isMOITTitleCriterion(c.title)) return;
+    var meta = getCriterionMeta(criteria, idx);
+    var opt = document.createElement('option');
+    opt.value = meta.code;
+    opt.textContent = meta.label + ' — ' + String(c.title).replace(/^\d+(?:\.\d+)*\.?\s*/, '').slice(0, 110);
+    select.appendChild(opt);
+  });
+
+  updateITAManagerTarget();
+}
+
+function getITAManagerSelection() {
+  var moit = Number(document.getElementById('itaMgrMoit').value || 0);
+  var code = document.getElementById('itaMgrCriterion').value || '';
+  var found = moit && code ? getCriterionByCode(moit, code) : null;
+  return { moit:moit, code:code, found:found };
+}
+
+function updateITAManagerTarget() {
+  var s = getITAManagerSelection();
+  var box = document.getElementById('itaMgrTargetBox');
+  var uploadBtn = document.getElementById('itaMgrUploadBtn');
+  var goBtn = document.getElementById('itaMgrGoPublicBtn');
+  var copyBtn = document.getElementById('itaMgrCopyBtn');
+
+  if (!s.found) {
+    box.className = 'alert alert-warning mt-4 mb-0';
+    box.innerHTML = 'กรุณาเลือก MOIT และข้อที่ต้องการอัปโหลดหลักฐาน';
+    uploadBtn.disabled = goBtn.disabled = copyBtn.disabled = true;
+    renderITAManagerEvidenceList();
+    return;
+  }
+
+  box.className = 'alert alert-success mt-4 mb-0';
+  box.innerHTML =
+    '<div class="small fw-bold mb-1">' + itaEsc(ITA_INDICATOR_BY_MOIT[s.moit] || '') + '</div>' +
+    '<div class="fw-bold fs-5">MOIT ' + s.moit + ' → ' + itaEsc(s.found.meta.label) + '</div>' +
+    '<div class="mt-1">' + itaEsc(s.found.criterion.title) + '</div>' +
+    '<hr class="my-2"><div class="small"><strong>ตรวจสอบให้แน่ใจก่อน Upload:</strong> ไฟล์จะถูกล็อกกับข้อนี้โดยตรง</div>';
+
+  uploadBtn.disabled = goBtn.disabled = copyBtn.disabled = false;
+  renderITAManagerEvidenceList();
+}
+
+function uploadFromITAManager() {
+  var s = getITAManagerSelection();
+  if (!s.found) return alert('กรุณาเลือก MOIT และข้อก่อน');
+  openITAEvidenceUpload(s.moit, s.code);
+}
+
+function selectedCriterionAnchor() {
+  var s = getITAManagerSelection();
+  if (!s.found) return '';
+  return 'ita-2569-r2-moit' + s.moit + '-' + s.code;
+}
+
+function openSelectedCriterionPublic() {
+  var id = selectedCriterionAnchor();
+  if (!id) return;
+  location.hash = id;
+  showPage('ita-page');
+  setTimeout(handleITADeepLink, 150);
+}
+
+function copySelectedCriterionURL() {
+  var id = selectedCriterionAnchor();
+  if (!id) return;
+  copyITALink(id);
+}
+
+async function refreshITAEvidenceManager() {
+  await loadITAManualEvidence();
+  renderITAManagerEvidenceList();
+}
+
+function renderITAManagerEvidenceList() {
+  var root = document.getElementById('itaMgrEvidenceList');
+  if (!root) return;
+  var s = getITAManagerSelection();
+  if (!s.found) {
+    root.innerHTML = '<div class="text-muted p-3">เลือก MOIT และข้อเพื่อดูหลักฐาน</div>';
+    return;
+  }
+
+  var items = getManualEvidenceForCriterion(s.moit, s.code);
+  if (!items.length) {
+    root.innerHTML = '<div class="alert alert-warning m-2 mb-0"><i class="fas fa-triangle-exclamation me-2"></i>ยังไม่มีหลักฐานในข้อนี้</div>';
+    return;
+  }
+
+  var h = '<div class="list-group list-group-flush">';
+  items.forEach(function(e) {
+    h += '<div class="list-group-item p-3">';
+    h += '<div class="d-flex flex-wrap justify-content-between gap-3">';
+    h += '<div class="flex-grow-1"><div class="fw-bold"><i class="fas fa-file-lines text-success me-2"></i>' + itaEsc(e.original_name || 'เอกสารหลักฐาน') + '</div>';
+    if (e.description) h += '<div class="small text-muted mt-1">' + itaEsc(e.description) + '</div>';
+    h += '<div class="small text-muted mt-1">อัปโหลด: ' + itaEsc(e.uploaded_at || '-') + '</div></div>';
+    h += '<div class="d-flex flex-wrap gap-2 align-items-start">';
+    h += '<button class="btn btn-sm btn-outline-success ita-mgr-preview" data-url="' + encodeURIComponent(e.public_url || '') + '" data-title="' + encodeURIComponent(e.original_name || 'เอกสารหลักฐาน') + '"><i class="fas fa-eye me-1"></i> Preview</button>';
+    h += '<a class="btn btn-sm btn-success" href="' + itaEsc(e.public_url || '#') + '" target="_blank"><i class="fas fa-download me-1"></i> เปิด/ดาวน์โหลด</a>';
+    h += '<button class="btn btn-sm btn-outline-danger" onclick="deleteITAEvidenceFromManager(' + Number(e.id) + ')"><i class="fas fa-trash me-1"></i> ลบ</button>';
+    h += '</div></div></div>';
+  });
+  h += '</div>';
+  root.innerHTML = h;
+
+  root.querySelectorAll('.ita-mgr-preview').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      openITAPreview(
+        decodeURIComponent(btn.dataset.url || ''),
+        decodeURIComponent(btn.dataset.title || ''),
+        s.found.criterion.title
+      );
+    });
+  });
+}
+
+async function deleteITAEvidenceFromManager(id) {
+  if (!confirm('ยืนยันลบหลักฐานนี้ออกจาก GitHub และหน้าเว็บหรือไม่?')) return;
+  var pass = sessionStorage.getItem('itaAdminPass') || '';
+  try {
+    var r = await fetch(API_URL + '?action=deleteITAEvidence', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ id:Number(id), password:pass })
+    });
+    var j = await r.json();
+    if (!r.ok || j.status !== 'success') throw new Error(j.message || 'ลบไม่สำเร็จ');
+    await loadITAManualEvidence();
+    renderITAManagerEvidenceList();
+    alert('ลบหลักฐานเรียบร้อย');
+  } catch (err) {
+    alert('ลบไม่สำเร็จ: ' + (err.message || err));
+  }
+}
+
+// เมื่ออัปโหลดสำเร็จและ modal ปิด ให้หน้า Manager รีเฟรชรายการด้วย
+document.addEventListener('shown.bs.modal', function(e) {
+  if (e.target && e.target.id === 'itaEvidenceUploadModal') {
+    var s = getITAManagerSelection();
+    if (s.found) {
+      document.getElementById('itaUploadMoit').value = s.moit;
+      document.getElementById('itaUploadCriterionCode').value = s.code;
+    }
+  }
+});
+</script>
 
 </body>
 </html>
