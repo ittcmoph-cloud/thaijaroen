@@ -380,6 +380,15 @@
           <button id="itaMgrCopyBtn" class="btn btn-outline-secondary" disabled onclick="copySelectedCriterionURL()">
             <i class="fas fa-link me-1"></i> คัดลอก URL ข้อนี้
           </button>
+          <button id="itaMgrEditBtn" class="btn btn-outline-primary" disabled onclick="editSelectedITACriterion()">
+            <i class="fas fa-pen me-1"></i> แก้ชื่อหัวข้อ
+          </button>
+          <button id="itaMgrAddChildBtn" class="btn btn-outline-warning" disabled onclick="addChildITACriterion()">
+            <i class="fas fa-plus me-1"></i> เพิ่มข้อย่อย
+          </button>
+          <button id="itaMgrDeleteCriterionBtn" class="btn btn-outline-danger d-none" disabled onclick="deleteSelectedITACriterion()">
+            <i class="fas fa-trash me-1"></i> ลบข้อย่อยนี้
+          </button>
         </div>
       </div>
     </div>
@@ -531,6 +540,40 @@
     </div>
     
     
+
+    <div class="modal fade" id="itaCriterionEditModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title fw-bold"><i class="fas fa-pen-to-square me-2"></i><span id="itaCriterionEditModalTitle">แก้ไขหัวข้อ ITA</span></h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="itaEditMode">
+            <input type="hidden" id="itaEditMoit">
+            <input type="hidden" id="itaEditCode">
+            <input type="hidden" id="itaEditParentCode">
+            <input type="hidden" id="itaEditLevel">
+            <div class="mb-3">
+              <label class="form-label fw-bold">เลขข้อ / ชื่อย่อ</label>
+              <input type="text" class="form-control" id="itaEditLabel" placeholder="เช่น ข้อ 2.1">
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">ชื่อหัวข้อที่จะแสดงบนเว็บไซต์</label>
+              <textarea class="form-control" id="itaEditTitle" rows="4"></textarea>
+            </div>
+            <div class="alert alert-info small mb-0">
+              การแก้ชื่อหัวข้อจะไม่เปลี่ยน URL เดิม เพราะระบบยึด Criterion ID เป็นหลัก
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+            <button class="btn btn-primary" onclick="saveITACriterionFromModal()"><i class="fas fa-save me-1"></i> บันทึก</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="modal fade" id="itaEvidenceUploadModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg">
@@ -751,7 +794,8 @@
             fetchAPI('getBannerData').then(data => { if(data) showBanner(data); });
             fetchAPI('getITAData').then(data => { if(data) showITA(data); });
             itaAdminUnlocked = !!sessionStorage.getItem('itaAdminPass');
-            loadITAManualEvidence(); 
+            loadITAManualEvidence();
+            loadITACriteriaConfig(); 
             fetchAPI('getDownloadsData').then(data => { if(data) showDownloads(data); }); 
             fetchAPI('getAboutData').then(data => { if(data) renderAboutTabsDynamic(data); }); 
             fetchAPI('getVisitorCount').then(data => { if(data) showCount(data); }); 
@@ -1133,6 +1177,42 @@
             });
         }
 
+        var itaCriteriaConfig = [];
+
+        function getSavedCriterionConfig(moit, code) {
+            return itaCriteriaConfig.find(function(r) {
+                return Number(r.moit) === Number(moit) &&
+                       String(r.criterion_code || '') === String(code || '');
+            }) || null;
+        }
+
+        function getEffectiveCriterionTitle(moit, code, fallbackTitle) {
+            var saved = getSavedCriterionConfig(moit, code);
+            return saved && saved.title ? String(saved.title) : String(fallbackTitle || '');
+        }
+
+        function getCustomCriteriaForParent(moit, parentCode) {
+            return itaCriteriaConfig
+                .filter(function(r) {
+                    return Number(r.moit) === Number(moit) &&
+                           Number(r.is_custom || 0) === 1 &&
+                           String(r.parent_code || '') === String(parentCode || '');
+                })
+                .sort(function(a,b) {
+                    return Number(a.sort_order || 0) - Number(b.sort_order || 0) || Number(a.id || 0) - Number(b.id || 0);
+                });
+        }
+
+        async function loadITACriteriaConfig() {
+            var data = await fetchAPI('getITACriteriaConfig', { fiscal_year: 2569, round_code: 'r2' });
+            itaCriteriaConfig = Array.isArray(data) ? data : [];
+            if (typeof currentITARound !== 'undefined' && currentITARound === '12m') renderITARound();
+            if (document.getElementById('ita-admin-manager-page') &&
+                document.getElementById('ita-admin-manager-page').style.display !== 'none') {
+                populateITAManagerCriteria();
+            }
+        }
+
         var itaManualEvidence = [];
         var itaAdminUnlocked = false;
 
@@ -1155,7 +1235,29 @@
             for (var i = 0; i < criteria.length; i++) {
                 if (isMOITTitleCriterion(criteria[i].title)) continue;
                 var meta = getCriterionMeta(criteria, i);
-                if (meta.code === code) return { criterion: criteria[i], meta: meta };
+                if (meta.code === code) {
+                    return {
+                        criterion: {
+                            title: getEffectiveCriterionTitle(moit, code, criteria[i].title),
+                            content: criteria[i].content || ''
+                        },
+                        meta: meta,
+                        isCustom: false
+                    };
+                }
+            }
+            var custom = getSavedCriterionConfig(moit, code);
+            if (custom && Number(custom.is_custom || 0) === 1) {
+                return {
+                    criterion: { title: custom.title || '', content: '' },
+                    meta: {
+                        label: custom.criterion_label || code,
+                        code: custom.criterion_code,
+                        level: Number(custom.level || 2)
+                    },
+                    isCustom: true,
+                    customRow: custom
+                };
             }
             return null;
         }
@@ -1250,6 +1352,54 @@
             return getITAAnchorId(moit, criteria, seq);
         }
 
+
+        function renderCustomCriterionCard(moit, row) {
+            var code = String(row.criterion_code || '');
+            var label = String(row.criterion_label || code);
+            var title = String(row.title || '');
+            var anchorId = 'ita-2569-r2-moit' + moit + '-' + code;
+            var mappedDocs = getManualEvidenceForCriterion(moit, code);
+            var hasFiles = mappedDocs.length > 0;
+            var level = Number(row.level || 2);
+            var levelClass = level >= 3 ? ' border-start border-4 border-info' : ' border-start border-4 border-success-subtle';
+            var html = '';
+
+            html += '<div id="' + anchorId + '" class="ita-document ita-criterion-card bg-white p-3 p-md-4 rounded-4 shadow-sm border mb-3' + levelClass + '" data-moit="' + moit + '" data-criterion-code="' + escapeITAHtml(code) + '">';
+            html += '<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2">';
+            html += '<div class="flex-grow-1">';
+            html += '<div class="small text-success fw-bold mb-1"><i class="fas fa-list-check me-1"></i> MOIT ' + moit + ' • ' + escapeITAHtml(label) + '</div>';
+            html += '<div class="small text-secondary fw-semibold mb-1">' + escapeITAHtml(ITA_INDICATOR_BY_MOIT[moit] || '') + '</div>';
+            html += '<div class="fw-bold text-dark" style="font-size:1.03rem;line-height:1.65;">' + escapeITAHtml(title) + '</div>';
+            html += '</div><div class="d-flex flex-wrap gap-2">';
+            html += '<button class="btn btn-outline-secondary btn-sm rounded-pill" onclick="copyITALink(\'' + anchorId + '\')"><i class="fas fa-link me-1"></i> คัดลอก URL ข้อนี้</button>';
+            if (itaAdminUnlocked) {
+                html += '<button class="btn btn-warning btn-sm rounded-pill" onclick="openITAEvidenceUpload(' + moit + ',\'' + code + '\')"><i class="fas fa-cloud-arrow-up me-1"></i> เพิ่มหลักฐาน</button>';
+            }
+            html += '</div></div>';
+
+            if (hasFiles) {
+                html += '<div class="border-top pt-3"><div class="small fw-bold text-success mb-2"><i class="fas fa-paperclip me-1"></i> หลักฐานที่แนบในหัวข้อนี้</div>';
+                mappedDocs.forEach(function(doc) {
+                    var titleText = doc.original_name || 'เอกสารหลักฐาน';
+                    var rawLink = String(doc.public_url || '').trim();
+                    html += '<div class="border rounded-3 p-3 mb-2 bg-white">';
+                    html += '<div class="fw-semibold text-dark mb-2"><i class="fas fa-file-alt text-success me-2"></i>' + escapeITAHtml(titleText) + '</div>';
+                    if (rawLink) {
+                        var safeTitle = titleText.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+                        var safeUrl = rawLink.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+                        html += '<button class="btn btn-outline-success btn-sm rounded-pill me-2 mb-1" onclick="openITAFileModal(\'' + safeTitle + '\',\'' + safeUrl + '\')"><i class="fas fa-eye me-1"></i> Preview</button>';
+                        html += '<a class="btn btn-success btn-sm rounded-pill me-2 mb-1" target="_blank" href="' + escapeITAHtml(rawLink) + '"><i class="fas fa-download me-1"></i> เปิด/ดาวน์โหลด</a>';
+                    }
+                    html += '</div>';
+                });
+                html += '</div>';
+            } else {
+                html += '<div class="alert alert-warning py-2 px-3 mb-0 small"><i class="fas fa-triangle-exclamation me-2"></i><strong>ยังไม่มีหลักฐาน</strong></div>';
+            }
+            html += '</div>';
+            return html;
+        }
+
         function renderITARound() {
             var div = document.getElementById('itaAccordion');
             if (!div) return;
@@ -1283,12 +1433,13 @@
                         if (isMOITTitleCriterion(criterion.title)) {
                             html += '<div class="mb-3 p-3 rounded-3 bg-success-subtle border border-success-subtle">';
                             html += '<div class="small fw-bold text-success mb-1">' + escapeITAHtml(ITA_INDICATOR_BY_MOIT[moit] || '') + '</div>';
-                            html += '<div class="fw-bold text-dark">' + escapeITAHtml(criterion.title) + '</div>';
+                            html += '<div class="fw-bold text-dark">' + escapeITAHtml(effectiveTitle) + '</div>';
                             html += '</div>';
                             continue;
                         }
 
                         var criterionMeta = getCriterionMeta(criteria, ci);
+                        var effectiveTitle = getEffectiveCriterionTitle(moit, criterionMeta.code, criterion.title);
                         var anchorId = getITAAnchorId(moit, criteria, ci);
                         var mappedDocs = getManualEvidenceForCriterion(moit, criterionMeta.code);
                         var hasFiles = mappedDocs.length > 0;
@@ -1309,7 +1460,7 @@
                         html += '</div>';
                         html += '</div>';
 
-                        if (criterion.content && normalizeITAText(criterion.content) !== normalizeITAText(criterion.title)) {
+                        if (criterion.content && normalizeITAText(criterion.content) !== normalizeITAText(effectiveTitle)) {
                             html += '<div class="small text-secondary bg-light border-start border-4 border-success rounded p-2 mb-3" style="line-height:1.65;">' + escapeITAHtml(criterion.content) + '</div>';
                         }
 
@@ -1347,6 +1498,11 @@
                             html += '<div class="alert alert-warning py-2 px-3 mb-0 small"><i class="fas fa-triangle-exclamation me-2"></i><strong>ยังไม่มีหลักฐาน</strong> — ไฟล์จะแสดงที่นี่เมื่อ Admin เลือกข้อนี้และอัปโหลดด้วยตนเอง</div>';
                         }
                         html += '</div>';
+
+                        var customChildren = getCustomCriteriaForParent(moit, criterionMeta.code);
+                        for (var cci = 0; cci < customChildren.length; cci++) {
+                            html += renderCustomCriterionCard(moit, customChildren[cci]);
+                        }
                     }
 
                     // V2 Manual Upload: ไม่ Auto-map เอกสาร legacy เพื่อป้องกันการผูกผิดข้อ
@@ -1669,6 +1825,104 @@
 
 
 <script>
+
+function editSelectedITACriterion() {
+  var s = getITAManagerSelection();
+  if (!s.found) return;
+  document.getElementById('itaEditMode').value = 'edit';
+  document.getElementById('itaEditMoit').value = s.moit;
+  document.getElementById('itaEditCode').value = s.code;
+  document.getElementById('itaEditParentCode').value = s.found.customRow ? (s.found.customRow.parent_code || '') : '';
+  document.getElementById('itaEditLevel').value = s.found.meta.level || 1;
+  document.getElementById('itaEditLabel').value = s.found.meta.label || '';
+  document.getElementById('itaEditTitle').value = s.found.criterion.title || '';
+  document.getElementById('itaCriterionEditModalTitle').innerText = 'แก้ชื่อหัวข้อ';
+  new bootstrap.Modal(document.getElementById('itaCriterionEditModal')).show();
+}
+
+function addChildITACriterion() {
+  var s = getITAManagerSelection();
+  if (!s.found) return;
+  var children = getCustomCriteriaForParent(s.moit, s.code);
+  var nextNo = children.length + 1;
+  var code = s.code + '-item' + String(nextNo).padStart(2,'0');
+  var parentLabel = String(s.found.meta.label || '').replace(/^ข้อ\s*/, '');
+  var label = 'ข้อ ' + parentLabel + '.' + nextNo;
+
+  document.getElementById('itaEditMode').value = 'add';
+  document.getElementById('itaEditMoit').value = s.moit;
+  document.getElementById('itaEditCode').value = code;
+  document.getElementById('itaEditParentCode').value = s.code;
+  document.getElementById('itaEditLevel').value = Number(s.found.meta.level || 1) + 1;
+  document.getElementById('itaEditLabel').value = label;
+  document.getElementById('itaEditTitle').value = '';
+  document.getElementById('itaCriterionEditModalTitle').innerText = 'เพิ่มข้อย่อย';
+  new bootstrap.Modal(document.getElementById('itaCriterionEditModal')).show();
+}
+
+async function saveITACriterionFromModal() {
+  var pass = sessionStorage.getItem('itaAdminPass') || '';
+  var payload = {
+    password: pass,
+    fiscal_year: 2569,
+    round_code: 'r2',
+    moit: Number(document.getElementById('itaEditMoit').value),
+    criterion_code: document.getElementById('itaEditCode').value,
+    criterion_label: document.getElementById('itaEditLabel').value.trim(),
+    title: document.getElementById('itaEditTitle').value.trim(),
+    parent_code: document.getElementById('itaEditParentCode').value,
+    level: Number(document.getElementById('itaEditLevel').value || 1),
+    sort_order: Date.now(),
+    is_custom: document.getElementById('itaEditMode').value === 'add'
+  };
+  if (!payload.criterion_label || !payload.title) return alert('กรุณากรอกเลขข้อและชื่อหัวข้อ');
+
+  try {
+    var r = await fetch(API_URL + '?action=saveITACriterion', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    var j = await r.json();
+    if (!r.ok || j.status !== 'success') throw new Error(j.message || 'บันทึกไม่สำเร็จ');
+    await loadITACriteriaConfig();
+    populateITAManagerCriteria();
+    document.getElementById('itaMgrCriterion').value = payload.criterion_code;
+    updateITAManagerTarget();
+    bootstrap.Modal.getInstance(document.getElementById('itaCriterionEditModal')).hide();
+    alert('บันทึกหัวข้อเรียบร้อย');
+  } catch (e) {
+    alert('บันทึกไม่สำเร็จ: ' + (e.message || e));
+  }
+}
+
+async function deleteSelectedITACriterion() {
+  var s = getITAManagerSelection();
+  if (!s.found || !s.found.isCustom) return;
+  if (getManualEvidenceForCriterion(s.moit, s.code).length) {
+    return alert('ข้อนี้มีหลักฐานอยู่ กรุณาย้าย/ลบหลักฐานก่อนลบข้อย่อย');
+  }
+  if (!confirm('ยืนยันลบ ' + s.found.meta.label + ' ?')) return;
+
+  try {
+    var r = await fetch(API_URL + '?action=deleteITACriterion', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        password: sessionStorage.getItem('itaAdminPass') || '',
+        fiscal_year:2569, round_code:'r2', moit:s.moit, criterion_code:s.code
+      })
+    });
+    var j = await r.json();
+    if (!r.ok || j.status !== 'success') throw new Error(j.message || 'ลบไม่สำเร็จ');
+    await loadITACriteriaConfig();
+    populateITAManagerCriteria();
+    alert('ลบข้อย่อยเรียบร้อย');
+  } catch(e) {
+    alert('ลบไม่สำเร็จ: ' + (e.message || e));
+  }
+}
+
 function logoutAdminV2() {
   sessionStorage.removeItem('itaAdminPass');
   itaAdminUnlocked = false;
@@ -1707,18 +1961,28 @@ function populateITAManagerMoits() {
 function populateITAManagerCriteria() {
   var moit = Number(document.getElementById('itaMgrMoit').value || 0);
   var select = document.getElementById('itaMgrCriterion');
+  var current = select.value;
   select.innerHTML = '<option value="">— เลือกข้อ —</option>';
 
   var criteria = ITA_MASTER_12M[String(moit)] || [];
   criteria.forEach(function(c, idx) {
     if (isMOITTitleCriterion(c.title)) return;
     var meta = getCriterionMeta(criteria, idx);
+    var title = getEffectiveCriterionTitle(moit, meta.code, c.title);
     var opt = document.createElement('option');
     opt.value = meta.code;
-    opt.textContent = meta.label + ' — ' + String(c.title).replace(/^\d+(?:\.\d+)*\.?\s*/, '').slice(0, 110);
+    opt.textContent = meta.label + ' — ' + title.replace(/^\d+(?:\.\d+)*\.?\s*/, '').slice(0, 110);
     select.appendChild(opt);
+
+    getCustomCriteriaForParent(moit, meta.code).forEach(function(row) {
+      var child = document.createElement('option');
+      child.value = row.criterion_code;
+      child.textContent = '↳ ' + (row.criterion_label || row.criterion_code) + ' — ' + String(row.title || '').slice(0, 100);
+      select.appendChild(child);
+    });
   });
 
+  if (current) select.value = current;
   updateITAManagerTarget();
 }
 
@@ -1735,11 +1999,17 @@ function updateITAManagerTarget() {
   var uploadBtn = document.getElementById('itaMgrUploadBtn');
   var goBtn = document.getElementById('itaMgrGoPublicBtn');
   var copyBtn = document.getElementById('itaMgrCopyBtn');
+  var editBtn = document.getElementById('itaMgrEditBtn');
+  var addChildBtn = document.getElementById('itaMgrAddChildBtn');
+  var deleteCriterionBtn = document.getElementById('itaMgrDeleteCriterionBtn');
 
   if (!s.found) {
     box.className = 'alert alert-warning mt-4 mb-0';
     box.innerHTML = 'กรุณาเลือก MOIT และข้อที่ต้องการอัปโหลดหลักฐาน';
     uploadBtn.disabled = goBtn.disabled = copyBtn.disabled = true;
+    if (editBtn) editBtn.disabled = true;
+    if (addChildBtn) addChildBtn.disabled = true;
+    if (deleteCriterionBtn) { deleteCriterionBtn.disabled = true; deleteCriterionBtn.classList.add('d-none'); }
     renderITAManagerEvidenceList();
     return;
   }
@@ -1752,6 +2022,12 @@ function updateITAManagerTarget() {
     '<hr class="my-2"><div class="small"><strong>ตรวจสอบให้แน่ใจก่อน Upload:</strong> ไฟล์จะถูกล็อกกับข้อนี้โดยตรง</div>';
 
   uploadBtn.disabled = goBtn.disabled = copyBtn.disabled = false;
+  if (editBtn) editBtn.disabled = false;
+  if (addChildBtn) addChildBtn.disabled = false;
+  if (deleteCriterionBtn) {
+    deleteCriterionBtn.disabled = !s.found.isCustom;
+    deleteCriterionBtn.classList.toggle('d-none', !s.found.isCustom);
+  }
   renderITAManagerEvidenceList();
 }
 
