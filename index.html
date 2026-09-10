@@ -1,1385 +1,637 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <base target="_top">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>สำนักงานสาธารณสุขอำเภอไทยเจริญ</title>
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        :root { --primary-color: #0f5132; --accent-color: #ffc107; --border-color: #e2e8f0; }
-        body { font-family: 'Sarabun', sans-serif; background-color: #f4f6f9; min-height: 100vh; display: flex; flex-direction: column; color: #333; }
-        
-        .navbar-custom { background: linear-gradient(90deg, #0f5132 0%, #198754 100%); padding: 10px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-        .navbar-custom .nav-link { 
-            color: #ffffff !important; 
-            font-weight: 600; 
-            margin: 0 4px; 
-            transition: 0.2s; 
-            white-space: nowrap; 
-            display: flex; 
-            align-items: center; 
-        }
-        .navbar-custom .nav-link:hover, 
-        .navbar-custom .nav-link:focus { 
-            color: #e9f7ef !important; 
-            transform: translateY(-2px); 
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2); 
-        }
-        .navbar-custom .nav-icon { 
-            background: rgba(255,255,255,0.2); 
-            color: #ffffff !important; 
-            border-radius: 50%; 
-            margin-right: 6px; 
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            width: 32px;  
-            height: 32px; 
-            font-size: 0.85rem;
-        }
-       .carousel-item img { 
-    height: auto; 
-    max-height: 550px; 
-    object-fit: contain; 
-    width: 100%; 
-    object-position: center; 
-    background-color: #212529; 
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
+
+// src/cors.js
+function corsHeaders(env, request) {
+  const configured = String(env.ALLOWED_ORIGIN || "").trim();
+  const requestOrigin = request.headers.get("Origin") || "";
+  let origin = "*";
+  if (configured) {
+    origin = requestOrigin === configured ? configured : "null";
+  }
+  return {
+    "Access-Control-Allow-Origin": origin,
+    "Vary": "Origin",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Max-Age": "86400"
+  };
 }
-        .placeholder-banner { height: 450px; background-color: #e9ecef; display: flex; align-items: center; justify-content: center; color: #6c757d; }
-        
-        .section-header { border-bottom: 2px solid #198754; color: #0f5132; padding-bottom: 8px; font-weight: 700; margin-bottom: 20px; font-size: 1.3rem; display: flex; align-items: center; }
-        
-        .service-box { background: white; border-radius: 12px; padding: 15px 10px; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: all 0.3s ease; height: 100%; display: block; text-decoration: none; color: #444; }
-        .service-box:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(25, 135, 84, 0.15); border-color: #198754; color: var(--primary-color); }
-        .service-icon-bg { width: 50px; height: 50px; margin: 0 auto 10px; background: #e9f7ef; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
-        .service-box:hover .service-icon-bg { background: var(--primary-color); color: white; }
-
-        .news-card { transition: 0.3s; border-radius: 8px; border: 1px solid var(--border-color); cursor: pointer; }
-        .news-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important; border-color: #198754; }
-        .text-truncate-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; line-height: 1.4; height: 2.8em; color: #1e293b; transition: 0.2s; font-weight: 500;}
-        .news-card:hover .text-truncate-2 { color: #0f5132; }
-
-        .text-news-box { background: white; border-radius: 8px; border: 1px solid var(--border-color); border-top: 4px solid #198754; padding: 20px; height: 100%; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-        .text-news-item { border-bottom: 1px dashed #ddd; padding: 12px 0; transition: 0.2s; }
-        .text-news-item:last-child { border-bottom: none; }
-        .text-news-item:hover { background-color: #f8fffb; padding-left: 5px; }
-        .text-news-title { font-size: 0.95rem; font-weight: 500; color: #2d3748; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-decoration: none; margin-bottom: 5px; }
-        .text-news-title:hover { color: #198754; }
-        .news-meta { font-size: 0.8rem; color: #718096; display: flex; align-items: center; gap: 10px; }
-
-        .exec-card-small { border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; background: white; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .exec-img-small { width: 100%; height: auto; max-height: 350px; object-fit: contain; object-position: bottom; display: block; background-color: #e9ecef; }
-        .exec-card-full { border: none; border-radius: 15px; background: white; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: 0.3s; height: 100%; padding-bottom: 15px; position: relative; overflow: hidden; }
-        .exec-card-full::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 80px; background: linear-gradient(45deg, #198754, #20c997); }
-        .exec-card-full:hover { transform: translateY(-7px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
-        .exec-img-full { width: 160px; height: 210px; object-fit: cover; object-position: top center; border-radius: 10px; border: 4px solid white; margin-top: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); background-color: #fff; position: relative; z-index: 1; }
-
-        .knowledge-wrapper { border: 1px solid #d1d5db; border-radius: 4px; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .knowledge-header-left { background-color: #0b4a46; color: white; font-weight: bold; padding: 12px 20px; text-align: center; }
-        .knowledge-header-right { background-color: #116a5e; color: white; font-weight: bold; padding: 12px 20px; text-align: center; flex-grow: 1; }
-        .knowledge-list-col { column-count: 2; column-gap: 40px; padding: 20px; }
-        @media (max-width: 768px) { .knowledge-list-col { column-count: 1; } }
-        .knowledge-item { margin-bottom: 12px; break-inside: avoid; font-size: 0.95rem; }
-        .knowledge-item a { color: #444; text-decoration: none; transition: 0.2s; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .knowledge-item a:hover { color: #198754; text-decoration: underline; }
-
-        .moit-badge { background: white; border: 1px solid var(--primary-color); color: var(--primary-color); padding: 4px 12px; border-radius: 20px; font-weight: bold; min-width: 80px; text-align: center; display: inline-block; }
-        #btn-back-to-top { position: fixed; bottom: 25px; right: 25px; display: none; z-index: 99; width: 50px; height: 50px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        footer { margin-top: auto; background-color: #212529; color: #aaa; padding: 40px 0; border-top: 5px solid #198754; }
-        footer h5, footer h6 { color: white; border-left: 3px solid var(--accent-color); padding-left: 10px; }
-        
-        .about-nav-pills .nav-link { color: #000000 !important; border-radius: 8px; margin-bottom: 8px; font-weight: 600; text-align: left; padding: 14px 20px; border: 1px solid #e2e8f0; transition: all 0.3s ease; background-color: white;}
-        .about-nav-pills .nav-link:hover { background-color: #e9f7ef !important; color: #0f5132 !important; border-color: #198754;}
-        .about-nav-pills .nav-link.active { background-color: #198754 !important; color: white !important; box-shadow: 0 4px 10px rgba(25,135,84,0.25); border-color: #198754;}
-        
-        .about-tab-content { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 35px; min-height: 400px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
-        .about-tab-content h4 { color: #000000; font-weight: 700; margin-bottom: 1.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;}
-
-        .sub-nav-tabs { border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; padding-bottom: 10px; }
-        .sub-nav-tabs .nav-link { color: #0f5132 !important; font-weight: 600; border: 1px solid #198754 !important; border-radius: 25px !important; padding: 8px 20px; margin-right: 10px; margin-bottom: 5px; transition: 0.3s; font-size: 1rem; background-color: white !important; }
-        .sub-nav-tabs .nav-link:hover { color: #ffffff !important; background-color: #198754 !important; }
-        .sub-nav-tabs .nav-link.active { color: #ffffff !important; background-color: #0f5132 !important; border-color: #0f5132 !important; font-weight: 700; box-shadow: 0 4px 8px rgba(15, 81, 50, 0.2); }
-        .hover-bg-light:hover { background-color: #f8f9fa; }
-    
-        /* ===== ITA Full Detailed Criteria ===== */
-        .ita-indicator-group{border:1px solid #dbe5df;border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 4px 14px rgba(15,81,50,.06);margin-bottom:18px}
-        .ita-indicator-head{background:linear-gradient(90deg,#0f5132,#198754);color:#fff;padding:14px 18px;font-weight:700}
-        .ita-moit-card{border-top:1px solid #edf2ef;padding:18px}
-        .ita-moit-title{font-size:1.05rem;font-weight:700;color:#0f5132;margin-bottom:12px}
-        .ita-criterion{border:1px solid #e5e7eb;border-radius:12px;padding:14px;margin-bottom:10px;background:#fff;scroll-margin-top:110px}
-        .ita-criterion.level-2{margin-left:18px;background:#fbfdfc}
-        .ita-criterion.level-3{margin-left:36px;background:#f8fbf9}
-        .ita-criterion.flash{outline:3px solid #ffc107;background:#fff8db}
-        .ita-criterion-title{font-weight:600;color:#1f2937;line-height:1.6}
-        .ita-files{margin-top:10px;display:flex;flex-direction:column;gap:8px}
-        .ita-file-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px}
-        .ita-file-name{flex:1;min-width:220px;font-size:.92rem}
-        .ita-status-wait{color:#a16207;font-size:.9rem;margin-top:8px}
-        .ita-admin-note{font-size:.82rem;color:#64748b;margin-top:6px}
-
-    </style>
-</head>
-<body>
-
-    <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center py-2" href="javascript:void(0)" onclick="showPage('home-page')">
-                <div class="bg-white rounded-circle shadow-sm d-flex justify-content-center align-items-center me-3" style="width: 65px; height: 65px; flex-shrink: 0; border: 2px solid #e9f7ef;">
-                    <span style="color: #0f5132; font-size: 2.2rem; font-weight: 800; font-family: Arial, sans-serif; letter-spacing: -2px; margin-right: -2px;">TJ</span>
-                </div>
-                <div class="d-flex flex-column text-white justify-content-center" style="line-height: 1.1;">
-                    <span style="font-size: 0.9rem; font-weight: 400; color: rgba(255,255,255,0.9); margin-bottom: 2px;">สำนักงานสาธารณสุขอำเภอ</span>
-                    <span style="font-size: 1.7rem; font-weight: 700; text-shadow: 1px 1px 3px rgba(0,0,0,0.2); letter-spacing: 0.5px;">ไทยเจริญ</span>
-                    <span style="font-size: 0.65rem; font-weight: 300; color: rgba(255,255,255,0.7); letter-spacing: 1px; margin-top: 3px;">THAIJAROEN DISTRICT HEALTH OFFICE</span>
-                </div>
-            </a>
-            <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><i class="fas fa-bars fa-lg"></i></button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="showPage('home-page')"><span class="nav-icon"><i class="fas fa-home"></i></span> หน้าแรก</a></li>
-                    
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><span class="nav-icon"><i class="fas fa-info-circle"></i></span> เกี่ยวกับเรา</a>
-                        <ul class="dropdown-menu shadow-lg border-0 rounded-3 p-2" id="about-dropdown-menu">
-                            <li><span class="dropdown-item text-muted"><i class="fas fa-spinner fa-spin me-2"></i> กำลังโหลด...</span></li>
-                        </ul>
-                    </li>
-
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white fw-bold" href="#" id="navbarSystems" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-desktop me-1"></i> ระบบงานหลัก
-                        </a>
-                        <ul class="dropdown-menu shadow border-0 mt-2" aria-labelledby="navbarSystems" id="systems-dropdown-menu">
-                            <li><a class="dropdown-item text-center text-muted py-2" href="#"><div class="spinner-border spinner-border-sm text-success me-2"></div>กำลังโหลด...</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="showPage('exec-page')"><span class="nav-icon"><i class="fas fa-users"></i></span> ผู้บริหาร</a></li>
-                    
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><span class="nav-icon"><i class="fas fa-star"></i></span> ITA & ร้องเรียน</a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-3 p-2">
-                            <li><h6 class="dropdown-header text-success fw-bold">การประเมิน ITA</h6></li>
-                            <li><a class="dropdown-item rounded py-2" href="javascript:void(0)" onclick="showPage('ita-page')"><i class="fas fa-search me-2 text-success"></i> ข้อมูล MOIT</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><h6 class="dropdown-header text-primary fw-bold">ระบบร้องเรียน</h6></li>
-                            <li><a class="dropdown-item rounded py-2" href="javascript:void(0)" onclick="showPage('complaint-report-page'); loadComplaintsData();"><i class="fas fa-hands-helping me-2 text-primary"></i> ศูนย์รับเรื่องร้องเรียน</a></li>
-                            <li><a class="dropdown-item rounded py-2" href="javascript:void(0)" onclick="openComplaint('Q&A สอบถาม')"><i class="fas fa-comment-dots me-2 text-warning"></i> Q&A ถาม-ตอบ</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="showPage('downloads-page')"><span class="nav-icon"><i class="fas fa-download"></i></span> โหลดไฟล์</a></li>
-                    
-                    <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="scrollToContact()"><span class="nav-icon"><i class="fas fa-phone"></i></span> ติดต่อเรา</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <div id="home-page">
-        <div id="mainCarousel" class="carousel slide shadow-sm mb-5" data-bs-ride="carousel">
-            <div class="carousel-inner" id="banner-container"><div class="carousel-item active"><div class="placeholder-banner"><h5><div class="spinner-border spinner-border-sm me-2"></div> กำลังโหลด...</h5></div></div></div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
-            <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
-        </div>
-
-        <div class="container">
-            <div class="row g-4 mb-5">
-                <div class="col-lg-9">
-                    <h4 class="section-header"><i class="fas fa-laptop-medical me-2"></i> ระบบบริการออนไลน์</h4>
-                    <div class="row g-3">
-                        <div class="col-6 col-md-3"><a href="https://hdc.moph.go.th/yst/public/main" target="_blank" class="service-box"><div class="service-icon-bg"><i class="fas fa-database fa-lg text-primary"></i></div><span class="fw-bold">HDC</span></a></div>
-                        <div class="col-6 col-md-3"><a href="javascript:void(0)" onclick="showPage('ita-page')" class="service-box"><div class="service-icon-bg"><i class="fas fa-file-contract fa-lg text-success"></i></div><span class="fw-bold">ITA</span></a></div>
-                        <div class="col-6 col-md-3"><a href="https://e-sarabanyasothon.moph.go.th/web/saraban/docspending" target="_blank" class="service-box"><div class="service-icon-bg"><i class="fas fa-envelope fa-lg text-warning"></i></div><span class="fw-bold">e-Office</span></a></div>
-                        <div class="col-6 col-md-3"><a href="https://www.nhso.go.th/th/" target="_blank" class="service-box"><div class="service-icon-bg"><i class="fas fa-users fa-lg text-info"></i></div><span class="fw-bold">สปสช.</span></a></div>
-                        <div class="col-6 col-md-3"><a href="#" target="_blank" class="service-box"><div class="service-icon-bg"><i class="fas fa-chart-pie fa-lg text-danger"></i></div><span class="fw-bold">Cockpit</span></a></div>
-                        <div class="col-6 col-md-3"><a href="#" target="_blank" class="service-box"><div class="service-icon-bg"><i class="fas fa-coins fa-lg text-secondary"></i></div><span class="fw-bold">การเงิน</span></a></div>
-                        <div class="col-6 col-md-3"><a href="#" target="_blank" class="service-box"><div class="service-icon-bg"><i class="fas fa-calendar-check fa-lg text-primary"></i></div><span class="fw-bold">ประชุม</span></a></div>
-                        <div class="col-6 col-md-3"><a href="javascript:void(0)" onclick="showPage('downloads-page')" class="service-box"><div class="service-icon-bg"><i class="fas fa-cloud-download-alt fa-lg text-success"></i></div><span class="fw-bold">แบบฟอร์ม</span></a></div>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <h4 class="section-header"><i class="fas fa-user-tie me-2"></i> สาธารณสุขอำเภอ</h4>
-                    <div id="executive-sidebar" class="text-center"><div class="exec-card-small p-5"><div class="spinner-border text-success"></div></div></div>
-                    <button class="btn btn-outline-success w-100 rounded-pill fw-bold" onclick="showPage('exec-page')">โครงสร้างบุคลากร <i class="fas fa-arrow-right ms-1"></i></button>
-                </div>
-            </div>
-
-            <div class="mb-5">
-                <h4 class="section-header d-flex justify-content-between">
-                    <span><i class="fas fa-images me-2"></i> ข่าวกิจกรรมและผลงาน</span>
-                    <select id="newsFilter" class="form-select form-select-sm shadow-sm" style="width:auto; font-size: 0.9rem;" onchange="filterImageNews()"><option value="all">ดูทุกหมวดหมู่</option></select>
-                </h4>
-                <div id="image-news-container"><div class="text-center p-5 bg-white rounded shadow-sm border"><div class="spinner-border text-success"></div></div></div>
-            </div>
-
-            <div class="mb-5">
-                <h4 class="section-header"><i class="fas fa-bullhorn me-2"></i> ข่าวประกาศ / จัดซื้อจัดจ้าง</h4>
-                <div id="text-news-container" class="row g-4"><div class="col-12 text-center p-5 bg-white rounded shadow-sm border"><div class="spinner-border text-success"></div></div></div>
-            </div>
-
-            <div class="mb-5">
-                <h4 class="section-header"><i class="fas fa-book-reader me-2"></i> แหล่งความรู้ สสจ.ยโสธร</h4>
-                <div class="knowledge-wrapper">
-                    <div class="d-flex"><div class="knowledge-header-left" style="min-width: 130px;">ความรู้</div><div class="knowledge-header-right">แหล่งความรู้ และหน่วยงานที่เกี่ยวข้อง</div></div>
-                    <div class="knowledge-list-col" id="knowledge-list-container"><div class="text-center p-4 w-100"><div class="spinner-border spinner-border-sm text-success"></div></div></div>
-                </div>
-            </div>
-
-            <div class="row g-4 mb-5">
-                <div class="col-lg-8">
-                    <h4 class="section-header"><i class="far fa-calendar-alt me-2"></i> ปฏิทินกิจกรรม</h4>
-                    <div class="bg-white p-2 border rounded-3 shadow-sm"><iframe src="https://calendar.google.com/calendar/embed?height=400&wkst=1&bgcolor=%23ffffff&ctz=Asia%2FBangkok&src=th.th%23holiday%40group.v.calendar.google.com&color=%230B8043" style="border:0" width="100%" height="400" frameborder="0" scrolling="no"></iframe></div>
-                </div>
-                <div class="col-lg-4" id="contact-section">
-                    <h4 class="section-header"><i class="fas fa-address-book me-2"></i> ติดต่อเรา</h4>
-                    <div class="bg-white p-3 rounded-3 shadow-sm border">
-                        <div><iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1916.9554573586108!2d104.434352!3d16.070112!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313d87a466ad35c9%3A0x34d85a4846ad719d!2z4Liq4Liz4LiZ4Lix4LiB4LiH4Liy4LiZ4Liq4Liy4LiY4Liy4Lij4LiT4Liq4Li44LiC4Lit4Liz4LmA4Lig4Lit4LmE4LiX4Lii4LmA4LiI4Lij4Li04LiN!5e0!3m2!1sth!2sth!4v1774508724825!5m2!1sth!2sth" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
-                        <ul class="list-unstyled mt-3 small text-secondary">
-                            <li class="mb-2"><i class="fas fa-map-marker-alt text-danger me-2 w-20"></i> หมู่ที่1 ต.ไทยเจริญ อ.ไทยเจริญ จ.ยโสธร 35120</li>
-                            <li class="mb-2"><i class="fas fa-phone-alt text-success me-2 w-20"></i> <a href="tel:045718136" class="text-decoration-none text-dark fw-bold">045-718-136</a></li>
-                            <li class="mb-2"><i class="fas fa-envelope text-primary me-2 w-20"></i> ittcmoph@gmail.com</li>
-                            <li><i class="fab fa-facebook text-primary me-2 w-20"></i> <a href="https://www.facebook.com/profile.php?id=100066249590143&sk=about" target="_blank" class="text-decoration-none">เพจ สสอ.ไทยเจริญ</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="about-page" style="display: none; background-color: #f4f6f9; padding-bottom: 50px;">
-        <div class="bg-success text-white py-4 mb-4 shadow-sm" style="background: linear-gradient(90deg, #14532d 0%, #166534 100%);">
-            <div class="container d-flex justify-content-between align-items-center">
-                <h3 class="fw-bold m-0"><i class="fas fa-info-circle me-2 text-warning"></i> เกี่ยวกับหน่วยงาน</h3>
-                <button class="btn btn-light btn-sm rounded-pill px-4 fw-bold text-success shadow-sm" onclick="showPage('home-page')"><i class="fas fa-arrow-left me-1"></i> กลับหน้าหลัก</button>
-            </div>
-        </div>
-        
-        <div class="container">
-            <div class="row g-4">
-                <div class="col-lg-3">
-                    <div class="nav flex-column nav-pills about-nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                        <div class="text-center p-4 bg-white rounded border shadow-sm text-muted"><span class="spinner-border spinner-border-sm text-success"></span> กำลังโหลดเมนู...</div>
-                    </div>
-                </div>
-                
-                <div class="col-lg-9">
-                    <div class="tab-content about-tab-content" id="v-pills-tabContent">
-                        <div class="text-center p-5 text-muted"><span class="spinner-border spinner-border-sm text-success"></span> กำลังดึงข้อมูลจากระบบ...</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="news-detail-page" style="display: none; background-color: #f4f6f9; padding-bottom: 50px;"><div class="container my-5"><div class="row justify-content-center"><div class="col-lg-9"><button class="btn btn-outline-secondary btn-sm rounded-pill px-4 mb-4 shadow-sm" onclick="showPage('home-page')"><i class="fas fa-arrow-left me-2"></i> ย้อนกลับไปหน้าหลัก</button><div class="bg-white rounded-4 shadow-sm overflow-hidden border"><div class="bg-success text-white p-4 p-md-5"><span id="nd-category" class="badge bg-warning text-dark mb-3 px-3 py-2" style="font-size: 0.9rem;">หมวดหมู่</span><h3 id="nd-title" class="fw-bold mb-4" style="line-height: 1.5;">หัวข้อข่าว</h3><div class="d-flex flex-wrap gap-4 small opacity-75"><span><i class="far fa-calendar-alt me-2"></i><span id="nd-date">วันที่</span></span><span><i class="far fa-eye me-2"></i><span id="nd-views">ยอดเข้าชม</span> ครั้ง</span></div></div><div class="p-4 p-md-5 text-center bg-white"><img id="nd-image" src="" class="img-fluid rounded-3 shadow-sm mb-5" style="max-height: 600px; display: none; object-fit: contain;"><hr class="mb-5 text-muted"><h5 class="text-secondary mb-4">รายละเอียดเพิ่มเติม / เอกสารแนบ</h5><a id="nd-link" href="#" target="_blank" class="btn btn-success btn-lg px-5 rounded-pill shadow-sm" style="display: none;"><i class="fas fa-external-link-alt me-2"></i> เปิดอ่านข้อมูลฉบับเต็ม</a></div></div></div></div></div></div>
-    <div id="exec-page" style="display: none; background-color: #f0f2f5; padding-bottom: 50px;"><div class="container my-5"><div class="text-center mb-5"><span class="badge bg-success mb-2 px-3 py-2">PERSONNEL</span><h2 class="fw-bold text-dark">โครงสร้างบุคลากร</h2><button class="btn btn-secondary btn-sm rounded-pill px-4" onclick="showPage('home-page')"><i class="fas fa-arrow-left me-2"></i> กลับหน้าหลัก</button></div><div id="exec-full-container"><div class="text-center p-5"><div class="spinner-border text-success"></div></div></div></div></div>
-    <div id="ita-page" style="display: none;">
-        <div class="container my-5">
-            <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
-                <div>
-                    <h3 class="text-success fw-bold m-0"><i class="fas fa-balance-scale me-2"></i> ITA 2569</h3>
-                    <small class="text-muted">เอกสารประกอบการประเมินคุณธรรมและความโปร่งใส</small>
-                </div>
-                <button class="btn btn-outline-secondary rounded-pill" onclick="showPage('home-page')"><i class="fas fa-arrow-left"></i> กลับ</button>
-            </div>
-
-            <div class="row g-3 mb-4">
-                <div class="col-md-6">
-                    <button id="ita-round-6m" class="btn btn-outline-primary w-100 p-3 rounded-4 shadow-sm fw-bold" onclick="setITARound('6m')">
-                        <i class="fas fa-calendar-check me-2"></i> รอบที่ 1 : 6 เดือน
-                        <div class="small fw-normal mt-1"><span id="ita-count-6m">-</span> รายการ</div>
-                    </button>
-                </div>
-                <div class="col-md-6">
-                    <button id="ita-round-12m" class="btn btn-success w-100 p-3 rounded-4 shadow-sm fw-bold" onclick="setITARound('12m')">
-                        <i class="fas fa-clipboard-check me-2"></i> รอบที่ 2 : 12 เดือน
-                        <div class="small fw-normal mt-1"><span id="ita-count-12m">-</span> รายการ</div>
-                    </button>
-                </div>
-            </div>
-
-            <div id="ita-round-note" class="alert alert-success border-0 shadow-sm mb-4">
-                <i class="fas fa-info-circle me-2"></i><strong>กำลังแสดงรอบที่ 2 : 12 เดือน</strong>
-            </div>
-
-            <div class="input-group mb-4 shadow-sm">
-                <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
-                <input type="text" id="itaSearchInput" class="form-control border-start-0" placeholder="พิมพ์ชื่อ MOIT หรือชื่อเอกสารเพื่อค้นหา..." onkeyup="filterITA()">
-            </div>
-            <div id="itaDetailedContainer" class="mb-4"></div>
-            <div class="accordion shadow-sm rounded-3 overflow-hidden" id="itaAccordion">
-                <div class="text-center p-5" id="ita-loading"><div class="spinner-border text-success"></div><div class="mt-2 text-muted">กำลังโหลดข้อมูล ITA...</div></div>
-            </div>
-        </div>
-    </div>
-    <div id="downloads-page" style="display: none;"><div class="container my-5"><div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3"><h3 class="text-success fw-bold m-0"><i class="fas fa-cloud-download-alt me-2"></i> ดาวน์โหลดแบบฟอร์ม</h3><button class="btn btn-outline-secondary rounded-pill" onclick="showPage('home-page')"><i class="fas fa-arrow-left"></i> กลับ</button></div><div class="card shadow border-0 rounded-3"><div class="card-body p-0"><div id="downloads-container"><div class="text-center text-muted p-5"><div class="spinner-border spinner-border-sm"></div></div></div></div></div></div></div>
-    <div id="complaint-report-page" style="display: none; background-color: #f4f6f9; min-height: 80vh; padding-bottom: 50px;">
-        <div class="bg-primary text-white py-4 mb-4 shadow-sm" style="background: linear-gradient(90deg, #1e3a8a 0%, #1e40af 100%);">
-            <div class="container d-flex justify-content-between align-items-center">
-                <h3 class="fw-bold m-0"><i class="fas fa-hands-helping me-2 text-warning"></i> ศูนย์รับเรื่องร้องเรียน</h3>
-                <button class="btn btn-light btn-sm rounded-pill px-4 fw-bold text-primary shadow-sm" onclick="showPage('home-page')"><i class="fas fa-arrow-left me-1"></i> กลับหน้าหลัก</button>
-            </div>
-        </div>
-
-        <div class="container">
-            <div class="row g-4 mb-5">
-                <div class="col-12">
-                    <h5 class="fw-bold text-dark border-bottom border-2 border-primary pb-2"><i class="fas fa-pen-square me-2 text-primary"></i> แจ้งเรื่องร้องเรียน (กรุณาเลือกประเภท)</h5>
-                </div>
-                
-                <div class="col-md-4">
-                    <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-4 hover-bg-light" style="cursor: pointer; transition: 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'" onclick="openComplaint('ร้องเรียนทั่วไป')">
-                        <i class="fas fa-bullhorn fa-3x text-warning mb-3"></i>
-                        <h5 class="fw-bold text-dark">ร้องเรียนทั่วไป</h5>
-                        <p class="small text-muted mb-0">เรื่องร้องเรียนการให้บริการ, ข้อเสนอแนะ, หรือปัญหาทั่วไปที่พบเจอ</p>
-                    </div>
-                </div>
-                
-                <div class="col-md-4">
-                    <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-4 hover-bg-light" style="cursor: pointer; transition: 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'" onclick="openComplaint('ร้องเรียนการทุจริต')">
-                        <i class="fas fa-user-shield fa-3x text-danger mb-3"></i>
-                        <h5 class="fw-bold text-dark">ร้องเรียนการทุจริต</h5>
-                        <p class="small text-muted mb-0">แจ้งเบาะแสการทุจริตคอร์รัปชัน หรือการเรียกรับผลประโยชน์</p>
-                    </div>
-                </div>
-                
-                <div class="col-md-4">
-                    <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-4 hover-bg-light" style="cursor: pointer; transition: 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'" onclick="openComplaint('ร้องเรียนการปฏิบัติงานของเจ้าหน้าที่')">
-                        <i class="fas fa-user-times fa-3x text-secondary mb-3"></i>
-                        <h5 class="fw-bold text-dark">ร้องเรียนการปฏิบัติงาน</h5>
-                        <p class="small text-muted mb-0">การละเว้นการปฏิบัติหน้าที่ หรือพฤติกรรมที่ไม่เหมาะสมของเจ้าหน้าที่</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-12">
-                    <h5 class="fw-bold text-dark border-bottom border-2 border-primary pb-2"><i class="fas fa-chart-pie me-2 text-primary"></i> ข้อมูลสถิติและสถานะการร้องเรียน</h5>
-                </div>
-            </div>
-            
-            <div class="card border-0 shadow-sm mb-4 mt-3 rounded-4">
-                <div class="card-body bg-white rounded-4 d-flex justify-content-between align-items-center p-3 p-md-4">
-                    <h6 class="mb-0 text-dark fw-bold"><i class="fas fa-filter me-2 text-primary"></i> กรองข้อมูลตามปีงบประมาณ</h6>
-                    <select id="filter-year" class="form-select w-auto border-primary text-primary fw-bold shadow-sm rounded-pill px-4" onchange="loadComplaintsData()">
-                        <option value="all">แสดงทั้งหมดทุกปี</option>
-                        <option value="2569">ปีงบประมาณ 2569</option>
-                        <option value="2568">ปีงบประมาณ 2568</option>
-                        <option value="2567">ปีงบประมาณ 2567</option>
-                    </select>
-                </div>
-            </div>
-
-            <div id="complaint-report-container" class="mb-5 border-0 shadow-sm rounded-4 overflow-hidden">
-                <div class="text-center py-5 bg-white"><div class="spinner-border text-primary" role="status"></div><div class="mt-2 text-muted">กำลังโหลดข้อมูล...</div></div>
-            </div>
-        </div>
-    </div>
-    <div id="admin-login-page" style="display: none; background: #e9ecef; min-height: 80vh;"><div class="container py-5"><div class="row justify-content-center"><div class="col-md-5"><div class="admin-box"><div class="admin-header bg-dark p-4 text-center text-white"><i class="fas fa-lock fa-3x mb-3 text-warning"></i><h4 class="m-0">ระบบจัดการหลังบ้าน</h4></div><div class="p-4"><input type="password" id="adminPass" class="form-control form-control-lg mb-3" placeholder="••••••••"><button class="btn btn-success w-100 btn-lg" onclick="doAdminLogin()"><span id="login-spin" class="spinner-border spinner-border-sm d-none"></span> เข้าสู่ระบบ</button><div class="text-center mt-3"><a href="javascript:void(0)" onclick="showPage('home-page')" class="text-muted text-decoration-none"><i class="fas fa-arrow-left"></i> กลับหน้าหลัก</a></div></div></div></div></div></div></div>
-    <div id="admin-dashboard-page" style="display: none; background: #f4f6f9; min-height: 80vh;"><div class="container py-5"><div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom"><h3 class="fw-bold text-dark"><i class="fas fa-cogs text-success me-2"></i> Admin Dashboard</h3><button class="btn btn-danger btn-sm" onclick="showPage('home-page'); document.getElementById('adminPass').value='';"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</button></div><div class="row g-4"><div class="col-md-6"><div class="card h-100 shadow-sm border-0 rounded-3"><div class="card-body text-center p-4"><i class="fas fa-table fa-4x text-success mb-3"></i><h5 class="fw-bold">จัดการฐานข้อมูล (Google Sheet)</h5><a id="btn-open-sheet" href="#" target="_blank" class="btn btn-outline-success rounded-pill px-4 mt-2"><i class="fas fa-external-link-alt"></i> เปิด Google Sheet</a></div></div></div><div class="col-md-6"><div class="card h-100 shadow-sm border-0 rounded-3"><div class="card-body text-center p-4"><i class="fab fa-google-drive fa-4x text-primary mb-3"></i><h5 class="fw-bold">จัดการไฟล์ (Google Drive)</h5><a href="https://drive.google.com/" target="_blank" class="btn btn-outline-primary rounded-pill px-4 mt-2"><i class="fas fa-folder-open"></i> เปิด Google Drive</a></div></div></div></div></div></div>
-    
-    <div class="modal fade" id="complaintModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content border-0 shadow-lg"><div class="modal-header bg-success text-white"><h5 class="modal-title fw-bold"><span id="comp-title">ร้องเรียน</span></h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body p-4 bg-light"><form id="complaintForm"><input type="hidden" id="compType" name="type"><div class="mb-3"><input type="text" class="form-control shadow-sm" id="compTopic" placeholder="หัวข้อเรื่อง" required></div><div class="mb-3"><textarea class="form-control shadow-sm" id="compDetail" rows="5" placeholder="รายละเอียด" required></textarea></div><div class="row g-2"><div class="col-md-6 mb-3"><input type="text" class="form-control form-control-sm" id="compName" placeholder="ชื่อผู้แจ้ง"></div><div class="col-md-6 mb-3"><input type="text" class="form-control form-control-sm" id="compContact" placeholder="เบอร์โทร"></div></div></form></div><div class="modal-footer bg-white"><button type="button" class="btn btn-light" data-bs-dismiss="modal">ยกเลิก</button><button type="button" class="btn btn-success px-4" onclick="submitComplaint()"><span id="btn-spin" class="spinner-border spinner-border-sm d-none me-2"></span> ยืนยันส่งข้อมูล</button></div></div></div></div>
-    <div class="modal fade" id="announcementModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content border-0 bg-transparent"><div class="modal-header border-0 d-flex justify-content-end pb-0" style="position: absolute; right: 0; z-index: 10;"><button type="button" class="btn-close btn-close-white bg-dark rounded-circle p-2 m-2" data-bs-dismiss="modal" style="opacity: 0.8;"></button></div><div class="modal-body p-0 text-center relative"><img id="popupImage" src="" class="img-fluid rounded-3 shadow-lg" style="max-height: 85vh; border: 4px solid white;"></div></div></div></div>
-
-    <!-- ITA Document Preview Modal -->
-    <div class="modal fade" id="itaPreviewModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title fw-bold"><i class="fas fa-file-circle-check me-2"></i><span id="itaPreviewTitle">ตัวอย่างเอกสาร</span></h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body p-0 bg-light">
-                    <iframe id="itaPreviewFrame" src="" style="width:100%;height:72vh;border:0;background:white;"></iframe>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><i class="fas fa-times me-1"></i> ปิด</button>
-                    <a id="itaPreviewOpen" href="#" target="_blank" class="btn btn-success"><i class="fas fa-download me-1"></i> เปิด/ดาวน์โหลดไฟล์</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <button type="button" class="btn btn-success rounded-circle" id="btn-back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'});"><i class="fas fa-arrow-up"></i></button>
-
-    <footer class="mt-auto">
-        <div class="container">
-            <div class="row g-4">
-                <div class="col-md-5"><h5 class="mb-3">สสอ.ไทยเจริญ</h5><p class="small text-white-50">มุ่งมั่นพัฒนาคุณภาพชีวิตประชาชน ด้วยบริการสุขภาพที่ได้มาตรฐาน และการมีส่วนร่วมของภาคีเครือข่าย</p></div>
-                <div class="col-md-3"><h6 class="mb-3">เมนูลัด</h6><ul class="list-unstyled small"><li><a href="javascript:void(0)" onclick="showPage('home-page')" class="text-decoration-none text-white-50">หน้าแรก</a></li><li><a href="javascript:void(0)" onclick="showPage('admin-login-page')" class="text-decoration-none text-warning"><i class="fas fa-lock"></i> สำหรับเจ้าหน้าที่ (Admin)</a></li></ul></div>
-                <div class="col-md-4 text-center"><h6 class="mb-3">สถิติผู้เข้าชม</h6><div class="d-inline-block bg-dark border border-secondary rounded-3 p-3 px-5"><h2 id="visitor-count" class="text-success fw-bold m-0">-</h2><small class="text-white-50">VISITORS</small></div></div>
-            </div>
-            <hr class="border-secondary my-4">
-            <div class="text-center small text-white-50">© 2026 Thaijaroen District Health Office. All Rights Reserved.</div>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
-        // ===== ITA Full Master Criteria =====
-        const ITA_FULL_MASTER = [{"indicator": "ตัวชี้วัดที่ 2 การจัดซื้อจัดจ้างและการจัดหาพัสดุ", "moits": [{"moit": 4, "title": "MOIT 4 หน่วยงานมีการวางระบบการจัดซื้อจัดจ้างและการจัดหาพัสดุรายเดือน ประจำปีงบประมาณ", "items": [{"code": "q1", "title": "ข้อ 1. ประกาศเผยแพร่แผนการจัดซื้อจัดจ้างและการจัดหาพัสดุ ประจำปีของหน่วยงาน", "level": 1}, {"code": "q1-1", "title": "1. มีบันทึกข้อความ ที่ผู้บริหารลงนามรับทราบแผนการจัดซื้อจัดจ้างประจำปีของหน่วยงานและมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์ของหน่วยงาน", "level": 2}, {"code": "q1-2", "title": "2. มีหนังสือจัดสรรงบประมาณของหน่วยงาน ประจำปีงบประมาณ พ.ศ. 2569", "level": 2}, {"code": "q1-3", "title": "3. มีแผนการจัดซื้อจัดจ้างและการจัดหาพัสดุของหน่วยงาน ประจำปีงบประมาณ พ.ศ. 2569 (งบดำเนินงาน และ งบลงทุน)", "level": 2}, {"code": "q1-4", "title": "4. มีคำสั่งมอบหมายการปิดประกาศ หรือปลดประกาศ", "level": 2}, {"code": "q1-5", "title": "5. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 2}, {"code": "q2", "title": "ข้อ 2. การป้องกันผู้ที่มีหน้าที่ดำเนินการในการจัดซื้อจัดจ้างเป็นผู้มีส่วนได้ส่วนเสียกับผู้ยื่นข้อเสนอหรือคู่สัญญา", "level": 1}, {"code": "q2-1", "title": "1. มีบันทึกข้อความแจ้งเวียนประกาศสำนักงานปลัดกระทรวงสาธารณสุข ว่าด้วยแนวทางปฏิบัติงานเพื่อตรวจสอบบุคลากรในหน่วยงานด้านการจัดซื้อจัดจ้าง พ.ศ. 2560 และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์", "level": 2}, {"code": "q2-2", "title": "2. มีประกาศสำนักงานปลัดกระทรวงสาธารณสุขว่าด้วยแนวทางปฏิบัติงานเพื่อตรวจสอบบุคลากรในหน่วยงานด้านการจัดซื้อจัดจ้าง พ.ศ. 2560 และแบบแสดงความบริสุทธิ์ใจในการจัดซื้อจัดจ้าง", "level": 2}, {"code": "q2-3", "title": "3. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 2}, {"code": "q3", "title": "ข้อ 3. รายงานผลของแผนการจัดซื้อจัดจ้างและการจัดหาพัสดุประจำปีของหน่วยงาน ตามรอบระยะเวลาที่กำหนด", "level": 1}, {"code": "q3-1", "title": "1. มีบันทึกข้อความ ที่ผู้บริหารรับทราบรายงานผลของแผนการจัดซื้อจัดจ้างประจำปี และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์", "level": 2}, {"code": "q3-2-1", "title": "2.1 รายงานผลการดำเนินการตามแผนการจัดซื้อจัดจ้างและการจัดหาพัสดุ — งบลงทุน", "level": 2}, {"code": "q3-2-2", "title": "2.2 รายงานผลการดำเนินการตามแผนการจัดซื้อจัดจ้างและการจัดหาพัสดุ — งบดำเนินงาน", "level": 2}, {"code": "q3-3", "title": "3. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 2}]}, {"moit": 5, "title": "MOIT 5 หน่วยงานมีการสรุปผลการจัดซื้อจัดจ้างและการจัดหาพัสดุรายเดือน ประจำปีงบประมาณ พ.ศ. 2569", "items": [{"code": "q1", "title": "1. มีบันทึกข้อความ ที่ผู้บริหารลงนามรับทราบแบบ สขร. 1 และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์ของหน่วยงาน", "level": 1}, {"code": "q2", "title": "2. มีแบบสรุปผลการดำเนินการจัดซื้อจัดจ้างในรอบเดือน (แบบ สขร. 1)", "level": 1}, {"code": "q2-item01", "title": "รายการย่อยที่ 1 (Admin แก้ชื่อเดือน/หัวข้อได้)", "level": 2}, {"code": "q2-item02", "title": "รายการย่อยที่ 2 (Admin แก้ชื่อเดือน/หัวข้อได้)", "level": 2}, {"code": "q2-item03", "title": "รายการย่อยที่ 3 (Admin แก้ชื่อเดือน/หัวข้อได้)", "level": 2}, {"code": "q2-item04", "title": "รายการย่อยที่ 4 (Admin แก้ชื่อเดือน/หัวข้อได้)", "level": 2}, {"code": "q2-item05", "title": "รายการย่อยที่ 5 (Admin แก้ชื่อเดือน/หัวข้อได้)", "level": 2}, {"code": "q2-item06", "title": "รายการย่อยที่ 6 (Admin แก้ชื่อเดือน/หัวข้อได้)", "level": 2}, {"code": "q3", "title": "3. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 1}]}]}, {"indicator": "ตัวชี้วัดที่ 3 การบริหารและพัฒนาทรัพยากรบุคคล", "moits": [{"moit": 7, "title": "MOIT 7 หน่วยงานมีการรายงานการประเมินผลการปฏิบัติราชการของบุคลากรในหน่วยงาน และเปิดเผยผลการปฏิบัติราชการ ระดับดีเด่น และระดับดีมาก", "items": [{"code": "q1", "title": "1. มีบันทึกข้อความ ที่ผู้บริหารลงนามในประกาศผลการปฏิบัติราชการประจำปีของบุคลากร ระดับดีเด่น และดีมาก และมีการขออนุญาตนำขึ้นเผยแพร่บนเว็บไซต์", "level": 1}, {"code": "q2", "title": "2. มีประกาศรายงานการประเมินผลการปฏิบัติราชการประจำปีของบุคลากรในหน่วยงาน ระดับดีเด่น และดีมาก", "level": 1}, {"code": "q3", "title": "3. มีหลักฐานประกาศรายงานการประเมินผลการปฏิบัติราชการประจำปีของบุคลากรในหน่วยงาน ระดับดีเด่น และดีมาก", "level": 1}, {"code": "q4", "title": "4. แบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 1}]}]}, {"indicator": "ตัวชี้วัดที่ 4 การส่งเสริมความโปร่งใส", "moits": [{"moit": 10, "title": "MOIT 10 หน่วยงานมีสรุปผลการดำเนินงานเรื่องร้องเรียนการปฏิบัติงานหรือการให้บริการของเจ้าหน้าที่ภายในหน่วยงาน และเรื่องร้องเรียนการทุจริตและประพฤติมิชอบ", "items": [{"code": "q1", "title": "1. มีบันทึกข้อความ ที่ผู้บริหารลงนามรับทราบรายงานสรุปผลการดำเนินงานเรื่องร้องเรียน พร้อมการวิเคราะห์ปัญหา / อุปสรรคและแนวทางแก้ไข และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์", "level": 1}, {"code": "q2", "title": "2. มีรายงานสรุปผลการดำเนินงานเรื่องร้องเรียน", "level": 1}, {"code": "q2-1", "title": "2.1 สรุปผลการดำเนินงานเรื่องร้องเรียนการปฏิบัติงานหรือการให้บริการของเจ้าหน้าที่ภายในหน่วยงาน", "level": 2}, {"code": "q2-2", "title": "2.2 สรุปผลการดำเนินงานเรื่องร้องเรียนการทุจริตและประพฤติมิชอบ", "level": 2}, {"code": "q3", "title": "3. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 1}]}]}, {"indicator": "ตัวชี้วัดที่ 5 การป้องกันการรับสินบน", "moits": [{"moit": 12, "title": "MOIT 12 หน่วยงานมีมาตรการ “การป้องกันการรับสินบน” ที่เป็นระบบ", "items": [{"code": "q1", "title": "1. มีประกาศเจตนารมณ์ No Gift Policy ของปีงบประมาณ พ.ศ. 2569", "level": 1}, {"code": "q2", "title": "2. มีบันทึกข้อความ ที่ผู้บริหารลงนามในคำสั่ง หรือประกาศ หรือข้อสั่งการ และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์", "level": 1}, {"code": "q3", "title": "3. มีคำสั่ง หรือประกาศ หรือข้อสั่งการ มาตรการการป้องกันการรับสินบนทุกรูปแบบ และระบุการกำหนดกลไกการกำกับติดตาม", "level": 1}, {"code": "q4", "title": "4. มีหลักฐานหนังสือแจ้งเวียน", "level": 1}, {"code": "q5", "title": "5. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 1}]}]}, {"indicator": "ตัวชี้วัดที่ 7 การดำเนินงานเพื่อป้องกันการทุจริต", "moits": [{"moit": 16, "title": "MOIT 16 หน่วยงานมีรายงานผลการดำเนินงานตามแผนปฏิบัติการป้องกัน ปราบปรามการทุจริต และประพฤติมิชอบ และแผนปฏิบัติการส่งเสริมคุณธรรมของชมรมจริยธรรม", "items": [{"code": "q1", "title": "1. รายงานผลการดำเนินงานตามแผนปฏิบัติการป้องกัน ปราบปรามการทุจริต และประพฤติมิชอบของหน่วยงาน", "level": 1}, {"code": "q1-1", "title": "1.1 มีบันทึกข้อความ ที่ผู้บริหารลงนามรับทราบรายงานผลการดำเนินงานตามแผนฯ และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์", "level": 2}, {"code": "q1-2", "title": "1.2 รายงานผลการดำเนินงานตามแผนปฏิบัติการป้องกัน ปราบปรามการทุจริต และประพฤติมิชอบของหน่วยงาน", "level": 2}, {"code": "q1-3", "title": "1.3 มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 2}, {"code": "q2", "title": "2. การรายงานผลตามแผนปฏิบัติการส่งเสริมคุณธรรมของชมรมจริยธรรมของหน่วยงาน", "level": 1}, {"code": "q2-1", "title": "2.1 บันทึกข้อความเสนอผู้บริหารสูงสุด เพื่อขอความเห็นชอบ อนุมัติและลงนามในรายงานผลตามแผนปฏิบัติการส่งเสริมคุณธรรม", "level": 2}, {"code": "q2-2", "title": "2.2 รายงานผลการปฏิบัติการส่งเสริมคุณธรรมของชมรมจริยธรรมของหน่วยงาน", "level": 2}, {"code": "q2-2-1", "title": "2.2.1 การขับเคลื่อนคุณธรรมพอเพียง “ชีวิตดีวิถีพอเพียง” ในองค์กร", "level": 3}, {"code": "q2-2-2", "title": "2.2.2 การดำเนินการ “ปฏิญญาคุณธรรม (Do & Don’t)”", "level": 3}, {"code": "q2-2-3", "title": "2.2.3 การดำเนินการ “กิจกรรมครอบครัวอบอุ่นสรรสร้างคุณธรรม”", "level": 3}, {"code": "q2-3", "title": "2.3 มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 2}]}, {"moit": 17, "title": "MOIT 17 หน่วยงานมีการประเมินความเสี่ยงการทุจริต ประจำปีงบประมาณ พ.ศ. 2569 อย่างเป็นระบบ", "items": [{"code": "q1", "title": "1. มีบันทึกข้อความ แสดงถึงการขออนุมัติจัดการประชุมการจัดทำแผนบริหารความเสี่ยงการทุจริต", "level": 1}, {"code": "q2", "title": "2. มีรายงานการประชุมการจัดทำแผนบริหารความเสี่ยงการทุจริต", "level": 1}, {"code": "q3", "title": "3. มีบันทึกข้อความ ที่ผู้บริหารลงนามรับทราบรายงานแผนบริหารความเสี่ยงการทุจริต และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์", "level": 1}, {"code": "q4", "title": "4. มีรายงานแผนบริหารความเสี่ยงการทุจริต โดยจัดทำเป็นรูปเล่มรายงานที่มีการวิเคราะห์ความเสี่ยงและจัดทำแผนบริหารความเสี่ยงการทุจริตทั้ง 8 ขั้นตอน", "level": 1}, {"code": "q5", "title": "5. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 1}]}, {"moit": 19, "title": "MOIT 19 หน่วยงานมีการรายงานผลการส่งเสริมการปฏิบัติตามประมวลจริยธรรมข้าราชการพลเรือน : กรณีการเรี่ยไรและกรณีการให้หรือรับของขวัญหรือประโยชน์อื่นใด", "items": [{"code": "q1", "title": "1. มีบันทึกข้อความ ที่ผู้บริหารรับทราบการรายงานการเรี่ยไรและการให้หรือรับของขวัญ หรือประโยชน์อื่นใด และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์", "level": 1}, {"code": "q2", "title": "2. มีรายงานการเรี่ยไรและการให้หรือรับของขวัญหรือประโยชน์อื่นใดที่พิมพ์ (Print) จากระบบ MSRS", "level": 1}, {"code": "q3", "title": "3. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 1}]}]}, {"indicator": "ตัวชี้วัดที่ 9 การเสริมสร้างวัฒนธรรมองค์กร", "moits": [{"moit": 22, "title": "MOIT 22 หน่วยงานมีแนวปฏิบัติที่เคารพสิทธิมนุษยชนและศักดิ์ศรีของผู้ปฏิบัติงาน และรายงานการป้องกันและแก้ไขปัญหาการล่วงละเมิดหรือคุกคามทางเพศในการทำงาน", "items": [{"code": "q1", "title": "1. มีบันทึกข้อความ ที่ผู้บริหารรับทราบคู่มือแนวปฏิบัติการป้องกันและแก้ไขปัญหาการล่วงละเมิดหรือคุกคามทางเพศในการทำงาน และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์", "level": 1}, {"code": "q2", "title": "2. คู่มือแนวปฏิบัติการป้องกันและแก้ไขปัญหาการล่วงละเมิดหรือคุกคามทางเพศในการทำงานของหน่วยงาน และมีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะ", "level": 1}, {"code": "q3", "title": "3. บันทึกข้อความแจ้งเวียนคู่มือแนวปฏิบัติการป้องกันและแก้ไขปัญหาการล่วงละเมิดหรือคุกคามทางเพศในการทำงาน และมีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะ", "level": 1}, {"code": "q4", "title": "4. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "level": 1}]}]}];
-        let itaDetailedFileIndex = {};
-
-        function itaEsc(s) {
-            return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-        }
-        function itaSlug(round,moit,code) {
-            return 'ita-2569-' + (round === '12m' ? 'r2' : 'r1') + '-moit' + moit + '-' + code;
-        }
-        function buildItaFileIndex(data) {
-            itaDetailedFileIndex = {};
-            (Array.isArray(data)?data:[]).forEach(row => {
-                const mt = String(row?.[1] || row?.[0] || '');
-                const mm = mt.match(/MOIT\s*(\d+)/i);
-                if(!mm) return;
-                const moit = parseInt(mm[1],10);
-                const f = {title:String(row?.[2]||''), desc:String(row?.[3]||''), url:String(row?.[4]||'')};
-                if(!f.url) return;
-                (itaDetailedFileIndex[moit] ||= []).push(f);
-            });
-        }
-        function itaKeys(t) {
-            const keys=['บันทึก','แบบฟอร์ม','รายงาน','ประกาศ','หนังสือ','ความเสี่ยง','ร้องเรียน','สินบน','เรี่ยไร','ของขวัญ','ล่วงละเมิด','พอเพียง','ปฏิญญา','ครอบครัว','สขร','งบลงทุน','งบดำเนินงาน'];
-            return keys.filter(k => t.includes(k));
-        }
-        function guessItaFiles(moit,title) {
-            const keys=itaKeys(title);
-            if(!keys.length) return [];
-            return (itaDetailedFileIndex[moit]||[]).filter(f => keys.some(k => (f.title+' '+f.desc).includes(k)));
-        }
-        function copyITADeepLink(id) {
-            const url=location.origin+location.pathname+'#'+id;
-            if(navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(url).then(()=>alert('คัดลอก URL แล้ว\n'+url));
-            else {
-                const t=document.createElement('textarea'); t.value=url; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); alert('คัดลอก URL แล้ว\n'+url);
-            }
-        }
-        function openITAPreview(url,title,subtitle) {
-            const body=document.getElementById('itaPreviewBody');
-            const ext=(url.split('?')[0].split('.').pop()||'').toLowerCase();
-            document.getElementById('itaPreviewTitle').innerText=title||'เอกสารหลักฐาน ITA';
-            document.getElementById('itaPreviewSubtitle').innerText=subtitle||'';
-            document.getElementById('itaOpenFileBtn').href=url;
-            document.getElementById('itaDownloadFileBtn').href=url;
-            if(ext==='pdf') body.innerHTML='<iframe src="'+itaEsc(url)+'" style="width:100%;height:72vh;border:0;background:white;"></iframe>';
-            else if(['png','jpg','jpeg','webp','gif'].includes(ext)) body.innerHTML='<img src="'+itaEsc(url)+'" class="img-fluid rounded shadow-sm" style="max-height:72vh;">';
-            else body.innerHTML='<div class="p-5"><i class="fas fa-file-arrow-down fa-4x text-success mb-3"></i><h5>ไฟล์ชนิดนี้ Preview ในเบราว์เซอร์ไม่ได้โดยตรง</h5><p class="text-muted">กด “เปิดไฟล์” หรือ “ดาวน์โหลด” ด้านล่าง</p></div>';
-            new bootstrap.Modal(document.getElementById('itaPreviewModal')).show();
-        }
-        function renderFullItaDetails(round) {
-            const root=document.getElementById('itaDetailedContainer'); if(!root) return;
-            let h='';
-            ITA_FULL_MASTER.forEach(group => {
-                let body='';
-                group.moits.forEach(m => {
-                    body += '<div class="ita-moit-card"><div class="ita-moit-title">'+itaEsc(m.title)+'</div>';
-                    m.items.forEach(it => {
-                        const id=itaSlug(round,m.moit,it.code);
-                        const files=guessItaFiles(m.moit,it.title);
-                        body += '<div class="ita-criterion level-'+it.level+'" id="'+id+'"><div class="ita-criterion-title">'+itaEsc(it.title)+'</div>';
-                        body += '<div class="mt-2"><button class="btn btn-sm btn-outline-secondary" onclick="copyITADeepLink(\''+id+'\')"><i class="fas fa-link me-1"></i> คัดลอก URL ข้อนี้</button></div>';
-                        if(files.length) {
-                            body += '<div class="ita-files">';
-                            files.forEach(f => {
-                                body += '<div class="ita-file-row"><div class="ita-file-name"><i class="fas fa-file-lines text-success me-2"></i>'+itaEsc(f.title||'เอกสารหลักฐาน')+'</div>';
-                                body += '<button class="btn btn-sm btn-outline-success ita-preview-btn" data-url="'+encodeURIComponent(f.url)+'" data-title="'+encodeURIComponent(f.title||'เอกสารหลักฐาน')+'" data-subtitle="'+encodeURIComponent(it.title)+'"><i class="fas fa-eye me-1"></i> Preview</button></div>';
-                            });
-                            body += '</div>';
-                        } else body += '<div class="ita-status-wait"><i class="fas fa-triangle-exclamation me-1"></i> รอเพิ่ม/ยืนยันหลักฐาน</div>';
-                        if(m.moit===5 && it.code.startsWith('q2-item')) body += '<div class="ita-admin-note">รายการนี้ให้ Admin แก้ชื่อเดือน/หัวข้อได้ภายหลัง โดย URL ไม่เปลี่ยน</div>';
-                        body += '</div>';
-                    });
-                    body += '</div>';
-                });
-                if(body) h += '<section class="ita-indicator-group"><div class="ita-indicator-head"><i class="fas fa-layer-group me-2"></i>'+itaEsc(group.indicator)+'</div>'+body+'</section>';
-            });
-            root.innerHTML=h;
-            root.querySelectorAll('.ita-preview-btn').forEach(btn => btn.addEventListener('click',()=>openITAPreview(decodeURIComponent(btn.dataset.url),decodeURIComponent(btn.dataset.title),decodeURIComponent(btn.dataset.subtitle))));
-            setTimeout(handleITADeepLink,50);
-        }
-        function handleITADeepLink() {
-            const hash=location.hash.replace(/^#/,'');
-            const m=hash.match(/^ita-2569-r([12])-moit(\d+)-(.+)$/);
-            if(!m) return;
-            const round=m[1]==='2'?'12m':'6m';
-            if(typeof setITARound==='function' && typeof currentITARound!=='undefined' && currentITARound!==round) setITARound(round);
-            const el=document.getElementById(hash);
-            if(el) {
-                document.querySelectorAll('.ita-criterion.flash').forEach(x=>x.classList.remove('flash'));
-                el.classList.add('flash'); el.scrollIntoView({behavior:'smooth',block:'center'});
-                setTimeout(()=>el.classList.remove('flash'),2500);
-            }
-        }
-        window.addEventListener('hashchange',handleITADeepLink);
-
-        const __oldShowITA = (typeof showITA==='function') ? showITA : null;
-        if(__oldShowITA) {
-            showITA = function(data) {
-                buildItaFileIndex(data);
-                const r=__oldShowITA(data);
-                renderFullItaDetails(typeof currentITARound!=='undefined'?currentITARound:'12m');
-                return r;
-            };
-        }
-        const __oldSetITARound = (typeof setITARound==='function') ? setITARound : null;
-        if(__oldSetITARound) {
-            setITARound = function(round) {
-                const r=__oldSetITARound(round);
-                renderFullItaDetails(round);
-                return r;
-            };
-        }
-
-    </script>
-    <script>
-        // ==========================================
-        // 🚀 Backend API — Cloudflare Worker + D1
-        // ==========================================
-        const API_URL = "https://thaijaroen-api.ittcmoph.workers.dev";
-
-        // ==========================================
-        // 🔌 ฟังก์ชันกลางสำหรับเรียก Backend API
-        // ==========================================
-        async function fetchAPI(action, params = {}) {
-            try {
-                const postActions = ["checkAdminLogin", "saveComplaint"];
-                let response;
-
-                if (postActions.includes(action)) {
-                    response = await fetch(API_URL + "?action=" + encodeURIComponent(action), {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(params)
-                    });
-                } else {
-                    let url = API_URL + "?action=" + encodeURIComponent(action);
-                    for (let key in params) {
-                        url += "&" + encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
-                    }
-                    response = await fetch(url);
-                }
-
-                if (!response.ok) throw new Error("HTTP " + response.status + " " + response.statusText);
-                const json = await response.json();
-                if (json.status === "success") return json.data;
-                throw new Error(json.message || "API request failed");
-            } catch (error) {
-                console.error("API Error (" + action + "):", error);
-                return null;
-            }
-        }
-
-        var allImageNews = [];
-
-        // ==========================================
-        // 🚀 3. สั่งโหลดข้อมูลทั้งหมดเมื่อเปิดหน้าเว็บ
-        // ==========================================
-        window.onload = async function() {
-            fetchAPI('getExecutiveData').then(data => { if(data) processExecutive(data); });
-            fetchAPI('getNewsData').then(data => { if(data) renderImageNews(data); });
-            fetchAPI('getAnnouncementData').then(data => { if(data) renderTextNews(data); });
-            fetchAPI('getKnowledgeData').then(data => { if(data) renderKnowledge(data); });
-            fetchAPI('getBannerData').then(data => { if(data) showBanner(data); });
-            fetchAPI('getITAData').then(data => { if(data) showITA(data); }); 
-            fetchAPI('getDownloadsData').then(data => { if(data) showDownloads(data); }); 
-            fetchAPI('getAboutData').then(data => { if(data) renderAboutTabsDynamic(data); }); 
-            fetchAPI('getVisitorCount').then(data => { if(data) showCount(data); }); 
-            fetchAPI('getPopupConfig').then(data => { if(data) handlePopup(data); });
-            loadSystemsDropdown(); 
-            // --- ระบบอ่านลิงก์จาก URL (Hash Routing) ---
-            setTimeout(function() {
-                var hash = window.location.hash;
-                if (hash.indexOf('#ita-2569-r2-moit') === 0) {
-                    showPage('ita-page');
-                    currentITARound = '12m';
-                    setITARound('12m');
-                    setTimeout(openITAAnchorFromHash, 300);
-                } else if (hash === '#contact-section') {
-                    scrollToContact(); // ถ้าลิงก์คือติดต่อเรา ให้เลื่อนจอลงไป
-                } else if (hash && hash.length > 1) {
-                    var pageId = hash.substring(1);
-                    if (pageId.indexOf('ita-2569-') === 0) {
-                        showPage('ita-page');
-                        setTimeout(handleITADeepLink, 200);
-                    } else if (document.getElementById(pageId)) {
-                        showPage(pageId);
-                    }
-                }
-            }, 600); // หน่วงเวลาเล็กน้อยรอให้หน้าเว็บสร้างเสร็จก่อน
-        };
-      
-        window.onscroll = function () { var btn = document.getElementById("btn-back-to-top"); if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) { btn.style.display = "block"; } else { btn.style.display = "none"; } };
-
-        function showPage(pageId) { 
-            var pages = ['home-page', 'about-page', 'exec-page', 'ita-page', 'downloads-page', 'admin-login-page', 'admin-dashboard-page', 'news-detail-page', 'complaint-report-page'];
-            for (var i = 0; i < pages.length; i++) { 
-                var el = document.getElementById(pages[i]);
-                if(el) el.style.display = 'none'; 
-            } 
-            var target = document.getElementById(pageId);
-            if(target) target.style.display = 'block'; 
-            
-            // สั่งให้ URL ด้านบนเปลี่ยนตามหน้าเว็บ (เพื่อก๊อปปี้ลิงก์ได้)
-            if(pageId !== 'home-page') {
-                history.pushState(null, null, '#' + pageId);
-            } else {
-                history.pushState(null, null, ' '); // ถ้าเป็นหน้าแรกให้ลบ # ออก
-            }
-            window.scrollTo(0, 0); 
-        }
-      
-        function openAboutTab(tabBtnId) { showPage('about-page'); var triggerEl = document.querySelector('#' + tabBtnId); if (triggerEl) { var tab = new bootstrap.Tab(triggerEl); tab.show(); } }
-       function scrollToContact() { 
-            showPage('home-page'); 
-            setTimeout(function() { document.getElementById('contact-section').scrollIntoView({ behavior: 'smooth' }); }, 100); 
-            // สั่งให้ URL เปลี่ยนเป็น #contact-section
-            history.pushState(null, null, '#contact-section');
-        }
-        function showCount(count) { var el = document.getElementById('visitor-count'); if(el) el.innerText = count.toLocaleString(); }
-        
-        function handlePopup(data) { 
-            if(data && data[0] === 'เปิด' && data[1]) { 
-                var pImg = document.getElementById('popupImage');
-                var mEl = document.getElementById('announcementModal');
-                if(pImg && mEl) {
-                    pImg.src = convertDriveLink(data[1]); 
-                    new bootstrap.Modal(mEl).show(); 
-                }
-            } 
-        }
-
-        // --- (โค้ดหน้า About) ---
-        function renderAboutTabsDynamic(data) {
-            if (!data || data.length === 0) { document.getElementById('v-pills-tabContent').innerHTML = '<div class="alert alert-warning text-center" style="color:#000;">ไม่พบข้อมูล กรุณาตรวจสอบฐานข้อมูล</div>'; return; }
-            var groupedData = {}; var lastMainCat = ""; var lastSubCat = "ทั่วไป";
-            for (var i = 0; i < data.length; i++) {
-                var rawMain = data[i][0] ? data[i][0].trim() : ""; var rawSub = data[i][1] ? data[i][1].trim() : "";
-                var text = data[i][2] ? data[i][2].trim() : ""; var link = data[i][3] ? data[i][3].trim() : ""; var note = data[i][4] ? data[i][4].trim() : "";         
-                if (rawMain !== "") { lastMainCat = rawMain; lastSubCat = rawSub !== "" ? rawSub : "ทั่วไป"; } else if (rawSub !== "") { lastSubCat = rawSub; }
-                var mainCat = lastMainCat; var subCat = lastSubCat;
-                if (!mainCat || (text === "" && link === "")) continue;
-                if (!groupedData[mainCat]) groupedData[mainCat] = {};
-                if (!groupedData[mainCat][subCat]) groupedData[mainCat][subCat] = [];
-                groupedData[mainCat][subCat].push({ text: text, link: link, note: note });
-            }
-            var tabsHtml = ''; var contentHtml = ''; var dropdownHtml = ''; var mainIndex = 0;
-            for (var mainCat in groupedData) {
-                var safeMainId = 'dynamic-main-' + mainIndex; var isMainActive = (mainIndex === 0) ? 'active' : ''; var isMainShow = (mainIndex === 0) ? 'show active' : '';
-                var icon = 'fas fa-folder-open text-secondary'; var tabIcon = 'fas fa-folder-open';
-                if(mainCat.indexOf('โครงสร้าง') > -1) { icon = 'fas fa-sitemap text-success'; tabIcon = 'fas fa-sitemap'; }
-                else if(mainCat.indexOf('หน้าที่') > -1) { icon = 'fas fa-tasks text-warning'; tabIcon = 'fas fa-tasks'; }
-                else if(mainCat.indexOf('แผน') > -1) { icon = 'fas fa-map-signs text-primary'; tabIcon = 'fas fa-map-signs'; }
-                else if(mainCat.indexOf('สาธารณสุข') > -1 || mainCat.indexOf('วิสัยทัศน์') > -1) { icon = 'fas fa-heartbeat text-danger'; tabIcon = 'fas fa-heartbeat'; }
-                else if(mainCat.indexOf('คู่มือ') > -1) { icon = 'fas fa-book-open text-info'; tabIcon = 'fas fa-book-open'; }
-                else if(mainCat.indexOf('นโยบาย') > -1) { icon = 'fas fa-shield-alt text-success'; tabIcon = 'fas fa-shield-alt'; }
-                else if(mainCat.indexOf('รายงาน') > -1) { icon = 'fas fa-chart-line text-primary'; tabIcon = 'fas fa-chart-line'; }
-                dropdownHtml += '<li><a class="dropdown-item rounded py-2" style="color:#000; font-weight:500;" href="javascript:void(0)" onclick="openAboutTab(\'v-pills-' + safeMainId + '-tab\')"><i class="' + icon + ' me-2"></i> ' + mainCat + '</a></li>';
-                tabsHtml += '<button class="nav-link ' + isMainActive + '" id="v-pills-' + safeMainId + '-tab" data-bs-toggle="pill" data-bs-target="#v-pills-' + safeMainId + '" type="button" role="tab"><i class="' + tabIcon + ' me-2"></i> ' + mainCat + '</button>';
-                contentHtml += '<div class="tab-pane fade ' + isMainShow + '" id="v-pills-' + safeMainId + '" role="tabpanel">';
-                contentHtml += '<h4 style="color:#000; font-weight:bold; border-bottom:2px solid #198754; padding-bottom:10px;">' + mainCat + '</h4>';
-                var subCategories = Object.keys(groupedData[mainCat]);
-                var hasSubTabs = (subCategories.length > 1 || (subCategories.length === 1 && subCategories[0] !== "ทั่วไป"));
-                if (hasSubTabs) {
-                    contentHtml += '<ul class="nav nav-tabs sub-nav-tabs" id="subtab-' + safeMainId + '" role="tablist">';
-                    for(var j=0; j<subCategories.length; j++) {
-                        var subCat = subCategories[j]; var safeSubId = safeMainId + '-sub-' + j; var isSubActive = (j === 0) ? 'active' : '';
-                        contentHtml += '<li class="nav-item" role="presentation"><button class="nav-link ' + isSubActive + '" id="' + safeSubId + '-tab" data-bs-toggle="tab" data-bs-target="#' + safeSubId + '" type="button" role="tab">' + subCat + '</button></li>';
-                    }
-                    contentHtml += '</ul><div class="tab-content" id="subcontent-' + safeMainId + '">';
-                }
-                for(var j=0; j<subCategories.length; j++) {
-                    var subCat = subCategories[j]; var items = groupedData[mainCat][subCat]; var safeSubId = safeMainId + '-sub-' + j; var isSubActive = (j === 0) ? 'show active' : '';
-                    if (hasSubTabs) { contentHtml += '<div class="tab-pane fade ' + isSubActive + '" id="' + safeSubId + '" role="tabpanel">'; }
-                    var innerHtml = '';
-                    if (mainCat.indexOf('สาธารณสุข') > -1 || mainCat.indexOf('วิสัยทัศน์') > -1) {
-                        innerHtml += '<div class="row g-4 mt-1">';
-                        for(var k=0; k<items.length; k++) {
-                            var vText = items[k].text; var vLink = items[k].link || ''; var vIcon = 'fa-heartbeat'; var vColor = 'text-primary';
-                            if(vText.indexOf('วิสัยทัศน์') > -1) { vIcon = 'fa-eye'; vColor = 'text-primary'; }
-                            if(vText.indexOf('พันธกิจ') > -1) { vIcon = 'fa-bullseye'; vColor = 'text-danger'; }
-                            if(vText.indexOf('ค่านิยม') > -1) { vIcon = 'fa-gem'; vColor = 'text-warning'; }
-                            if (vLink !== "") {
-                                if(!vLink.startsWith('http')) vLink = 'https://' + vLink;
-                                innerHtml += '<div class="col-md-6"><a href="' + vLink + '" target="_blank" class="text-decoration-none d-block h-100"><div class="bg-light p-4 rounded-4 border h-100 text-center shadow-sm" style="transition: 0.3s;" onmouseover="this.style.transform=\'translateY(-5px)\'" onmouseout="this.style.transform=\'translateY(0)\'"><i class="fas ' + vIcon + ' fa-3x ' + vColor + ' mb-3"></i><p style="color:#000; font-size:1.1rem; text-align:left; margin:0; font-weight:500;">' + vText.replace(/\n/g, '<br>') + '</p></div></a></div>';
-                            } else {
-                                innerHtml += '<div class="col-md-6"><div class="bg-light p-4 rounded-4 border h-100 text-center"><i class="fas ' + vIcon + ' fa-3x ' + vColor + ' mb-3"></i><p style="color:#000; font-size:1.1rem; text-align:left; margin:0;">' + vText.replace(/\n/g, '<br>') + '</p></div></div>';
-                            }
-                        }
-                        innerHtml += '</div>';
-                    } else {
-                        innerHtml += '<div class="d-flex flex-column gap-3 mt-3">';
-                        for(var k=0; k<items.length; k++) {
-                            var dText = items[k].text || ''; var dLink = items[k].link || ''; var dNote = items[k].note ? '<div style="color:#475569; font-size:0.9rem; margin-top:8px;"><i class="fas fa-info-circle me-1"></i>' + items[k].note + '</div>' : '';
-                            if (dLink !== "") {
-                                if(!dLink.startsWith('http')) dLink = 'https://' + dLink;
-                                var fIcon = 'fa-file-pdf text-danger'; 
-                                if(mainCat.indexOf('รายงาน') > -1) fIcon = 'fa-chart-bar text-primary';
-                                else if(mainCat.indexOf('นโยบาย') > -1) fIcon = 'fa-shield-alt text-success';
-                                else if(mainCat.indexOf('แผน') > -1) fIcon = 'fa-map text-warning'; 
-                                else if(mainCat.indexOf('โครงสร้าง') > -1) fIcon = 'fa-sitemap text-info'; 
-                                else if(mainCat.indexOf('หน้าที่') > -1) fIcon = 'fa-tasks text-secondary'; 
-                                innerHtml += '<a href="' + dLink + '" target="_blank" class="list-group-item list-group-item-action p-3 rounded border d-flex align-items-start shadow-sm bg-white" style="text-decoration:none; transition:0.2s;">';
-                                innerHtml += '<i class="fas ' + fIcon + ' fs-3 me-3 mt-1"></i><div><div style="color:#000; font-weight:bold; font-size:1.1rem;">' + (dText || 'เอกสารแนบ') + '</div>' + dNote + '</div></a>';
-                            } else if (dText !== "") {
-                                innerHtml += '<div class="p-4 rounded border bg-white shadow-sm"><div style="color:#000; font-size:1.1rem; line-height:1.7;">' + dText.replace(/\n/g, '<br>') + '</div>' + dNote + '</div>';
-                            }
-                        }
-                        innerHtml += '</div>';
-                    }
-                    contentHtml += innerHtml;
-                    if (hasSubTabs) { contentHtml += '</div>'; }
-                }
-                if (hasSubTabs) { contentHtml += '</div>'; }
-                contentHtml += '</div>';
-                mainIndex++;
-            }
-            document.getElementById('about-dropdown-menu').innerHTML = dropdownHtml;
-            document.getElementById('v-pills-tab').innerHTML = tabsHtml;
-            document.getElementById('v-pills-tabContent').innerHTML = contentHtml;
-        }
-
-        // --- (โค้ดข่าวสาร) ---
-        function openNewsDetail(originalIndex) { 
-            var newsData = allImageNews[originalIndex]; if(!newsData) return; 
-            var title = newsData[1];
-            fetchAPI('incrementViewCount', { sheetName: 'News', title: title });
-            var currentViews = parseInt(newsData[5]) || 0; newsData[5] = currentViews + 1; 
-            document.getElementById('nd-views').innerText = newsData[5]; 
-            var imgEl = document.getElementById('nd-image'); var linkBtn = document.getElementById('nd-link'); 
-            document.getElementById('nd-category').innerText = newsData[3] || 'ข่าวกิจกรรม'; 
-            if(newsData[4]) { imgEl.src = convertDriveLink(newsData[4]); imgEl.style.display = 'inline-block'; } else { imgEl.style.display = 'none'; } 
-            document.getElementById('nd-title').innerText = title; document.getElementById('nd-date').innerText = newsData[0]; 
-            var rawLink = (newsData[2] && newsData[2] !== "") ? newsData[2].trim() : ""; 
-            if(rawLink !== "" && rawLink !== "-") { if (!rawLink.startsWith('http://') && !rawLink.startsWith('https://')) { rawLink = 'https://' + rawLink; } linkBtn.href = rawLink; linkBtn.style.display = 'inline-block'; } else { linkBtn.href = "#"; linkBtn.style.display = 'none'; } 
-            showPage('news-detail-page'); 
-        }
-
-        function renderImageNews(data) { 
-            allImageNews = data.map(function(item, idx) { var copy = item.slice(); copy.push(idx); return copy; }); 
-            var container = document.getElementById('image-news-container'); var filterSelect = document.getElementById('newsFilter'); 
-            if (!data || data.length === 0) { container.innerHTML = '<div class="alert alert-light border text-center p-4 w-100">ยังไม่มีข้อมูลข่าวกิจกรรม</div>'; return; } 
-            var sources = []; for(var i=0; i<data.length; i++) { var cat = data[i][3] || "ข่าวทั่วไป"; if(sources.indexOf(cat) === -1) sources.push(cat); } 
-            filterSelect.innerHTML = '<option value="all">ดูทุกหมวดหมู่</option>'; for(var s=0; s<sources.length; s++) { var opt = document.createElement('option'); opt.value = sources[s]; opt.innerHTML = sources[s]; filterSelect.appendChild(opt); } 
-            displayFilteredImageNews(); 
-        }
-
-        function filterImageNews() { displayFilteredImageNews(); }
-
-        function displayFilteredImageNews() { 
-            var container = document.getElementById('image-news-container'); var filterVal = document.getElementById('newsFilter').value; 
-            var displayData = (filterVal === 'all') ? allImageNews : allImageNews.filter(function(item) { return (item[3] || "ข่าวทั่วไป") === filterVal; }); 
-            var groups = {}; for(var i=0; i<displayData.length; i++) { var cat = displayData[i][3] || "ข่าวทั่วไป"; if(!groups[cat]) groups[cat] = []; groups[cat].push(displayData[i]); } 
-            var html = '<div class="row g-4">'; for(var cat in groups) { html += '<div class="col-12"><h5 class="text-success border-bottom pb-2 mt-2">' + cat + '</h5></div>'; var limit = (filterVal === 'all') ? 4 : groups[cat].length; for(var k=0; k < Math.min(groups[cat].length, limit); k++) { var r = groups[cat][k]; var imgLink = r[4] ? convertDriveLink(r[4]) : "https://via.placeholder.com/400x250?text=News"; var views = r[5] ? r[5] : "0"; var origIdx = r[6]; html += '<div class="col-sm-6 col-lg-3"><div class="card h-100 bg-white news-card" onclick="openNewsDetail(' + origIdx + ')"><img src="' + imgLink + '" class="card-img-top" style="height: 150px; object-fit: cover;"><div class="card-body p-3 d-flex flex-column"><span class="text-dark fw-bold text-truncate-2 mb-2">' + r[1] + '</span><div class="news-meta mb-3"><i class="far fa-calendar-alt text-dark"></i> ' + r[0] + ' <span class="ms-2"><i class="far fa-eye text-dark"></i> ' + views + ' ครั้ง</span></div><div class="mt-auto"><button class="btn btn-success btn-sm px-3" style="font-size:0.8rem;">อ่านต่อ... <i class="fas fa-arrow-right ms-1"></i></button></div></div></div></div>'; } } html += '</div>'; container.innerHTML = html; 
-        }
-
-        function renderTextNews(data) { 
-            var container = document.getElementById('text-news-container'); 
-            if (!data || data.length === 0) { container.innerHTML = '<div class="col-12 text-center text-muted p-4 border bg-white rounded">ยังไม่มีประกาศ/จัดซื้อจัดจ้าง ในขณะนี้</div>'; return; } 
-            var groups = {}; for(var i=0; i<data.length; i++) { var cat = data[i][3] || "ประกาศทั่วไป"; if(!groups[cat]) groups[cat] = []; groups[cat].push(data[i]); } 
-            var html = ''; for(var cat in groups) { html += '<div class="col-md-6 col-lg-4"><div class="text-news-box"><h5 class="text-success fw-bold border-bottom pb-2 mb-3">' + cat + '</h5>'; var items = groups[cat].slice(0, 5); for(var j=0; j<items.length; j++) { var r = items[j]; var views = r[4] ? r[4] : "0"; var rawLink = (r[2] && r[2] !== "") ? r[2].trim() : "#"; if(rawLink !== "#" && !rawLink.startsWith('http')) { rawLink = 'https://' + rawLink; } var safeTitle = r[1].replace(/'/g, "\\'").replace(/"/g, '"'); html += '<div class="text-news-item"><a href="javascript:void(0)" onclick="clickTextNews(\'' + rawLink + '\', \'' + safeTitle + '\', this)" class="text-news-title">' + r[1] + '</a><div class="news-meta mt-1"><i class="fas fa-calendar-day text-success"></i> ' + r[0] + ' <span class="ms-2"><i class="fas fa-eye"></i> <span class="view-count-num">' + views + '</span> ครั้ง</span></div></div>'; } html += '</div></div>'; } container.innerHTML = html; 
-        }
-
-        function clickTextNews(url, title, el) {
-            fetchAPI('incrementViewCount', { sheetName: 'Announcements', title: title });
-            var parent = el.parentElement; var numSpan = parent.querySelector('.view-count-num');
-            if(numSpan) { var current = parseInt(numSpan.innerText) || 0; numSpan.innerText = current + 1; }
-            if(url !== "#") window.open(url, '_blank');
-        }
-
-        function renderKnowledge(data) { var container = document.getElementById('knowledge-list-container'); if (!data || data.length === 0) { container.innerHTML = '<div class="text-center text-muted w-100 p-3">ยังไม่มีข้อมูลแหล่งความรู้</div>'; return; } var html = ''; for(var i=0; i<data.length; i++) { var title = data[i][0]; var rawLink = (data[i][1] && data[i][1] !== "") ? data[i][1].trim() : "#"; if(rawLink !== "#" && !rawLink.startsWith('http')) { rawLink = 'https://' + rawLink; } html += '<div class="knowledge-item"><a href="' + rawLink + '" target="_blank" title="' + title + '"><i class="fas fa-link text-success me-2" style="font-size: 0.8em;"></i>' + title + '</a></div>'; } container.innerHTML = html; }
-
-        // --- (โค้ดผู้บริหาร และระบบอื่นๆ) ---
-        function doAdminLogin() { 
-            var pass = document.getElementById('adminPass').value; 
-            if(!pass) { alert("กรุณาใส่รหัสผ่าน"); return; } 
-            document.getElementById('login-spin').classList.remove('d-none'); 
-            fetchAPI('checkAdminLogin', { pass: pass }).then(res => {
-                document.getElementById('login-spin').classList.add('d-none'); 
-                if(res && res.success) { document.getElementById('btn-open-sheet').href = res.sheetUrl; showPage('admin-dashboard-page'); } 
-                else { alert("❌ รหัสผ่านไม่ถูกต้อง"); }
-            });
-        }
-
-        function processExecutive(data) { 
-            if (!data || data.length === 0) return; 
-            var sidebar = document.getElementById('executive-sidebar'); 
-            
-            // ดึงข้อมูล สสอ. (กลุ่มที่ 1) มาแสดงด้านข้าง
-            var chief = data.filter(function(r) { return r[3] == 1; })[0]; 
-            if (chief) { 
-                sidebar.innerHTML = '<div class="exec-card-small"><img src="' + convertDriveLink(chief[2]) + '" class="exec-img-small"><div class="p-3 bg-white border-top"><h6 class="fw-bold text-success mb-1 text-truncate">' + chief[0] + '</h6><small class="text-muted d-block text-truncate">' + chief[1] + '</small></div></div>'; 
-            } 
-            
-            var container = document.getElementById('exec-full-container'); 
-            container.innerHTML = ""; 
-            
-            var groups = [
-                {id: 1, name: "สาธารณสุขอำเภอ"}, {id: 2, name: "ผู้ช่วย สาธารณสุขอำเภอ."}, {id: 3, name: "ผู้อำนวยการ รพ.สต."}, 
-                {id: 4, name: "พยาบาลวิชาชีพ"}, {id: 5, name: "นักวิชาการสาธารณสุข"}, {id: 6, name: "เจ้าพนักงานทันตสาธารณสุข"}, 
-                {id: 7, name: "เจ้าพนักงานสาธารณสุข"}, {id: 8, name: "ลูกจ้าง"}, {id: 9, name: "เจ้าพนักงานเภสัชกรรม"}, 
-                {id: 10, name: "พนักงานการเงินและบัญชี"},{id: 11, name: "พนักงานทำความสะอาดอาคาร"},
-            ]; 
-            
-            for (var g = 0; g < groups.length; g++) { 
-                var members = data.filter(function(r) { return r[3] == groups[g].id; }); 
-                if(members.length > 0) renderExecGroup(container, groups[g].name, members); 
-            } 
-        }
-
-        function renderExecGroup(container, title, people) { 
-            var html = '<div class="text-center mb-5"><h4 class="d-inline-block border-bottom border-3 border-success pb-2 mb-4 text-secondary">' + title + '</h4><div class="row justify-content-center g-4">'; 
-            
-            for (var i = 0; i < people.length; i++) { 
-                var p = people[i]; 
-                var p4 = p[4] ? p[4] : "-"; // สังกัด / รพ.สต.
-                var p5 = p[5] ? p[5] : ""; // เบอร์โทรศัพท์ (คอลัมน์ที่ 6 หรือ Index 5)
-                
-                // โค้ดสร้างป้ายเบอร์โทรศัพท์ (ถ้ามีข้อมูลถึงจะแสดง)
-                var phoneBadge = '';
-                if (p5 !== "" && p5 !== "-") {
-                    phoneBadge = '<div class="mt-2"><span class="badge bg-success-subtle text-success border border-success-subtle fw-medium" style="font-size: 0.8rem;"><i class="fas fa-phone-alt me-1"></i> ' + p5 + '</span></div>';
-                }
-
-                html += '<div class="col-6 col-md-4 col-lg-3">';
-                html += '<div class="exec-card-full">';
-                html += '<center><img src="' + convertDriveLink(p[2]) + '" class="exec-img-full"></center>';
-                html += '<div class="card-body text-center mt-2 px-2 pb-3">'; // เพิ่ม padding-bottom เล็กน้อย
-                html += '<h6 class="fw-bold text-dark mb-1 text-truncate">' + p[0] + '</h6>';
-                html += '<p class="small text-success mb-1 text-truncate">' + p[1] + '</p>';
-                html += '<span class="badge bg-light text-secondary border fw-normal text-truncate mb-1" style="max-width:100%"><i class="fas fa-hospital-alt me-1"></i> ' + p4 + '</span>';
-                html += phoneBadge; // เอาป้ายเบอร์โทรศัพท์มาแปะตรงนี้
-                html += '</div></div></div>'; 
-            } 
-            html += '</div></div>'; 
-            container.innerHTML += html; 
-        }
-        function showBanner(data) { var c = document.getElementById('banner-container'); if(data && data.length > 0) { c.innerHTML = ""; for(var i=0; i<data.length; i++) { c.innerHTML += '<div class="carousel-item ' + (i==0?'active':'') + '"><img src="' + convertDriveLink(data[i][0]) + '" class="d-block w-100"></div>'; } } }
-        
-       var allITAData = [];
-        var currentITARound = '12m';
-
-        // Master Criteria ITA 2569 — ใช้สร้างรายละเอียดระดับข้อ/หัวข้อย่อย
-        var ITA_MASTER_12M = {"4": [{"title": "MOIT 4 หน่วยงานมีการวางระบบการจัดซื้อจัดจ้างและการจัดหาพัสดุรายเดือน ประจำปีงบประมาณ", "content": ""}, {"title": "ข้อ 1. ประกาศเผยแพร่แผนการจัดซื้อจัดจ้างและการจัดหาพัสดุ ประจำปีของหน่วยงาน ภายใน 30 วันทำการ ระบุวันที่ที่ได้รับการจัดสรรงบประมาณในช่องคำอธิบายชี้แจงประกอบหลักฐาน วันที่ที่ได้ ทำการประกาศเผยแพร่ให้ชัดเจน", "content": ""}, {"title": "1. มีบันทึกข้อความ ที่ผู้บริหารลงนามรับทราบแผนการจัดซื้อจัดจ้างประจำปีของหน่วยงานและมีการขออนุญาตนำไปเผยแพร่บนเว็บไชต์ของหน่วยงาน", "content": ""}, {"title": "2. มีหนังสือจัดสรรงบประมาณของหน่วยงาน ประจำปีงบประมาณ พ.ศ. 256๙", "content": ""}, {"title": "3. มีแผนการจัดซื้อจัดจ้างและการจัดหาพัสดุของหน่วยงาน ประจำปีงบประมาณ พ.ศ. 2569 (งบดำเนินงาน และ งบลงทุน)", "content": ""}, {"title": "4. มีคำสั่งมอบหมายการปิดประกาศ หรือปลดประกาศ", "content": ""}, {"title": "5. มีแบบฟอร์มการเผยแพร่ข้อมูล ต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "content": ""}, {"title": "ข้อ 2. การป้องกันผู้ที่มีหน้าที่ดำเนินการในการจัดซื้อจัดจ้างเป็นผู้มีส่วนได้ส่วนเสียกับผู้ยื่นข้อเสนอหรือคู่สัญญา", "content": ""}, {"title": "1. มีบันทึกข้อความ แจ้งเวียนประกาศสำนักงานปลัดกระทรวงสาธารณสุข ว่าด้วยแนวทางปฏิบัติงานเพื่อตรวจสอบบุคลากรในหน่วยงานด้านการจัดซื้อจัดจ้าง พ.ศ. 2560 และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์ของหน่วยงาน", "content": ""}, {"title": "2. มีประกาศสำนักงานปลัดกระทรวงสาธารณสุขว่าด้วยแนวทางปฏิบัติงานเพื่อตรวจสอบบุคลากรในหน่วยงานด้านการจัดซื้อจัดจ้าง พ.ศ. 2560 ลงวันที่ 12 ตุลาคม พ.ศ. 2560 และแบบแสดงความบริสุทธิ์ใจในการจัดซื้อจัดจ้างของหน่วยงานในการเปิดเผยข้อมูล ความขัดแย้งทางผลประโยชน์ของหัวหน้าเจ้าหน้าที่ เจ้าหน้าที่ และผู้ตรวจรับพัสดุ จำนวน 2 แบบ คือ วงเงินเล็กน้อยไม่เกิน 100,000 บาท และวงเงินเกิน 100,000 บาท", "content": ""}, {"title": "3. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "content": ""}, {"title": "ข้อ 3. รายงานผลของแผนการจัดซื้อจัดจ้างและการจัดหาพัสดุประจำปีของหน่วยงาน ตามรอบระยะเวลาที่กำหนด 3.1 งบลงทุน ทุกรอบการประเมิน รอบ 6 เดือน และรอบ 12 เดือน 3.2 งบดำเนินงาน ทุกรอบการประเมิน รอบ 6 เดือน และรอบ 12 เดือน", "content": ""}, {"title": "1. มีบันทึกข้อความ ที่ผู้บริหารรับทราบรายงานผลของแผนการจัดซื้อจัดจ้างประจำปี ของหน่วยงาน และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์ของหน่วยงาน", "content": ""}, {"title": "2. มีรายงานผลการดำเนินการตามแผนการจัดซื้อจัดจ้างและการจัดหาพัสดุ ประจำปีงบประมาณ พ.ศ. 2569 ตามข้อกำหนด 2.1 งบลงทุน ทุกรอบการประเมิน รอบ 6 เดือน และรอบ 12 เดือน", "content": ""}, {"title": "2. มีรายงานผลการดำเนินการตามแผนการจัดซื้อจัดจ้างและการจัดหาพัสดุ ประจำปีงบประมาณ พ.ศ. 2569 ตามข้อกำหนด 2.2 งบดำเนินงาน ทุกรอบการประเมิน รอบ 6 เดือน และรอบ 12 เดือน", "content": ""}, {"title": "3. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "content": ""}], "5": [{"title": "MOIT 5 หน่วยงานมีการสรุปผลการจัดซื้อจัดจ้างและการจัดหาพัสดุรายเดือน ประจำปีงบประมาณ พ.ศ. 2569", "content": ""}, {"title": "1. มีบันทึกข้อความ ที่ผู้บริหารลงนามรับทราบแบบ สขร. 1 รอบ 6 เดือน และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์ของหน่วยงาน", "content": ""}, {"title": "2. มีแบบสรุปผลการดำเนินการจัดซื้อจัดจ้างในรอบเดือน (แบบ สขร. 1) รอบ 6 เดือน เดือนตุลาคม 2568 – เดือนมีนาคม 2569", "content": "เดือนตุลาม 2568"}, {"title": "3. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "content": ""}], "7": [{"title": "2. มีแบบสรุปผลการดำเนินการจัดซื้อจัดจ้างในรอบเดือน (แบบ สขร. 1) รอบ 6 เดือน เดือนตุลาคม 2568 – เดือนมีนาคม 2569", "content": "เดือนธันวาม 2568"}, {"title": "MOIT7 หน่วยงานมีการรายงานการประเมินผลการปฏิบัติราชการของบุคลากรในหน่วยงาน และเปิดเผยผลการปฏิบัติราชการ ระดับดีเด่น และระดับดีมาก ในที่เปิดเผยให้ทราบ ของปีงบประมาณ พ.ศ. 2568 และปีงบประมาณ พ.ศ. 2569", "content": ""}, {"title": "1. มีบันทึกข้อความ ที่ผู้บริหารลงนามในประกาศผลการปฏิบัติราชการประจำปี ของบุคลากรในหน่วยงาน ระดับดีเด่น และดีมาก (ข้าราชการ ลูกจ้างประจำ พนักงานราชการ ลูกจ้างชั่วคราว และพนักงานกระทรวงสาธารณสุข) มีการขออนุญาต นำขึ้นเผยแพร่บนเว็บไซต์ของหน่วยงาน", "content": ""}, {"title": "2. มีประกาศรายงานการประเมินผลการปฏิบัติราชการประจำปีของบุคลากรในหน่วยงาน ระดับดีเด่น และดีมาก (ข้าราชการ ลูกจ้างประจำ พนักงานราชการ ลูกจ้างชั่วคราว และพนักงานกระทรวงสาธารณสุข)", "content": ""}, {"title": "3. มีหลักฐานประกาศรายงานการประเมินผลการปฏิบัติราชการประจำปีของบุคลากร ในหน่วยงานระดับดีเด่น และดีมาก (ข้าราชการ ลูกจ้างประจำ พนักงานราชการ ลูกจ้างชั่วคราว และพนักงานกระทรวงสาธารณสุข) - รอบสอง ของปีงบประมาณ พ.ศ. 2568 (1 เมษายน 2568-30 กันยายน 2568)", "content": ""}, {"title": "4. แบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "content": ""}], "10": [{"title": "2. มีแบบสรุปผลการดำเนินการจัดซื้อจัดจ้างในรอบเดือน (แบบ สขร. 1) รอบ 6 เดือน เดือนตุลาคม 2568 – เดือนมีนาคม 2569", "content": "เดือนมีนาคม 2569"}, {"title": "MOIT10 หน่วยงานมีสรุปผลการดำเนินงานเรื่องร้องเรียนการปฏิบัติงานหรือการให้บริการ ของเจ้าหน้าที่ภายในหน่วยงาน และเรื่องร้องเรียนการทุจริตและประพฤติมิชอบ", "content": ""}, {"title": "1. มีบันทึกข้อความ ที่ผู้บริหารลงนามรับทราบรายงานสรุปผลการดำเนินงานเรื่องร้องเรียน ตามข้อ (1) และข้อ (2) ที่มีการวิเคราะห์ปัญหา / อุปสรรคและแนวทางแก้ไข และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์ของหน่วยงาน", "content": ""}, {"title": "2. มีรายงานสรุปผลการดำเนินงานเรื่องร้องเรียนตามข้อ (1) และข้อ (2) รอบ 6 เดือน ที่มีการวิเคราะห์ปัญหา / อุปสรรคและแนวทางแก้ไข (แนบตามข้อ 1.) รอบ 6 เดือน (1 ตุลาคม 2568-31 มีนาคม 2569) ประกอบด้วย 2.1 สรุปผลการดำเนินงานเรื่องร้องเรียนการปฏิบัติงานหรือการให้บริการของเจ้าหน้าที่ภายในหน่วยงาน 2.2 สรุปผลการดำเนินงานเรื่องร้องเรียนการทุจริตและประพฤติมิชอบ", "content": ""}, {"title": "3. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "content": ""}], "12": [{"title": "MOIT12 หน่วยงานมีมาตรการ “การป้องกันการรับสินบน” ที่เป็นระบบ", "content": ""}, {"title": "1. มีประกาศเจตนารมณ์เป็นหน่วยงานที่เจ้าหน้าที่ของรัฐทุกคนไม่รับของขวัญ และของกำนัลทุกชนิดจากการปฏิบัติหน้าที่ (No Gift Policy) ของปีงบประมาณ พ.ศ. 2569 ที่มีลักษณะเป็น Infographic No Gift Policy ในนามหัวหน้าหน่วยงาน อยู่หน้าเว็บไซต์หลักของหน่วยงาน", "content": ""}, {"title": "2. มีบันทึกข้อความ ที่ผู้บริหารลงนามในคำสั่ง หรือประกาศ หรือข้อสั่งการ และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์ของหน่วยงาน", "content": ""}, {"title": "3. มีคำสั่ง หรือประกาศ หรือข้อสั่งการ มาตรการการป้องกันการรับสินบนทุกรูปแบบ และระบุการกำหนดกลไกการกำกับติดตาม ของปีงบประมาณ พ.ศ. 2569 ตามข้อมูลประกอบข้อคำถาม ประเด็นข้อ 1. ถึงข้อ 5.", "content": ""}, {"title": "4. มีหลักฐานหนังสือแจ้งเวียน", "content": ""}, {"title": "5. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "content": ""}], "16": [{"title": "MOIT16 หน่วยงานมีรายงานผลการดำเนินงานตามแผนปฏิบัติการป้องกัน ปราบปรามการทุจริต และประพฤติมิชอบ ประจำปีงบประมาณ พ.ศ. 2569 และรายงานผลการดำเนินงาน ตามแผนปฏิบัติการส่งเสริมคุณธรรมของชมรมจริยธรรมของหน่วยงาน ประจำปีงบประมาณ พ.ศ. 2569", "content": ""}, {"title": "1. รายงานผลการดำเนินงานตามแผนปฏิบัติการป้องกัน ปราบปรามการทุจริต และประพฤติมิชอบของหน่วยงาน ประจำปีงบประมาณ พ.ศ. 2569 รอบ 6 เดือน", "content": ""}, {"title": "1.1 มีบันทึกข้อความ ที่ผู้บริหารลงนามรับทราบรายงานผลการดำเนินงาน ตามแผนปฏิบัติการป้องกัน ปราบปรามการทุจริตและประพฤติมิชอบของหน่วยงาน ประจำปีงบประมาณ พ.ศ. 2569 รอบ 6 เดือน และมีการขออนุญาตนำไปเผยแพร่ บนเว็บไซต์ของหน่วยงาน", "content": ""}, {"title": "1.2 รายงานผลการดำเนินงานตามแผนปฏิบัติการป้องกัน ปราบปรามการทุจริต และประพฤติมิชอบของหน่วยงาน ประจำปีงบประมาณ พ.ศ. 2569 รอบ 6 เดือน (1 ตุลาคม 2568-31 มีนาคม 2569) หน่วยงานต้องนำ link วางในระบบ MITAS ภายในวันที่ 27 มีนาคม 2569", "content": ""}, {"title": "1.3 มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "content": ""}, {"title": "2. การรายงานผลตามแผนปฏิบัติการส่งเสริมคุณธรรมของชมรมจริยธรรม ของหน่วยงาน ประจำปีงบประมาณ พ.ศ. 2569 (รอบ 6 เดือน)", "content": ""}, {"title": "2.1 บันทึกข้อความเสนอผู้บริหารสูงสุดของหน่วยงาน เพื่อขอความเห็นชอบ อนุมัติและลงนามในรายงานผลตามแผนปฏิบัติการส่งเสริมคุณธรรมของชมรมจริยธรรมของหน่วยงาน ประจำปีงบประมาณ พ.ศ. 2569 และมีการขออนุญาตนำไปเผยแพร่ บนเว็บไซต์ของหน่วยงาน", "content": ""}, {"title": "2.2 รายงานผลการปฏิบัติการส่งเสริมคุณธรรมของชมรมจริยธรรมของหน่วยงาน ประจำปีงบประมาณ พ.ศ. 2569 (แบบฟอร์ม ตามคู่มือฯ)", "content": ""}, {"title": "2.2.1 การขับเคลื่อนคุณธรรมพอเพียง “ชีวิตดีวิถีพอเพียง” ในองค์กร", "content": ""}, {"title": "2.2.2 การดำเนินการ “ปฏิญญาคุณธรรม (Do & Don’t)”", "content": ""}, {"title": "2.2.3 การดำเนินการ “กิจกรรมครอบครัวอบอุ่นสรรสร้างคุณธรรม”", "content": ""}, {"title": "2.3 มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "content": ""}], "17": [{"title": "MOIT17 หน่วยงานมีการประเมินความเสี่ยงการทุจริต ประจำปีงบประมาณ พ.ศ. 2569 อย่างเป็นระบบ", "content": ""}, {"title": "1. มีบันทึกข้อความ แสดงถึงการขออนุมัติจัดการประชุมการจัดทำแผนบริหารความเสี่ยงการทุจริต ประจำปีงบประมาณ พ.ศ. 2569 ของหน่วยงาน", "content": ""}, {"title": "2. มีรายงานการประชุมการจัดทำแผนบริหารความเสี่ยงการทุจริต ประจำปีงบประมาณ พ.ศ. 2569 ของหน่วยงาน", "content": ""}, {"title": "3. มีบันทึกข้อความ ที่ผู้บริหารลงนามรับทราบรายงานแผนบริหารความเสี่ยงการทุจริต ประจำปีงบประมาณ พ.ศ. 2569 ของหน่วยงานที่ชัดเจน และมีการขออนุญาตนำไปเผยแพร่ บนเว็บไซต์ของหน่วยงาน", "content": ""}, {"title": "4. มีรายงานแผนบริหารความเสี่ยงการทุจริต ประจำปีงบประมาณ พ.ศ. 2569 ของหน่วยงาน โดยจัดทำเป็นรูปเล่มรายงานที่มีการวิเคราะห์ความเสี่ยงและจัดทำแผนบริหาร ความเสี่ยงการทุจริตทั้ง 8 ขั้นตอน (ขั้นตอนที่ 1-8 หน้า 91 ถึงหน้า 98)", "content": ""}, {"title": "5. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "content": ""}], "19": [{"title": "MOIT19 หน่วยงานมีการรายงานผลการส่งเสริมการปฏิบัติตามประมวลจริยธรรมข้าราชการพลเรือน : กรณีการเรี่ยไรและกรณีการให้หรือรับของขวัญหรือประโยชน์อื่นใด ประจำปีงบประมาณ พ.ศ. 2569", "content": ""}, {"title": "1. มีบันทึกข้อความ ที่ผู้บริหารรับทราบการรายงานการเรี่ยไรและการให้หรือรับของขวัญ หรือประโยชน์อื่นใด ประจำปีงบประมาณ พ.ศ. 2569 รอบ 6 เดือน นำ link วางในระบบ MITAS ภายในวันที่ 27 มีนาคม 2569 และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์ของหน่วยงาน", "content": ""}, {"title": "2. มีรายงานการเรี่ยไรและการให้หรือรับของขวัญหรือประโยชน์อื่นใดที่พิมพ์ (Print) จากระบบ MSRS (แนบตามข้อ 1.) ตามตัวอย่างหน้า 104", "content": ""}, {"title": "3. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "content": ""}], "22": [{"title": "MOIT22 หน่วยงานมีแนวปฏิบัติที่เคารพสิทธิมนุษยชนและศักดิ์ศรีของผู้ปฏิบัติงาน และรายงาน การป้องกันและแก้ไขปัญหาการล่วงละเมิดหรือคุกคามทางเพศในการทำงาน ประจำปีงบประมาณ พ.ศ. 2569", "content": ""}, {"title": "1. มีบันทึกข้อความ ที่ผู้บริหารรับทราบคู่มือแนวปฏิบัติการป้องกันและแก้ไขปัญหา การล่วงละเมิดหรือคุกคามทางเพศในการทำงานของหน่วยงาน และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์ของหน่วยงาน", "content": ""}, {"title": "2. คู่มือแนวปฏิบัติการป้องกันและแก้ไขปัญหาการล่วงละเมิดหรือคุกคามทางเพศ ในการทำงานของหน่วยงาน และมีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "content": ""}, {"title": "3. บันทึกข้อความแจ้งเวียนคู่มือแนวปฏิบัติการป้องกันและแก้ไขปัญหาการล่วงละเมิดหรือคุกคามทางเพศในการทำงานของหน่วยงาน และมีแบบฟอร์มการเผยแพร่ข้อมูล ต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "content": ""}, {"title": "4. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "content": ""}]};
-
-        // Mapping เบื้องต้นของ 42 ไฟล์ที่นำเข้ารอบ 12 เดือน
-        // ใช้ชื่อไฟล์จาก D1 จับเข้าหัวข้อ Master Criteria
-        var ITA_FILE_MAPPING_12M = {"MOIT4 รายงานผลของแผนการจัดซื้อจัดจ้างและการ": {"criterion": "1. มีบันทึกข้อความ ที่ผู้บริหารรับทราบรายงานผลของแผนการจัดซื้อจัดจ้างประจำปี ของหน่วยงาน และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์ของหน่วยงาน", "score": 0.588}, "MOIT5 ไตรมาส3 พ.ค.69": {"criterion": "MOIT 5 หน่วยงานมีการสรุปผลการจัดซื้อจัดจ้างและการจัดหาพัสดุรายเดือน ประจำปีงบประมาณ พ.ศ. 2569", "score": 0.182}, "MOIT5 ไตรมาส3 มิ.ย.69": {"criterion": "MOIT 5 หน่วยงานมีการสรุปผลการจัดซื้อจัดจ้างและการจัดหาพัสดุรายเดือน ประจำปีงบประมาณ พ.ศ. 2569", "score": 0.16}, "MOIT5 ไตรมาส3 เม.ย69": {"criterion": "2. มีแบบสรุปผลการดำเนินการจัดซื้อจัดจ้างในรอบเดือน (แบบ สขร. 1) รอบ 6 เดือน เดือนตุลาคม 2568 – เดือนมีนาคม 2569", "score": 0.151}, "MOIT5 ไตรมาส4 ก.ค.69": {"criterion": "MOIT 5 หน่วยงานมีการสรุปผลการจัดซื้อจัดจ้างและการจัดหาพัสดุรายเดือน ประจำปีงบประมาณ พ.ศ. 2569", "score": 0.162}, "MOIT5 ไตรมาส4 ส.ค.69": {"criterion": "MOIT 5 หน่วยงานมีการสรุปผลการจัดซื้อจัดจ้างและการจัดหาพัสดุรายเดือน ประจำปีงบประมาณ พ.ศ. 2569", "score": 0.162}, "OK MOIT 7 หนังสือแจ้ง+ประกาศ ดีเด่น+ดีมาก รอบที่ 2-": {"criterion": "2. มีประกาศรายงานการประเมินผลการปฏิบัติราชการประจำปีของบุคลากรในหน่วยงาน ระดับดีเด่น และดีมาก (ข้าราชการ ลูกจ้างประจำ พนักงานราชการ ลูกจ้างชั่วคราว และพนักงานกระทรวงสาธารณสุข)", "score": 0.294}, "9 MOIT แบบฟอร์มเผยแพร่บนเว็บไซต์2569": {"criterion": "3. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "score": 0.595}, "MOIT10 บันทึกรายงานผลการดำเนินงานเรื่องร้องเรียน รอบ 12 เดือน": {"criterion": "1. มีบันทึกข้อความ ที่ผู้บริหารลงนามรับทราบรายงานสรุปผลการดำเนินงานเรื่องร้องเรียน ตามข้อ (1) และข้อ (2) ที่มีการวิเคราะห์ปัญหา / อุปสรรคและแนวทางแก้ไข และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์ของหน่วยงาน", "score": 0.645}, "MOIT10 บันทึกรายงานผลการดำเนินงานเรื่องร้องเรียน รอบ 12M": {"criterion": "1. มีบันทึกข้อความ ที่ผู้บริหารลงนามรับทราบรายงานสรุปผลการดำเนินงานเรื่องร้องเรียน ตามข้อ (1) และข้อ (2) ที่มีการวิเคราะห์ปัญหา / อุปสรรคและแนวทางแก้ไข และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์ของหน่วยงาน", "score": 0.62}, "MOIT10 แบบรายงานการจัดการเรื่องร้องเรียน 12 ด": {"criterion": "1. มีบันทึกข้อความ ที่ผู้บริหารลงนามรับทราบรายงานสรุปผลการดำเนินงานเรื่องร้องเรียน ตามข้อ (1) และข้อ (2) ที่มีการวิเคราะห์ปัญหา / อุปสรรคและแนวทางแก้ไข และมีการขออนุญาตนำไปเผยแพร่บนเว็บไซต์ของหน่วยงาน", "score": 0.437}, "1. ประกาศเจตนารมณ์ ต่อต้านการทุจริต": {"criterion": "MOIT12 หน่วยงานมีมาตรการ “การป้องกันการรับสินบน” ที่เป็นระบบ", "score": 0.282}, "12 MOIT แบบฟอร์มเผยแพร่บนเว็บไซต์2569": {"criterion": "5. มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "score": 0.59}, "MOIT12 บันทึกรายงานผลการดำเนินงานรายงานสรุปผลการกำกับติดตามมาตรการ การป้องกันการรับสินบน": {"criterion": "MOIT12 หน่วยงานมีมาตรการ “การป้องกันการรับสินบน” ที่เป็นระบบ", "score": 0.61}, "มาตรการ การป้องกันการรับสินบน2569": {"criterion": "MOIT12 หน่วยงานมีมาตรการ “การป้องกันการรับสินบน” ที่เป็นระบบ", "score": 0.77}, "10 เอกสารหมายเลข 4 ปฎิญญาคุณธรรม": {"criterion": "2.2.2 การดำเนินการ “ปฏิญญาคุณธรรม (Do & Don’t)”", "score": 0.493}, "11 เอกสารหมายเลข 5 ครอบครัวอบอุ่นสรรสร้างคุ": {"criterion": "2.2.3 การดำเนินการ “กิจกรรมครอบครัวอบอุ่นสรรสร้างคุณธรรม”", "score": 0.672}, "12 เอกสารหมายเลข 6 รายงานผลฯ 69": {"criterion": "2. การรายงานผลตามแผนปฏิบัติการส่งเสริมคุณธรรมของชมรมจริยธรรม ของหน่วยงาน ประจำปีงบประมาณ พ.ศ. 2569 (รอบ 6 เดือน)", "score": 0.296}, "1 MOIT16 บันทึกเสนอผู้บริหารทราบ - 1.2": {"criterion": "2.1 บันทึกข้อความเสนอผู้บริหารสูงสุดของหน่วยงาน เพื่อขอความเห็นชอบ อนุมัติและลงนามในรายงานผลตามแผนปฏิบัติการส่งเสริมคุณธรรมของชมรมจริยธรรมของหน่วยงาน ประจำปีงบประมาณ พ.ศ. 2569 และมีการขออนุญาตนำไปเผยแพร่ บนเว็บไซต์ของหน่วยงาน", "score": 0.262}, "1 MOIT16 บันทึกเสนอผู้บริหารทราบ": {"criterion": "2.1 บันทึกข้อความเสนอผู้บริหารสูงสุดของหน่วยงาน เพื่อขอความเห็นชอบ อนุมัติและลงนามในรายงานผลตามแผนปฏิบัติการส่งเสริมคุณธรรมของชมรมจริยธรรมของหน่วยงาน ประจำปีงบประมาณ พ.ศ. 2569 และมีการขออนุญาตนำไปเผยแพร่ บนเว็บไซต์ของหน่วยงาน", "score": 0.249}, "8 เอกสารหมายเลข 2 แผนฯ 69": {"criterion": "2. การรายงานผลตามแผนปฏิบัติการส่งเสริมคุณธรรมของชมรมจริยธรรม ของหน่วยงาน ประจำปีงบประมาณ พ.ศ. 2569 (รอบ 6 เดือน)", "score": 0.26}, "9 เอกสารหมายเลข 3 กิจกรรมพอเพียง": {"criterion": "2.2.1 การขับเคลื่อนคุณธรรมพอเพียง “ชีวิตดีวิถีพอเพียง” ในองค์กร", "score": 0.424}, "MOIT 16 แบบฟอร์มเผยแพร่บนเว็บไซต์2569": {"criterion": "1.3 มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "score": 0.602}, "MOIT 16.2 แบบฟอร์มเผยแพร่บนเว็บไซต์2569": {"criterion": "2.3 มีแบบฟอร์มการเผยแพร่ข้อมูลต่อสาธารณะผ่านเว็บไซต์ของหน่วยงาน", "score": 0.633}, "MOIT17 รายงานประเมินความเสี่ยงการทุจริต 2569": {"criterion": "2. มีรายงานการประชุมการจัดทำแผนบริหารความเสี่ยงการทุจริต ประจำปีงบประมาณ พ.ศ. 2569 ของหน่วยงาน", "score": 0.703}, "OK MOIT 19 เรี่ยไร": {"criterion": "2. มีรายงานการเรี่ยไรและการให้หรือรับของขวัญหรือประโยชน์อื่นใดที่พิมพ์ (Print) จากระบบ MSRS (แนบตามข้อ 1.) ตามตัวอย่างหน้า 104", "score": 0.203}, "OK MOIT 22 รายงานผลล่วงละเมิดทางเพศ 12เดือน": {"criterion": "MOIT22 หน่วยงานมีแนวปฏิบัติที่เคารพสิทธิมนุษยชนและศักดิ์ศรีของผู้ปฏิบัติงาน และรายงาน การป้องกันและแก้ไขปัญหาการล่วงละเมิดหรือคุกคามทางเพศในการทำงาน ประจำปีงบประมาณ พ.ศ. 2569", "score": 0.419}};
-
-
-        function isITA12MonthRow(item) {
-            var marker = item && item[0] ? String(item[0]) : '';
-            return marker.indexOf('รอบ 12 เดือน') !== -1;
-        }
-
-        function showITA(data) {
-            allITAData = Array.isArray(data) ? data : [];
-            var loading = document.getElementById('ita-loading');
-            if (loading) loading.style.display = 'none';
-
-            var count6 = allITAData.filter(function(item) { return !isITA12MonthRow(item); }).length;
-            var count12 = allITAData.filter(function(item) { return isITA12MonthRow(item); }).length;
-            var c6 = document.getElementById('ita-count-6m');
-            var c12 = document.getElementById('ita-count-12m');
-            if (c6) c6.innerText = count6;
-            if (c12) c12.innerText = count12;
-
-            // รอบ 12 เดือนเป็นค่าเริ่มต้น เพื่อใช้รายงานจังหวัดในรอบปัจจุบัน
-            setITARound('12m');
-        }
-
-        function setITARound(round) {
-            currentITARound = round;
-            var btn6 = document.getElementById('ita-round-6m');
-            var btn12 = document.getElementById('ita-round-12m');
-            var note = document.getElementById('ita-round-note');
-            var search = document.getElementById('itaSearchInput');
-            if (search) search.value = '';
-
-            if (round === '12m') {
-                if (btn12) btn12.className = 'btn btn-success w-100 p-3 rounded-4 shadow-sm fw-bold';
-                if (btn6) btn6.className = 'btn btn-outline-primary w-100 p-3 rounded-4 shadow-sm fw-bold';
-                if (note) {
-                    note.className = 'alert alert-success border-0 shadow-sm mb-4';
-                    note.innerHTML = '<i class="fas fa-info-circle me-2"></i><strong>รอบที่ 2 : 12 เดือน</strong> — แสดงเอกสารที่ต้องรายงานรอบ 12 เดือน';
-                }
-            } else {
-                if (btn6) btn6.className = 'btn btn-primary w-100 p-3 rounded-4 shadow-sm fw-bold';
-                if (btn12) btn12.className = 'btn btn-outline-success w-100 p-3 rounded-4 shadow-sm fw-bold';
-                if (note) {
-                    note.className = 'alert alert-primary border-0 shadow-sm mb-4';
-                    note.innerHTML = '<i class="fas fa-info-circle me-2"></i><strong>รอบที่ 1 : 6 เดือน</strong> — แสดงเอกสารรอบ 6 เดือนที่เผยแพร่ไว้เดิม';
-                }
-            }
-            renderITARound();
-        }
-
-        function escapeITAHtml(value) {
-            return String(value == null ? '' : value)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
-        }
-
-        function normalizeITAText(value) {
-            return String(value || '').replace(/\s+/g, ' ').trim();
-        }
-
-        function getITA12DocumentsByMoit(moit) {
-            return allITAData.filter(function(item) {
-                if (!isITA12MonthRow(item)) return false;
-                var marker = item[1] ? String(item[1]) : '';
-                var match = marker.match(/\d+/);
-                return match && parseInt(match[0], 10) === parseInt(moit, 10);
-            });
-        }
-
-        function getMappedDocsForCriterion(moit, criterionTitle) {
-            var docs = getITA12DocumentsByMoit(moit);
-            return docs.filter(function(doc) {
-                var title = doc[2] ? String(doc[2]) : '';
-                var mapping = ITA_FILE_MAPPING_12M[title];
-                return mapping && mapping.criterion === criterionTitle;
-            });
-        }
-
-        var ITA_INDICATOR_BY_MOIT = {
-            4: 'ตัวชี้วัดที่ 2 การจัดซื้อจัดจ้างและการจัดหาพัสดุ',
-            5: 'ตัวชี้วัดที่ 2 การจัดซื้อจัดจ้างและการจัดหาพัสดุ',
-            7: 'ตัวชี้วัดที่ 3 การบริหารและพัฒนาทรัพยากรบุคคล',
-            10: 'ตัวชี้วัดที่ 4 การส่งเสริมความโปร่งใส',
-            12: 'ตัวชี้วัดที่ 5 การป้องกันการรับสินบน',
-            16: 'ตัวชี้วัดที่ 7 การดำเนินงานเพื่อป้องกันการทุจริต',
-            17: 'ตัวชี้วัดที่ 7 การดำเนินงานเพื่อป้องกันการทุจริต',
-            19: 'ตัวชี้วัดที่ 7 การดำเนินงานเพื่อป้องกันการทุจริต',
-            22: 'ตัวชี้วัดที่ 9 การเสริมสร้างวัฒนธรรมองค์กร'
-        };
-
-        function isMOITTitleCriterion(title) {
-            return /^MOIT\s*\d+/i.test(normalizeITAText(title).replace(/^MOIT(?=\d)/i, 'MOIT '));
-        }
-
-        function getCriterionMeta(criteria, criterionIndex) {
-            var title = normalizeITAText(criteria[criterionIndex] && criteria[criterionIndex].title);
-            var currentParent = null;
-
-            // หา parent แบบ "ข้อ 1.", "ข้อ 2.", "ข้อ 3." ที่อยู่ก่อนหน้า
-            for (var i = 0; i <= criterionIndex; i++) {
-                var t = normalizeITAText(criteria[i] && criteria[i].title);
-                var pm = t.match(/^ข้อ\s*(\d+(?:\.\d+)*)/);
-                if (pm) currentParent = pm[1];
-            }
-
-            var explicitParent = title.match(/^ข้อ\s*(\d+(?:\.\d+)*)/);
-            if (explicitParent) {
-                var p = explicitParent[1];
-                return {
-                    label: 'ข้อ ' + p,
-                    code: 'q' + p.replace(/\./g, '-'),
-                    level: 1
-                };
-            }
-
-            // เช่น 1.1 / 2.2.1
-            var nested = title.match(/^(\d+(?:\.\d+)+)\s+/);
-            if (nested) {
-                var n = nested[1];
-                return {
-                    label: 'ข้อ ' + n,
-                    code: 'q' + n.replace(/\./g, '-'),
-                    level: n.split('.').length
-                };
-            }
-
-            // เช่น 1. / 2. / 3.
-            var plain = title.match(/^(\d+)\.\s+/);
-            if (plain) {
-                var num = plain[1];
-                if (currentParent) {
-                    return {
-                        label: 'ข้อ ' + currentParent + '.' + num,
-                        code: 'q' + currentParent.replace(/\./g, '-') + '-' + num,
-                        level: 2
-                    };
-                }
-                return {
-                    label: 'ข้อ ' + num,
-                    code: 'q' + num,
-                    level: 1
-                };
-            }
-
-            return {
-                label: 'รายละเอียด',
-                code: 'item-' + (criterionIndex + 1),
-                level: 1
-            };
-        }
-
-        function getITAAnchorId(moit, criteria, criterionIndex) {
-            var meta = getCriterionMeta(criteria, criterionIndex);
-            return 'ita-2569-r2-moit' + moit + '-' + meta.code;
-        }
-
-
-        function resolveOldITASequentialAnchor(hash) {
-            var m = String(hash || '').match(/^ita-2569-r2-moit(\d+)-q(\d{3})$/);
-            if (!m) return hash;
-            var moit = parseInt(m[1], 10);
-            var seq = parseInt(m[2], 10) - 1;
-            var criteria = ITA_MASTER_12M[String(moit)] || [];
-            if (!criteria[seq]) return hash;
-            if (isMOITTitleCriterion(criteria[seq].title)) return hash;
-            return getITAAnchorId(moit, criteria, seq);
-        }
-
-        function renderITARound() {
-            var div = document.getElementById('itaAccordion');
-            if (!div) return;
-
-            // รอบ 12 เดือน: แสดง Master Criteria ระดับ MOIT → ข้อ → หัวข้อย่อย → ไฟล์
-            if (currentITARound === '12m') {
-                var moitNumbers = Object.keys(ITA_MASTER_12M).map(Number).sort(function(a,b){ return a-b; });
-                var html = '';
-
-                for (var mi = 0; mi < moitNumbers.length; mi++) {
-                    var moit = moitNumbers[mi];
-                    var criteria = ITA_MASTER_12M[String(moit)] || [];
-                    var docsInMoit = getITA12DocumentsByMoit(moit);
-                    var cid = 'cITA-12m-moit-' + moit;
-
-                    html += '<div class="accordion-item border-0 mb-3 shadow-sm rounded-4 overflow-hidden">';
-                    html += '<h2 class="accordion-header">';
-                    html += '<button class="accordion-button ' + (mi > 0 ? 'collapsed' : '') + ' fw-bold text-success bg-white fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#' + cid + '">';
-                    html += '<span class="moit-badge me-3">MOIT ' + moit + '</span>';
-                    html += '<span class="flex-grow-1"><span class="d-block small text-secondary fw-semibold mb-1">' + escapeITAHtml(ITA_INDICATOR_BY_MOIT[moit] || '') + '</span><span class="d-block">รายละเอียดหลักฐานตามเกณฑ์</span></span>';
-                    html += '<span class="badge bg-success-subtle text-success ms-2">' + docsInMoit.length + ' ไฟล์</span>';
-                    html += '</button></h2>';
-
-                    html += '<div id="' + cid + '" class="accordion-collapse collapse ' + (mi === 0 ? 'show' : '') + '" data-bs-parent="#itaAccordion">';
-                    html += '<div class="accordion-body bg-light p-3 p-md-4">';
-
-                    for (var ci = 0; ci < criteria.length; ci++) {
-                        var criterion = criteria[ci];
-
-                        // ชื่อ MOIT เป็นหัวเรื่อง ไม่ใช่ข้อเกณฑ์
-                        if (isMOITTitleCriterion(criterion.title)) {
-                            html += '<div class="mb-3 p-3 rounded-3 bg-success-subtle border border-success-subtle">';
-                            html += '<div class="small fw-bold text-success mb-1">' + escapeITAHtml(ITA_INDICATOR_BY_MOIT[moit] || '') + '</div>';
-                            html += '<div class="fw-bold text-dark">' + escapeITAHtml(criterion.title) + '</div>';
-                            html += '</div>';
-                            continue;
-                        }
-
-                        var criterionMeta = getCriterionMeta(criteria, ci);
-                        var anchorId = getITAAnchorId(moit, criteria, ci);
-                        var mappedDocs = getMappedDocsForCriterion(moit, criterion.title);
-                        var hasFiles = mappedDocs.length > 0;
-                        var levelClass = criterionMeta.level >= 3 ? ' border-start border-4 border-info' : (criterionMeta.level === 2 ? ' border-start border-4 border-success-subtle' : '');
-
-                        html += '<div id="' + anchorId + '" class="ita-document ita-criterion-card bg-white p-3 p-md-4 rounded-4 shadow-sm border mb-3' + levelClass + '" data-moit="' + moit + '" data-criterion-code="' + criterionMeta.code + '">';
-                        html += '<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2">';
-                        html += '<div class="flex-grow-1">';
-                        html += '<div class="small text-success fw-bold mb-1"><i class="fas fa-list-check me-1"></i> MOIT ' + moit + ' • ' + escapeITAHtml(criterionMeta.label) + '</div>';
-                        html += '<div class="small text-secondary fw-semibold mb-1">' + escapeITAHtml(ITA_INDICATOR_BY_MOIT[moit] || '') + '</div>';
-                        html += '<div class="fw-bold text-dark" style="font-size:1.03rem;line-height:1.65;">' + escapeITAHtml(criterion.title) + '</div>';
-                        html += '</div>';
-                        html += '<button class="btn btn-outline-secondary btn-sm rounded-pill" onclick="copyITALink(\'' + anchorId + '\')"><i class="fas fa-link me-1"></i> คัดลอก URL ข้อนี้</button>';
-                        html += '</div>';
-
-                        if (criterion.content && normalizeITAText(criterion.content) !== normalizeITAText(criterion.title)) {
-                            html += '<div class="small text-secondary bg-light border-start border-4 border-success rounded p-2 mb-3" style="line-height:1.65;">' + escapeITAHtml(criterion.content) + '</div>';
-                        }
-
-                        if (hasFiles) {
-                            html += '<div class="border-top pt-3">';
-                            html += '<div class="small fw-bold text-success mb-2"><i class="fas fa-paperclip me-1"></i> หลักฐานที่แนบในหัวข้อนี้</div>';
-
-                            for (var di = 0; di < mappedDocs.length; di++) {
-                                var doc = mappedDocs[di];
-                                var titleText = doc[2] ? String(doc[2]) : 'เอกสารหลักฐาน';
-                                var descText = doc[3] ? String(doc[3]).trim() : '';
-                                var rawLink = doc[4] ? String(doc[4]).trim() : '';
-
-                                html += '<div class="border rounded-3 p-3 mb-2 bg-white">';
-                                html += '<div class="fw-semibold text-dark mb-1"><i class="fas fa-file-alt text-success me-2"></i>' + escapeITAHtml(titleText) + '</div>';
-                                if (descText) {
-                                    html += '<div class="small text-muted mb-2">' + escapeITAHtml(descText) + '</div>';
-                                }
-
-                                if (rawLink) {
-                                    var links = rawLink.split(/[,\n ]+/).filter(function(x){ return x.trim() !== ''; });
-                                    for (var li = 0; li < links.length; li++) {
-                                        var fileUrl = links[li].trim();
-                                        if (!fileUrl.startsWith('http')) fileUrl = 'https://' + fileUrl;
-                                        var safeTitle = titleText.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-                                        var safeUrl = fileUrl.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-                                        html += '<button class="btn btn-outline-success btn-sm rounded-pill me-2 mb-1" onclick="openITAFileModal(\'' + safeTitle + '\',\'' + safeUrl + '\')"><i class="fas fa-eye me-1"></i> Preview</button>';
-                                        html += '<a class="btn btn-success btn-sm rounded-pill me-2 mb-1" target="_blank" href="' + escapeITAHtml(fileUrl) + '"><i class="fas fa-download me-1"></i> เปิด/ดาวน์โหลด</a>';
-                                    }
-                                }
-                                html += '</div>';
-                            }
-                            html += '</div>';
-                        } else {
-                            html += '<div class="alert alert-warning py-2 px-3 mb-0 small"><i class="fas fa-triangle-exclamation me-2"></i><strong>รอเพิ่ม/ยืนยันหลักฐาน</strong> — หัวข้อนี้ยังไม่มีไฟล์ที่จับคู่ยืนยันในชุดรอบ 12 เดือน</div>';
-                        }
-                        html += '</div>';
-                    }
-
-                    // เอกสารที่นำเข้า แต่ยังไม่สามารถจับคู่กับ Master Criteria ได้อย่างชัดเจน
-                    var unmatched = docsInMoit.filter(function(doc) {
-                        var title = doc[2] ? String(doc[2]) : '';
-                        var mapping = ITA_FILE_MAPPING_12M[title];
-                        if (!mapping) return true;
-                        return !(criteria || []).some(function(c){ return c.title === mapping.criterion; });
-                    });
-                    if (unmatched.length > 0) {
-                        html += '<div class="alert alert-secondary mt-3"><strong><i class="fas fa-folder-open me-2"></i>เอกสารรอตรวจ Mapping</strong><div class="small mt-1">พบ ' + unmatched.length + ' ไฟล์ที่ยังต้องตรวจหัวข้อก่อนนำ URL ไปตอบ Excel</div></div>';
-                    }
-
-                    html += '</div></div></div>';
-                }
-
-                div.innerHTML = html;
-                setTimeout(openITAAnchorFromHash, 100);
-                return;
-            }
-
-            // รอบ 6 เดือน: คงรูปแบบเดิม เพื่อไม่กระทบข้อมูลเก่า
-            var data = allITAData.filter(function(item) { return !isITA12MonthRow(item); });
-            if (!data || data.length === 0) {
-                div.innerHTML = '<div class="alert alert-warning text-center m-0 p-4">ยังไม่มีข้อมูลในรอบนี้</div>';
-                return;
-            }
-
-            var groups = {};
-            for (var i = 0; i < data.length; i++) {
-                var r = data[i];
-                var groupName = r[0] || 'ข้อมูล ITA';
-                if (!groups[groupName]) groups[groupName] = [];
-                groups[groupName].push(r);
-            }
-
-            var groupNames = Object.keys(groups);
-            var html6 = '';
-            for (var gi = 0; gi < groupNames.length; gi++) {
-                var cat = groupNames[gi];
-                var cid6 = 'cITA-6m-' + gi;
-                html6 += '<div class="accordion-item border-0 mb-3 shadow-sm rounded overflow-hidden">';
-                html6 += '<h2 class="accordion-header"><button class="accordion-button ' + (gi > 0 ? 'collapsed' : '') + ' fw-bold text-success bg-white fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#' + cid6 + '">';
-                html6 += '<i class="fas fa-folder-open me-2 text-success"></i> ' + escapeITAHtml(cat) + '<span class="badge bg-success-subtle text-success ms-2">' + groups[cat].length + ' รายการ</span></button></h2>';
-                html6 += '<div id="' + cid6 + '" class="accordion-collapse collapse ' + (gi === 0 ? 'show' : '') + '" data-bs-parent="#itaAccordion"><div class="accordion-body bg-light p-3">';
-
-                for (var k = 0; k < groups[cat].length; k++) {
-                    var item = groups[cat][k];
-                    var titleText6 = item[2] ? item[2] : 'ไม่มีชื่อเอกสาร';
-                    var descText6 = item[3] ? String(item[3]).trim() : '';
-                    var rawLink6 = item[4] ? String(item[4]).trim() : '';
-                    html6 += '<div class="ita-document bg-white p-3 rounded shadow-sm border mb-3">';
-                    html6 += '<div class="fw-bold text-dark mb-2">' + escapeITAHtml(titleText6) + '</div>';
-                    if (descText6) html6 += '<div class="text-secondary small mb-3">' + escapeITAHtml(descText6) + '</div>';
-                    if (rawLink6) {
-                        var links6 = rawLink6.split(/[,\n ]+/);
-                        for (var l6 = 0; l6 < links6.length; l6++) {
-                            var u6 = links6[l6].trim();
-                            if (!u6) continue;
-                            if (!u6.startsWith('http')) u6 = 'https://' + u6;
-                            var st6 = String(titleText6).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-                            var su6 = String(u6).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-                            html6 += '<button class="btn btn-outline-success btn-sm rounded-pill me-2" onclick="openITAFileModal(\'' + st6 + '\',\'' + su6 + '\')"><i class="fas fa-eye me-1"></i> Preview</button>';
-                            html6 += '<a href="' + escapeITAHtml(u6) + '" target="_blank" class="btn btn-success btn-sm rounded-pill"><i class="fas fa-external-link-alt me-1"></i> เปิดไฟล์</a>';
-                        }
-                    }
-                    html6 += '</div>';
-                }
-                html6 += '</div></div></div>';
-            }
-            div.innerHTML = html6;
-        }
-
-        function openITAFileModal(title, fileUrl) {
-            var titleEl = document.getElementById('itaPreviewTitle');
-            var frame = document.getElementById('itaPreviewFrame');
-            var openBtn = document.getElementById('itaPreviewOpen');
-            if (!titleEl || !frame || !openBtn) return;
-
-            titleEl.innerText = title || 'ตัวอย่างเอกสาร';
-            openBtn.href = fileUrl;
-
-            var lower = fileUrl.toLowerCase().split('?')[0];
-            var embedUrl = fileUrl;
-            if (lower.endsWith('.pdf') || lower.endsWith('.doc') || lower.endsWith('.docx') || lower.endsWith('.xls') || lower.endsWith('.xlsx') || lower.endsWith('.ppt') || lower.endsWith('.pptx')) {
-                embedUrl = 'https://docs.google.com/viewer?url=' + encodeURIComponent(fileUrl) + '&embedded=true';
-            }
-            frame.src = embedUrl;
-            new bootstrap.Modal(document.getElementById('itaPreviewModal')).show();
-        }
-
-        function copyITALink(anchorId) {
-            var url = window.location.origin + window.location.pathname + '#' + anchorId;
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(url).then(function() {
-                    alert('คัดลอก URL สำหรับใส่ไฟล์ Excel แล้ว');
-                }).catch(function() { prompt('คัดลอก URL นี้', url); });
-            } else {
-                prompt('คัดลอก URL นี้', url);
-            }
-        }
-
-        function openITAAnchorFromHash() {
-            var hash = window.location.hash ? window.location.hash.substring(1) : '';
-            if (hash.indexOf('ita-2569-r2-moit') !== 0) return;
-            var target = document.getElementById(hash);
-            if (!target) return;
-
-            var collapse = target.closest('.accordion-collapse');
-            if (collapse) {
-                var instance = bootstrap.Collapse.getOrCreateInstance(collapse, { toggle: false });
-                instance.show();
-            }
-            setTimeout(function() {
-                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                target.style.outline = '3px solid #ffc107';
-                setTimeout(function(){ target.style.outline = ''; }, 2500);
-            }, 250);
-        }
-
-        function toggleMoit(id) {
-            var el = document.getElementById(id);
-            if (el) el.style.display = (el.style.display === 'block') ? 'none' : 'block';
-        }
-
-        function filterITA() {
-            var input = document.getElementById('itaSearchInput');
-            var filter = input ? input.value.toLowerCase() : '';
-            var docs = document.querySelectorAll('#itaAccordion .ita-document');
-            for (var i = 0; i < docs.length; i++) {
-                docs[i].style.display = docs[i].innerText.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
-            }
-            if (filter !== '') {
-                var collapses = document.querySelectorAll('#itaAccordion .accordion-collapse');
-                for (var j = 0; j < collapses.length; j++) collapses[j].classList.add('show');
-            }
-        }
-        // 📌 ฟังก์ชันสั่งเปิด-ปิด กล่องตัวอย่างเอกสาร
-        function toggleInlinePreview(previewId, fileUrl) {
-            var box = document.getElementById(previewId);
-            var iframe = document.getElementById('iframe-' + previewId);
-
-            if (box.style.display === "none") {
-                var embedUrl = fileUrl;
-
-                // ความฉลาดที่ 1: ถ้าเป็นลิงก์ Google Drive ให้แปลงเป็นโหมด Preview
-                if (fileUrl.includes('drive.google.com')) {
-                    var id = "";
-                    if (fileUrl.indexOf("/d/") !== -1) id = fileUrl.split('/d/')[1].split('/')[0];
-                    else if (fileUrl.indexOf("id=") !== -1) id = fileUrl.split('id=')[1].split('&')[0];
-                    if (id) embedUrl = "https://drive.google.com/file/d/" + id + "/preview";
-                } 
-                // ความฉลาดที่ 2: ถ้าเป็นลิงก์ PDF (บน GitHub) ให้ใช้ Google Docs Viewer ช่วยฉายภาพ (ป้องกันบัคมือถือ)
-                else if (fileUrl.toLowerCase().endsWith('.pdf')) {
-                    embedUrl = 'https://docs.google.com/viewer?url=' + encodeURIComponent(fileUrl) + '&embedded=true';
-                }
-
-                iframe.src = embedUrl; // โหลดไฟล์ใส่จอ
-                box.style.display = "block"; // กางกล่องออก
-            } else {
-                box.style.display = "none"; // ปิดกล่อง
-                iframe.src = ""; // ล้างข้อมูลออกจากจอเพื่อคืนหน่วยความจำเครื่อง
-            }
-        }
-        function showDownloads(data) { var c = document.getElementById('downloads-container'); if (!data || data.length === 0) { c.innerHTML = '<div class="alert alert-light text-center">ไม่พบเอกสาร</div>'; return; } var html = '<div class="list-group list-group-flush">'; for(var i=0; i<data.length; i++) { html += '<a href="' + (data[i][1] || "#") + '" target="_blank" class="list-group-item list-group-item-action py-3"><div class="d-flex align-items-center"><div class="flex-shrink-0 text-danger fs-4 me-3"><i class="fas fa-file-pdf"></i></div><div class="flex-grow-1"><h6 class="mb-0 text-dark fw-bold">' + data[i][0] + '</h6><small class="text-muted">คลิกเพื่อดาวน์โหลด</small></div><i class="fas fa-chevron-right text-muted"></i></div></a>'; } html += '</div>'; c.innerHTML = html; }
-        
-        function openComplaint(type) { document.getElementById('compType').value = type; document.getElementById('comp-title').innerText = " " + type; document.getElementById('complaintForm').reset(); new bootstrap.Modal(document.getElementById('complaintModal')).show(); }
-        function submitComplaint() { 
-            var topic = document.getElementById('compTopic').value; var detail = document.getElementById('compDetail').value; 
-            if(topic == "" || detail == "") { alert("กรุณากรอกข้อมูลให้ครบ"); return; } 
-            document.getElementById('btn-spin').classList.remove('d-none'); 
-            var payload = { type: document.getElementById('compType').value, topic: topic, detail: detail, name: document.getElementById('compName').value || "ไม่ระบุ", contact: document.getElementById('compContact').value || "-" }; 
-            fetchAPI('saveComplaint', { data: JSON.stringify(payload) }).then(res => {
-                document.getElementById('btn-spin').classList.add('d-none'); 
-                if(res && res.success) { alert("✅ ส่งข้อมูลเรียบร้อย"); bootstrap.Modal.getInstance(document.getElementById('complaintModal')).hide(); loadComplaintsData(); } 
-                else { alert("❌ Error: ส่งข้อมูลไม่สำเร็จ"); }
-            });
-        }
-
-        function convertDriveLink(link) { if (!link) return "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png"; try { var id = ""; if (link.indexOf("/d/") !== -1) id = link.split('/d/')[1].split('/')[0]; else if (link.indexOf("id=") !== -1) id = link.split('id=')[1].split('&')[0]; if (id) return "https://drive.google.com/thumbnail?id=" + id + "&sz=w1000"; } catch (e) {} return "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png"; }
-        
-        function loadSystemsDropdown() {
-            var menu = document.getElementById('systems-dropdown-menu'); if(!menu) return; 
-            menu.innerHTML = '<li><a class="dropdown-item text-muted py-2 px-3" href="#"><div class="spinner-border spinner-border-sm text-success me-2"></div>กำลังโหลดข้อมูล...</a></li>';
-            fetchAPI('getSystemsData').then(data => {
-                if(data) renderSystemsDropdown(data);
-                else menu.innerHTML = '<li><a class="dropdown-item text-danger py-2 px-3" href="#"><i class="fas fa-exclamation-triangle me-2"></i>ดึงข้อมูลไม่สำเร็จ</a></li>';
-            });
-        }
-
-        function renderSystemsDropdown(data) {
-            var menu = document.getElementById('systems-dropdown-menu'); if (!menu) return;
-            if (!data || data.length === 0) { menu.innerHTML = '<li><a class="dropdown-item text-muted py-3 px-4" href="#">ไม่มีข้อมูลในระบบ</a></li>'; return; }
-            var grouped = {}; 
-            for(var i = 0; i < data.length; i++) {
-                var cat = data[i][0] ? data[i][0].trim() : "ระบบทั่วไป"; var subCat = data[i][1] ? data[i][1].trim() : "";        
-                var name = data[i][2] ? data[i][2].trim() : ""; var type = data[i][4] ? data[i][4].trim() : ""; var link = data[i][6] ? data[i][6].trim() : "#";         
-                var displayName = name !== "" ? name : subCat; if(!displayName) continue; 
-                if(!grouped[cat]) grouped[cat] = []; grouped[cat].push({ name: displayName, type: type, link: link });
-            }
-            var html = '';
-            for(var cat in grouped) {
-                html += '<li><h6 class="dropdown-header text-success fw-bold px-3 mt-2" style="font-size: 0.95rem;"><i class="fas fa-folder-open me-2"></i>' + cat + '</h6></li>';
-                for(var j = 0; j < grouped[cat].length; j++) {
-                    var item = grouped[cat][j]; var url = item.link; if(url !== "#" && !url.startsWith('http')) url = 'https://' + url;
-                    var typeBadge = item.type ? '<span class="badge bg-light text-success border ms-2" style="font-size: 0.75rem;">' + item.type + '</span>' : '';
-                    html += '<li><a class="dropdown-item py-2 px-4 d-flex align-items-center" href="' + url + '" target="_blank" style="transition: 0.2s; white-space: normal;"><i class="fas fa-angle-right text-muted me-2"></i><span class="text-dark fw-medium" style="font-size: 0.95rem;">' + item.name + '</span>' + typeBadge + '</a></li>';
-                }
-                html += '<li><hr class="dropdown-divider my-1"></li>'; 
-            }
-            menu.innerHTML = html;
-        }
-
-        function loadComplaintsData() {
-            document.getElementById('complaint-report-container').innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary"></div><div class="mt-2 text-muted">กำลังโหลดข้อมูล...</div></div>';
-            fetchAPI('getComplaintReport').then(data => { if(data) renderComplaintTable(data); });
-        }
-
-        function renderComplaintTable(data) {
-            var container = document.getElementById('complaint-report-container'); var selectedYear = document.getElementById('filter-year').value;
-            if (!data || data.length === 0) { container.innerHTML = '<div class="alert alert-warning text-center border-0 shadow-sm"><i class="fas fa-exclamation-circle me-2"></i>ไม่มีข้อมูลการร้องเรียนในระบบ</div>'; return; }
-            var html = '<div class="table-responsive bg-white rounded shadow-sm border-0"><table class="table table-hover table-borderless align-middle mb-0" style="min-width: 800px;"><thead class="bg-primary text-white"><tr><th class="py-3 px-4 rounded-top-start" width="15%">วันที่รับเรื่อง</th><th class="py-3" width="20%">หมวดหมู่</th><th class="py-3" width="35%">หัวข้อเรื่องร้องเรียน</th><th class="py-3 text-center" width="15%">สถานะ</th><th class="py-3 text-center rounded-top-end" width="15%">ปีงบฯ</th></tr></thead><tbody class="border-top border-light">';
-            var count = 0;
-            for (var i = 0; i < data.length; i++) {
-                var rawDate = data[i][0] || "-"; var category = data[i][1] || "-"; var topic = data[i][2] || "-"; var status = data[i][6] || "รับเรื่องแล้ว"; 
-                var calculatedYear = "-"; var dateMatch = rawDate.match(/(\d{4})/); 
-                if (dateMatch) { var yearInt = parseInt(dateMatch[1]); if (yearInt < 2500) yearInt += 543; calculatedYear = yearInt.toString(); }
-                if (selectedYear !== "all" && calculatedYear !== selectedYear) continue;
-                var statusBadge = '<span class="badge bg-secondary rounded-pill px-3 py-2 fw-normal">' + status + '</span>';
-                if (status.indexOf('เสร็จ') > -1 || status.indexOf('แล้ว') > -1 || status.indexOf('ยุติ') > -1) { statusBadge = '<span class="badge bg-success rounded-pill px-3 py-2 fw-normal">' + status + '</span>'; } 
-                else if (status.indexOf('กำลัง') > -1 || status.indexOf('ระหว่าง') > -1) { statusBadge = '<span class="badge bg-warning text-dark rounded-pill px-3 py-2 fw-normal">' + status + '</span>'; }
-                html += '<tr class="border-bottom border-light"><td class="px-4 text-muted small">' + rawDate + '</td><td class="text-secondary small">' + category + '</td><td class="fw-bold text-dark">' + topic + '</td><td class="text-center">' + statusBadge + '</td><td class="text-muted text-center fw-bold">' + calculatedYear + '</td></tr>';
-                count++;
-            }
-            html += '</tbody></table></div>';
-            if (count === 0) { container.innerHTML = '<div class="alert alert-info text-center border-0 shadow-sm"><i class="fas fa-info-circle me-2"></i>ยังไม่มีสถิติการร้องเรียนในปีงบประมาณ ' + selectedYear + '</div>'; } 
-            else { container.innerHTML = html; }
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            var itaModal = document.getElementById('itaPreviewModal');
-            if (itaModal) {
-                itaModal.addEventListener('hidden.bs.modal', function() {
-                    var frame = document.getElementById('itaPreviewFrame');
-                    if (frame) frame.src = '';
-                });
-            }
+__name(corsHeaders, "corsHeaders");
+function jsonResponse(env, request, payload, status = 200) {
+  return new Response(JSON.stringify(payload), {
+    status,
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "no-store",
+      ...corsHeaders(env, request)
+    }
+  });
+}
+__name(jsonResponse, "jsonResponse");
+function success(env, request, data) {
+  return jsonResponse(env, request, { status: "success", data });
+}
+__name(success, "success");
+function failure(env, request, message, status = 400) {
+  return jsonResponse(env, request, { status: "error", message }, status);
+}
+__name(failure, "failure");
+
+// src/utils.js
+function clampString(value, max = 5e3) {
+  return String(value ?? "").trim().slice(0, max);
+}
+__name(clampString, "clampString");
+function parseLegacyRow(dataJson) {
+  try {
+    const row = JSON.parse(dataJson);
+    if (!Array.isArray(row)) return [];
+    return row.map((v) => v == null ? "" : String(v));
+  } catch {
+    return [];
+  }
+}
+__name(parseLegacyRow, "parseLegacyRow");
+function overlayView(dataset, row, count) {
+  const out = row.slice();
+  if (dataset === "News") {
+    while (out.length < 6) out.push("");
+    out[5] = String(Number(count || 0));
+  } else if (dataset === "Announcements") {
+    while (out.length < 5) out.push("");
+    out[4] = String(Number(count || 0));
+  }
+  return out;
+}
+__name(overlayView, "overlayView");
+function bangkokDisplayDate(date = /* @__PURE__ */ new Date()) {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Bangkok",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23"
+  }).formatToParts(date);
+  const m = Object.fromEntries(parts.map((p) => [p.type, p.value]));
+  return `${m.day}/${m.month}/${m.year} ${m.hour}:${m.minute}`;
+}
+__name(bangkokDisplayDate, "bangkokDisplayDate");
+async function sha256Hex(text) {
+  const data = new TextEncoder().encode(String(text));
+  const digest = await crypto.subtle.digest("SHA-256", data);
+  return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+__name(sha256Hex, "sha256Hex");
+function constantTimeTextEqual(a, b) {
+  a = String(a || "");
+  b = String(b || "");
+  const len = Math.max(a.length, b.length);
+  let diff = a.length ^ b.length;
+  for (let i = 0; i < len; i++) {
+    diff |= (a.charCodeAt(i) || 0) ^ (b.charCodeAt(i) || 0);
+  }
+  return diff === 0;
+}
+__name(constantTimeTextEqual, "constantTimeTextEqual");
+
+// src/repository.js
+var D1Repository = class {
+  static {
+    __name(this, "D1Repository");
+  }
+  constructor(db) {
+    if (!db) throw new Error("D1 binding DB is missing");
+    this.db = db;
+  }
+  async getLegacyDataset(dataset) {
+    const result = await this.db.prepare(`
+      SELECT l.row_index, l.data_json, COALESCE(v.view_count, 0) AS view_count
+      FROM legacy_rows l
+      LEFT JOIN view_counters v
+        ON v.dataset = l.dataset AND v.row_index = l.row_index
+      WHERE l.dataset = ?
+      ORDER BY l.row_index ASC
+    `).bind(dataset).all();
+    return (result.results || []).map((r) => {
+      const row = parseLegacyRow(r.data_json);
+      return overlayView(dataset, row, r.view_count);
+    });
+  }
+  async getPopupFirstRow() {
+    const row = await this.db.prepare(`
+      SELECT data_json
+      FROM legacy_rows
+      WHERE dataset = 'Popup'
+      ORDER BY row_index ASC
+      LIMIT 1
+    `).first();
+    return row ? parseLegacyRow(row.data_json) : [];
+  }
+  async incrementView(dataset, title) {
+    if (!["News", "Announcements"].includes(dataset)) return false;
+    const row = await this.db.prepare(`
+      SELECT row_index
+      FROM legacy_rows
+      WHERE dataset = ? AND title_text = ?
+      ORDER BY row_index ASC
+      LIMIT 1
+    `).bind(dataset, title).first();
+    if (!row) return false;
+    await this.db.prepare(`
+      INSERT INTO view_counters(dataset, row_index, view_count, updated_at)
+      VALUES (?, ?, 1, CURRENT_TIMESTAMP)
+      ON CONFLICT(dataset, row_index)
+      DO UPDATE SET
+        view_count = view_counters.view_count + 1,
+        updated_at = CURRENT_TIMESTAMP
+    `).bind(dataset, row.row_index).run();
+    return true;
+  }
+  async incrementVisitorCount() {
+    await this.db.prepare(`
+      INSERT INTO settings(key, value_integer, updated_at)
+      VALUES ('visitor_count', 1, CURRENT_TIMESTAMP)
+      ON CONFLICT(key)
+      DO UPDATE SET
+        value_integer = COALESCE(settings.value_integer, 0) + 1,
+        updated_at = CURRENT_TIMESTAMP
+    `).run();
+    const row = await this.db.prepare(`
+      SELECT COALESCE(value_integer, 0) AS value
+      FROM settings
+      WHERE key = 'visitor_count'
+    `).first();
+    return Number(row?.value || 0);
+  }
+  async saveComplaint(data) {
+    await this.db.prepare(`
+      INSERT INTO complaints(
+        submitted_at, type, topic, detail, name, contact, status, note
+      ) VALUES (?, ?, ?, ?, ?, ?, '\u0E23\u0E31\u0E1A\u0E40\u0E23\u0E37\u0E48\u0E2D\u0E07\u0E41\u0E25\u0E49\u0E27', '')
+    `).bind(
+      data.submitted_at,
+      data.type,
+      data.topic,
+      data.detail,
+      data.name,
+      data.contact
+    ).run();
+    return { success: true };
+  }
+  async getComplaintPublicRows() {
+    const result = await this.db.prepare(`
+      SELECT submitted_at, type, topic, status, note
+      FROM complaints
+      ORDER BY id DESC
+    `).all();
+    return (result.results || []).map((r) => [
+      String(r.submitted_at || ""),
+      String(r.type || ""),
+      String(r.topic || ""),
+      "",
+      "",
+      "",
+      String(r.status || "\u0E23\u0E31\u0E1A\u0E40\u0E23\u0E37\u0E48\u0E2D\u0E07\u0E41\u0E25\u0E49\u0E27"),
+      String(r.note || "")
+    ]);
+  }
+
+  async getITAEvidence(fiscalYear, roundCode) {
+    const result = await this.db.prepare(`
+      SELECT
+        id, fiscal_year, round_code, indicator, moit,
+        criterion_code, criterion_label, criterion_title,
+        original_name, stored_path, public_url, github_sha,
+        mime_type, size_bytes, description, uploaded_at
+      FROM ita_evidence
+      WHERE fiscal_year = ?
+        AND round_code = ?
+        AND is_active = 1
+      ORDER BY moit ASC, criterion_code ASC, id ASC
+    `).bind(fiscalYear, roundCode).all();
+    return result.results || [];
+  }
+
+  async insertITAEvidence(data) {
+    const result = await this.db.prepare(`
+      INSERT INTO ita_evidence(
+        fiscal_year, round_code, indicator, moit,
+        criterion_code, criterion_label, criterion_title,
+        original_name, stored_path, public_url, github_sha,
+        mime_type, size_bytes, description, is_active
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
+    `).bind(
+      data.fiscal_year,
+      data.round_code,
+      data.indicator,
+      data.moit,
+      data.criterion_code,
+      data.criterion_label,
+      data.criterion_title,
+      data.original_name,
+      data.stored_path,
+      data.public_url,
+      data.github_sha,
+      data.mime_type,
+      data.size_bytes,
+      data.description
+    ).run();
+
+    return {
+      id: Number(result.meta?.last_row_id || 0),
+      ...data
+    };
+  }
+
+  async getITAEvidenceById(id) {
+    return await this.db.prepare(`
+      SELECT *
+      FROM ita_evidence
+      WHERE id = ? AND is_active = 1
+      LIMIT 1
+    `).bind(id).first();
+  }
+
+  async deactivateITAEvidence(id) {
+    await this.db.prepare(`
+      UPDATE ita_evidence
+      SET is_active = 0
+      WHERE id = ?
+    `).bind(id).run();
+    return true;
+  }
+};
+
+// src/auth.js
+async function checkAdminPassword(env, password) {
+  const expected = String(env.ADMIN_PASSWORD_SHA256 || "").toLowerCase().trim();
+  if (!expected || expected.length !== 64) {
+    throw new Error("ADMIN_PASSWORD_SHA256 is not configured");
+  }
+  const actual = await sha256Hex(String(password || ""));
+  return constantTimeTextEqual(actual, expected);
+}
+__name(checkAdminPassword, "checkAdminPassword");
+
+
+// src/ita-evidence.js
+function extensionFromFileName(name) {
+  const m = String(name || "").match(/(\.[A-Za-z0-9]{1,10})$/);
+  return m ? m[1].toLowerCase() : "";
+}
+__name(extensionFromFileName, "extensionFromFileName");
+
+function bytesToBase64(bytes) {
+  let binary = "";
+  const chunkSize = 32768;
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(i, Math.min(i + chunkSize, bytes.length)));
+  }
+  return btoa(binary);
+}
+__name(bytesToBase64, "bytesToBase64");
+
+function githubConfig(env) {
+  return {
+    owner: String(env.GITHUB_OWNER || "ittcmoph-cloud").trim(),
+    repo: String(env.GITHUB_REPO || "thaijaroen").trim(),
+    branch: String(env.GITHUB_BRANCH || "main").trim()
+  };
+}
+__name(githubConfig, "githubConfig");
+
+async function uploadFileToGitHub(env, path, bytes, commitMessage) {
+  if (!env.GITHUB_TOKEN) throw new Error("GITHUB_TOKEN is not configured");
+
+  const cfg = githubConfig(env);
+  const encodedPath = path.split("/").map(encodeURIComponent).join("/");
+  const endpoint = `https://api.github.com/repos/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}/contents/${encodedPath}`;
+
+  const response = await fetch(endpoint, {
+    method: "PUT",
+    headers: {
+      "Authorization": `Bearer ${env.GITHUB_TOKEN}`,
+      "Accept": "application/vnd.github+json",
+      "X-GitHub-Api-Version": "2022-11-28",
+      "User-Agent": "thaijaroen-ita-worker",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      message: commitMessage,
+      content: bytesToBase64(bytes),
+      branch: cfg.branch
+    })
+  });
+
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(body?.message || `GitHub upload failed (${response.status})`);
+  }
+
+  const publicUrl = `https://${cfg.owner}.github.io/${cfg.repo}/${path}`;
+  return {
+    sha: String(body?.content?.sha || ""),
+    publicUrl
+  };
+}
+__name(uploadFileToGitHub, "uploadFileToGitHub");
+
+async function deleteFileFromGitHub(env, path, sha, commitMessage) {
+  if (!env.GITHUB_TOKEN) throw new Error("GITHUB_TOKEN is not configured");
+
+  const cfg = githubConfig(env);
+  const encodedPath = String(path).split("/").map(encodeURIComponent).join("/");
+  const endpoint = `https://api.github.com/repos/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}/contents/${encodedPath}`;
+
+  const response = await fetch(endpoint, {
+    method: "DELETE",
+    headers: {
+      "Authorization": `Bearer ${env.GITHUB_TOKEN}`,
+      "Accept": "application/vnd.github+json",
+      "X-GitHub-Api-Version": "2022-11-28",
+      "User-Agent": "thaijaroen-ita-worker",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      message: commitMessage,
+      sha,
+      branch: cfg.branch
+    })
+  });
+
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(body?.message || `GitHub delete failed (${response.status})`);
+  }
+  return true;
+}
+__name(deleteFileFromGitHub, "deleteFileFromGitHub");
+
+async function readFormData(request) {
+  try {
+    return await request.formData();
+  } catch {
+    return null;
+  }
+}
+__name(readFormData, "readFormData");
+
+// src/router.js
+var DATASET_ACTIONS = {
+  getExecutiveData: "Executive",
+  getNewsData: "News",
+  getAnnouncementData: "Announcements",
+  getKnowledgeData: "Knowledge",
+  getBannerData: "Banners",
+  getITAData: "ITA",
+  getDownloadsData: "Downloads",
+  getAboutData: "About",
+  getSystemsData: "Systems"
+};
+async function readJsonBody(request) {
+  try {
+    return await request.json();
+  } catch {
+    return {};
+  }
+}
+__name(readJsonBody, "readJsonBody");
+async function routeRequest(request, env, repo) {
+  const url = new URL(request.url);
+  const action = String(url.searchParams.get("action") || "").trim();
+  if (!action) {
+    return failure(env, request, "\u0E44\u0E21\u0E48\u0E1E\u0E1A\u0E04\u0E33\u0E2A\u0E31\u0E48\u0E07 (Action) \u0E17\u0E35\u0E48\u0E23\u0E30\u0E1A\u0E38", 400);
+  }
+  if (DATASET_ACTIONS[action]) {
+    if (request.method !== "GET") {
+      return failure(env, request, "Method not allowed", 405);
+    }
+    return success(env, request, await repo.getLegacyDataset(DATASET_ACTIONS[action]));
+  }
+  switch (action) {
+    case "getITAEvidence": {
+      if (request.method !== "GET") {
+        return failure(env, request, "getITAEvidence requires GET", 405);
+      }
+      const fiscalYear = Number(url.searchParams.get("fiscal_year") || 2569);
+      const roundCode = clampString(url.searchParams.get("round_code") || "r2", 20);
+      if (!Number.isFinite(fiscalYear) || fiscalYear < 2500 || fiscalYear > 3000) {
+        return failure(env, request, "fiscal_year ไม่ถูกต้อง", 400);
+      }
+      return success(env, request, await repo.getITAEvidence(fiscalYear, roundCode));
+    }
+
+    case "uploadITAEvidence": {
+      if (request.method !== "POST") {
+        return failure(env, request, "uploadITAEvidence requires POST", 405);
+      }
+
+      const form = await readFormData(request);
+      if (!form) return failure(env, request, "ไม่สามารถอ่านข้อมูลอัปโหลดได้", 400);
+
+      const password = String(form.get("pass") || form.get("password") || "");
+      const adminOk = await checkAdminPassword(env, password);
+      if (!adminOk) return failure(env, request, "รหัสผ่าน Admin ไม่ถูกต้อง", 401);
+
+      const file = form.get("file");
+      if (!(file instanceof File) || !file.size) {
+        return failure(env, request, "กรุณาเลือกไฟล์หลักฐาน", 400);
+      }
+
+      const maxBytes = Number(env.ITA_UPLOAD_MAX_BYTES || 20 * 1024 * 1024);
+      if (file.size > maxBytes) {
+        return failure(
+          env,
+          request,
+          `ไฟล์ใหญ่เกินกำหนด (${Math.round(maxBytes / 1024 / 1024)} MB)`,
+          413
+        );
+      }
+
+      const fiscalYear = Number(form.get("fiscal_year") || 2569);
+      const roundCode = clampString(form.get("round_code") || "r2", 20);
+      const indicator = clampString(form.get("indicator"), 500);
+      const moit = Number(form.get("moit"));
+      const criterionCode = clampString(form.get("criterion_code"), 100);
+      const criterionLabel = clampString(form.get("criterion_label"), 200);
+      const criterionTitle = clampString(form.get("criterion_title"), 3000);
+      const description = clampString(form.get("description"), 3000);
+      const originalName = clampString(file.name || "evidence", 500);
+
+      if (!indicator || !Number.isInteger(moit) || moit < 1 || moit > 99 ||
+          !criterionCode || !criterionLabel || !criterionTitle) {
+        return failure(env, request, "ข้อมูลตัวชี้วัด / MOIT / ข้อเกณฑ์ไม่ครบ", 400);
+      }
+
+      const ext = extensionFromFileName(originalName);
+      const allowedExt = new Set([
+        ".pdf", ".doc", ".docx", ".xls", ".xlsx",
+        ".png", ".jpg", ".jpeg"
+      ]);
+      if (!allowedExt.has(ext)) {
+        return failure(env, request, "ชนิดไฟล์ไม่รองรับ", 415);
+      }
+
+      const uuid = crypto.randomUUID();
+      const storedPath =
+        `ita-evidence/${fiscalYear}/${roundCode}/moit${String(moit).padStart(2, "0")}/` +
+        `${criterionCode}/${uuid}${ext}`;
+
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      const commitMessage =
+        `ITA ${fiscalYear} ${roundCode} MOIT ${moit} ${criterionLabel}: ${originalName}`;
+
+      const githubResult = await uploadFileToGitHub(
+        env,
+        storedPath,
+        bytes,
+        commitMessage
+      );
+
+      try {
+        const inserted = await repo.insertITAEvidence({
+          fiscal_year: fiscalYear,
+          round_code: roundCode,
+          indicator,
+          moit,
+          criterion_code: criterionCode,
+          criterion_label: criterionLabel,
+          criterion_title: criterionTitle,
+          original_name: originalName,
+          stored_path: storedPath,
+          public_url: githubResult.publicUrl,
+          github_sha: githubResult.sha,
+          mime_type: clampString(file.type || "", 200),
+          size_bytes: Number(file.size || 0),
+          description
         });
+        return success(env, request, inserted);
+      } catch (dbError) {
+        console.error("ITA D1 insert failed after GitHub upload:", dbError);
+        // ไม่ลบไฟล์ GitHub อัตโนมัติ เพื่อไม่ให้เกิดการสูญหายของหลักฐาน
+        throw dbError;
+      }
+    }
 
-    </script>
-</body>
-</html>
+    case "deleteITAEvidence": {
+      if (request.method !== "POST") {
+        return failure(env, request, "deleteITAEvidence requires POST", 405);
+      }
+
+      const body = await readJsonBody(request);
+      const password = body.password ?? body.pass ?? "";
+      const adminOk = await checkAdminPassword(env, password);
+      if (!adminOk) return failure(env, request, "รหัสผ่าน Admin ไม่ถูกต้อง", 401);
+
+      const id = Number(body.id);
+      if (!Number.isInteger(id) || id <= 0) {
+        return failure(env, request, "id ไม่ถูกต้อง", 400);
+      }
+
+      const evidence = await repo.getITAEvidenceById(id);
+      if (!evidence) return failure(env, request, "ไม่พบหลักฐานนี้", 404);
+
+      // ลบไฟล์ GitHub ก่อน แล้วจึงปิดสถานะใน D1
+      await deleteFileFromGitHub(
+        env,
+        evidence.stored_path,
+        evidence.github_sha,
+        `Remove ITA evidence #${id}: ${evidence.original_name}`
+      );
+      await repo.deactivateITAEvidence(id);
+      return success(env, request, { success: true, id });
+    }
+
+    case "getPopupConfig": {
+      if (request.method !== "GET") return failure(env, request, "Method not allowed", 405);
+      return success(env, request, await repo.getPopupFirstRow());
+    }
+    case "getComplaintReport": {
+      if (request.method !== "GET") return failure(env, request, "Method not allowed", 405);
+      return success(env, request, await repo.getComplaintPublicRows());
+    }
+    case "getVisitorCount": {
+      if (request.method !== "GET") return failure(env, request, "Method not allowed", 405);
+      return success(env, request, await repo.incrementVisitorCount());
+    }
+    case "incrementViewCount": {
+      if (request.method !== "GET") return failure(env, request, "Method not allowed", 405);
+      const sheetName = clampString(url.searchParams.get("sheetName"), 40);
+      const title = clampString(url.searchParams.get("title"), 1e3);
+      const ok = await repo.incrementView(sheetName, title);
+      return success(env, request, ok);
+    }
+    case "checkAdminLogin": {
+      if (request.method !== "POST") {
+        return failure(env, request, "Admin login requires POST", 405);
+      }
+      const body = await readJsonBody(request);
+      const password = body.password ?? body.pass ?? "";
+      const ok = await checkAdminPassword(env, password);
+      return success(
+        env,
+        request,
+        ok ? { success: true, sheetUrl: String(env.ADMIN_SHEET_URL || "") } : { success: false }
+      );
+    }
+    case "saveComplaint": {
+      if (request.method !== "POST") {
+        return failure(env, request, "saveComplaint requires POST", 405);
+      }
+      let body = await readJsonBody(request);
+      if (typeof body.data === "string") {
+        try {
+          body = JSON.parse(body.data);
+        } catch {
+          body = {};
+        }
+      }
+      const data = {
+        submitted_at: bangkokDisplayDate(),
+        type: clampString(body.type, 200),
+        topic: clampString(body.topic, 500),
+        detail: clampString(body.detail, 1e4),
+        name: clampString(body.name || "\u0E44\u0E21\u0E48\u0E23\u0E30\u0E1A\u0E38", 300),
+        contact: clampString(body.contact || "-", 300)
+      };
+      if (!data.type || !data.topic || !data.detail) {
+        return failure(env, request, "\u0E01\u0E23\u0E38\u0E13\u0E32\u0E01\u0E23\u0E2D\u0E01\u0E1B\u0E23\u0E30\u0E40\u0E20\u0E17 \u0E2B\u0E31\u0E27\u0E02\u0E49\u0E2D \u0E41\u0E25\u0E30\u0E23\u0E32\u0E22\u0E25\u0E30\u0E40\u0E2D\u0E35\u0E22\u0E14\u0E43\u0E2B\u0E49\u0E04\u0E23\u0E1A", 400);
+      }
+      return success(env, request, await repo.saveComplaint(data));
+    }
+    default:
+      return failure(env, request, "\u0E44\u0E21\u0E48\u0E1E\u0E1A\u0E04\u0E33\u0E2A\u0E31\u0E48\u0E07 (Action) \u0E17\u0E35\u0E48\u0E23\u0E30\u0E1A\u0E38", 404);
+  }
+}
+__name(routeRequest, "routeRequest");
+
+// src/index.js
+async function handleRequest(request, env, repoOverride = null) {
+  if (request.method === "OPTIONS") {
+    return new Response(null, {
+      status: 204,
+      headers: corsHeaders(env, request)
+    });
+  }
+  try {
+    const repo = repoOverride || new D1Repository(env.DB);
+    return await routeRequest(request, env, repo);
+  } catch (error) {
+    console.error("Worker error:", error);
+    return failure(env, request, "\u0E40\u0E01\u0E34\u0E14\u0E02\u0E49\u0E2D\u0E1C\u0E34\u0E14\u0E1E\u0E25\u0E32\u0E14\u0E20\u0E32\u0E22\u0E43\u0E19\u0E23\u0E30\u0E1A\u0E1A", 500);
+  }
+}
+__name(handleRequest, "handleRequest");
+var index_default = {
+  fetch(request, env) {
+    return handleRequest(request, env);
+  }
+};
+export {
+  index_default as default,
+  handleRequest
+};
+//# sourceMappingURL=index.js.map
