@@ -2215,5 +2215,1825 @@ if (typeof escapeITAHtml !== 'function') {
 })();
 </script>
 <!-- ===== END V3.5 PATCH ===== -->
+    <!-- =========================================================
+     ITA V3.7 ADMIN STRUCTURE MANAGER
+     Paste ONCE before </body>
+========================================================== -->
+<script>
+(function () {
+  'use strict';
+
+  const V37_API =
+    typeof API_URL !== 'undefined'
+      ? API_URL
+      : 'https://thaijaroen-api.ittcmoph.workers.dev/';
+
+  let v37Rows = [];
+
+  function v37Pass() {
+    return sessionStorage.getItem('itaAdminPass') || '';
+  }
+
+  function v37Escape(v) {
+    if (typeof escapeITAHtml === 'function') {
+      return escapeITAHtml(v);
+    }
+
+    return String(v ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function v37Api(action, body) {
+    return fetch(
+      V37_API + '?action=' + encodeURIComponent(action),
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body || {})
+      }
+    )
+    .then(async function (res) {
+      const data = await res.json();
+
+      if (!res.ok || data.status !== 'success') {
+        throw new Error(
+          data.message || 'API Error ' + res.status
+        );
+      }
+
+      return data.data;
+    });
+  }
+
+  /* =====================================================
+     CREATE ADMIN CARD
+  ====================================================== */
+
+  function v37CreateDashboardCard() {
+    const dashboard =
+      document.getElementById('admin-dashboard-page');
+
+    if (!dashboard) return;
+
+    if (
+      document.getElementById(
+        'v37-structure-dashboard-card'
+      )
+    ) {
+      return;
+    }
+
+    const container =
+      dashboard.querySelector('.container') ||
+      dashboard;
+
+    const wrap = document.createElement('div');
+
+    wrap.id = 'v37-structure-dashboard-card';
+    wrap.className = 'mt-4';
+
+    wrap.innerHTML = `
+      <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-4">
+          <div class="row align-items-center g-3">
+
+            <div class="col-md-8">
+
+              <div class="d-flex align-items-center gap-3">
+
+                <div
+                  class="bg-success-subtle text-success rounded-circle
+                         d-flex align-items-center justify-content-center"
+                  style="width:64px;height:64px;font-size:28px;"
+                >
+                  <i class="fas fa-sitemap"></i>
+                </div>
+
+                <div>
+                  <h4 class="fw-bold mb-1">
+                    จัดการโครงสร้าง ITA
+                  </h4>
+
+                  <div class="text-muted">
+                    V3.7 — จัดการชื่อข้อ ข้อย่อย Dynamic
+                    การเรียงลำดับ และเตรียมโครงสร้างปีถัดไป
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="col-md-4 text-md-end">
+
+              <button
+                class="btn btn-success rounded-pill px-4"
+                onclick="openITAStructureManagerV37()"
+              >
+                <i class="fas fa-sliders me-2"></i>
+                จัดการโครงสร้าง
+              </button>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    `;
+
+    container.appendChild(wrap);
+  }
+
+  /* =====================================================
+     CREATE PAGE
+  ====================================================== */
+
+  function v37CreatePage() {
+    if (
+      document.getElementById(
+        'ita-structure-manager-v37'
+      )
+    ) {
+      return;
+    }
+
+    const page = document.createElement('div');
+
+    page.id = 'ita-structure-manager-v37';
+
+    page.style.display = 'none';
+    page.style.background = '#f4f6f9';
+    page.style.minHeight = '80vh';
+
+    page.innerHTML = `
+      <div class="container py-4">
+
+        <div
+          class="d-flex flex-wrap
+                 justify-content-between
+                 align-items-center gap-2
+                 mb-4 pb-3 border-bottom"
+        >
+
+          <div>
+            <h3 class="fw-bold mb-1">
+              <i class="fas fa-sitemap text-success me-2"></i>
+              จัดการโครงสร้าง ITA
+            </h3>
+
+            <div class="text-muted">
+              V3.7 ITA Admin Management
+            </div>
+          </div>
+
+          <button
+            class="btn btn-outline-secondary"
+            onclick="closeITAStructureManagerV37()"
+          >
+            <i class="fas fa-arrow-left me-1"></i>
+            กลับ Dashboard
+          </button>
+
+        </div>
+
+
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+          <div class="card-body p-4">
+
+            <div class="row g-3">
+
+              <div class="col-md-3">
+                <label class="form-label fw-bold">
+                  ปีงบประมาณ
+                </label>
+
+                <select
+                  id="v37Year"
+                  class="form-select"
+                >
+                  <option value="2569">
+                    2569
+                  </option>
+                </select>
+              </div>
+
+
+              <div class="col-md-3">
+                <label class="form-label fw-bold">
+                  รอบ
+                </label>
+
+                <select
+                  id="v37Round"
+                  class="form-select"
+                >
+                  <option value="r2">
+                    รอบ 12 เดือน
+                  </option>
+                </select>
+              </div>
+
+
+              <div class="col-md-4">
+                <label class="form-label fw-bold">
+                  MOIT
+                </label>
+
+                <select
+                  id="v37Moit"
+                  class="form-select"
+                  onchange="renderV37Criteria()"
+                ></select>
+              </div>
+
+
+              <div class="col-md-2 d-flex align-items-end">
+
+                <button
+                  class="btn btn-outline-success w-100"
+                  onclick="loadV37Criteria()"
+                >
+                  <i class="fas fa-rotate me-1"></i>
+                  รีเฟรช
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+          <div
+            class="card-header bg-white py-3
+                   d-flex justify-content-between
+                   align-items-center"
+          >
+
+            <h5 class="fw-bold mb-0">
+              <i class="fas fa-list-check text-success me-2"></i>
+              ข้อ / ข้อย่อย Dynamic
+            </h5>
+
+            <button
+              class="btn btn-warning btn-sm rounded-pill"
+              onclick="addV37Criterion()"
+            >
+              <i class="fas fa-plus me-1"></i>
+              เพิ่มข้อใหม่
+            </button>
+
+          </div>
+
+
+          <div class="card-body p-0">
+
+            <div
+              id="v37Table"
+              class="p-3"
+            >
+              กำลังโหลด...
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="card border-0 shadow-sm rounded-4">
+
+          <div class="card-header bg-success text-white py-3">
+
+            <h5 class="fw-bold mb-0">
+              <i class="fas fa-copy me-2"></i>
+              เตรียมปีงบประมาณถัดไป
+            </h5>
+
+          </div>
+
+
+          <div class="card-body p-4">
+
+            <p class="text-muted">
+              คัดลอกโครงสร้างไปปีใหม่
+              โดยไม่คัดลอกไฟล์หลักฐาน
+            </p>
+
+
+            <div class="row g-3">
+
+              <div class="col-md-4">
+
+                <label class="form-label fw-bold">
+                  ปีงบประมาณปลายทาง
+                </label>
+
+                <input
+                  id="v37TargetYear"
+                  type="number"
+                  class="form-control"
+                  value="2570"
+                >
+
+              </div>
+
+
+              <div class="col-md-4 d-flex align-items-end">
+
+                <button
+                  class="btn btn-success w-100"
+                  onclick="copyV37Year()"
+                >
+                  <i class="fas fa-copy me-1"></i>
+                  คัดลอกไปปีใหม่
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    `;
+
+    document.body.appendChild(page);
+  }
+
+  /* =====================================================
+     MODAL
+  ====================================================== */
+
+  function v37CreateModal() {
+    if (
+      document.getElementById('v37EditModal')
+    ) {
+      return;
+    }
+
+    const modal = document.createElement('div');
+
+    modal.innerHTML = `
+      <div
+        class="modal fade"
+        id="v37EditModal"
+        tabindex="-1"
+      >
+
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+
+          <div class="modal-content border-0 shadow-lg">
+
+            <div class="modal-header bg-success text-white">
+
+              <h5 class="modal-title fw-bold">
+                <i class="fas fa-pen-to-square me-2"></i>
+                <span id="v37ModalTitle">
+                  แก้ไขหัวข้อ
+                </span>
+              </h5>
+
+              <button
+                type="button"
+                class="btn-close btn-close-white"
+                data-bs-dismiss="modal"
+              ></button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+              <input
+                type="hidden"
+                id="v37EditMode"
+              >
+
+              <input
+                type="hidden"
+                id="v37EditCode"
+              >
+
+              <input
+                type="hidden"
+                id="v37EditParent"
+              >
+
+              <input
+                type="hidden"
+                id="v37EditLevel"
+              >
+
+
+              <div class="mb-3">
+
+                <label class="form-label fw-bold">
+                  เลขข้อ / ชื่อข้อ
+                </label>
+
+                <input
+                  id="v37EditLabel"
+                  class="form-control"
+                  placeholder="เช่น ข้อ 2.1"
+                >
+
+              </div>
+
+
+              <div class="mb-3">
+
+                <label class="form-label fw-bold">
+                  ชื่อหัวข้อ
+                </label>
+
+                <textarea
+                  id="v37EditTitle"
+                  class="form-control"
+                  rows="4"
+                ></textarea>
+
+              </div>
+
+
+              <div class="alert alert-info small mb-0">
+
+                ระบบยึด Criterion Code เป็นรหัสภายใน
+                การแก้ชื่อจะไม่ทำให้ URL เดิมเปลี่ยน
+
+              </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+              <button
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                ยกเลิก
+              </button>
+
+              <button
+                class="btn btn-success"
+                onclick="saveV37Criterion()"
+              >
+                <i class="fas fa-save me-1"></i>
+                บันทึก
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+  }
+
+  /* =====================================================
+     OPEN / CLOSE
+  ====================================================== */
+
+  window.openITAStructureManagerV37 =
+    async function () {
+
+      if (!v37Pass()) {
+
+        alert(
+          'กรุณาเข้าสู่ระบบ Admin ก่อน'
+        );
+
+        if (
+          typeof showPage === 'function'
+        ) {
+          showPage('admin-login-page');
+        }
+
+        return;
+      }
+
+      v37CreatePage();
+      v37CreateModal();
+
+      const dashboard =
+        document.getElementById(
+          'admin-dashboard-page'
+        );
+
+      if (dashboard) {
+        dashboard.style.display = 'none';
+      }
+
+      const oldManager =
+        document.getElementById(
+          'ita-admin-manager-page'
+        );
+
+      if (oldManager) {
+        oldManager.style.display = 'none';
+      }
+
+      document.getElementById(
+        'ita-structure-manager-v37'
+      ).style.display = 'block';
+
+      window.scrollTo(0, 0);
+
+      await loadV37Criteria();
+    };
+
+
+  window.closeITAStructureManagerV37 =
+    function () {
+
+      const page =
+        document.getElementById(
+          'ita-structure-manager-v37'
+        );
+
+      if (page) {
+        page.style.display = 'none';
+      }
+
+      if (
+        typeof showPage === 'function'
+      ) {
+        showPage(
+          'admin-dashboard-page'
+        );
+      } else {
+
+        const dashboard =
+          document.getElementById(
+            'admin-dashboard-page'
+          );
+
+        if (dashboard) {
+          dashboard.style.display = 'block';
+        }
+      }
+
+      window.scrollTo(0, 0);
+    };
+
+  /* =====================================================
+     LOAD
+  ====================================================== */
+
+  window.loadV37Criteria =
+    async function () {
+
+      const table =
+        document.getElementById(
+          'v37Table'
+        );
+
+      if (table) {
+        table.innerHTML =
+          '<div class="text-center py-4">' +
+          '<i class="fas fa-spinner fa-spin me-2"></i>' +
+          'กำลังโหลด...' +
+          '</div>';
+      }
+
+      try {
+
+        const year =
+          Number(
+            document.getElementById(
+              'v37Year'
+            )?.value || 2569
+          );
+
+        const round =
+          document.getElementById(
+            'v37Round'
+          )?.value || 'r2';
+
+        const data =
+          await v37Api(
+            'getITACriteriaAdminConfig',
+            {
+              password: v37Pass(),
+              fiscal_year: year,
+              round_code: round
+            }
+          );
+
+        v37Rows =
+          Array.isArray(data)
+            ? data
+            : [];
+
+        fillV37Moit();
+
+        renderV37Criteria();
+
+      } catch (err) {
+
+        if (table) {
+          table.innerHTML =
+            '<div class="alert alert-danger mb-0">' +
+            'โหลดข้อมูลไม่สำเร็จ: ' +
+            v37Escape(err.message || err) +
+            '</div>';
+        }
+      }
+    };
+
+  function fillV37Moit() {
+
+    const select =
+      document.getElementById(
+        'v37Moit'
+      );
+
+    if (!select) return;
+
+    const current =
+      select.value;
+
+    const moits = new Set();
+
+    v37Rows.forEach(function (r) {
+      moits.add(
+        Number(r.moit)
+      );
+    });
+
+    if (
+      typeof ITA_MASTER_12M !== 'undefined'
+    ) {
+      Object.keys(
+        ITA_MASTER_12M
+      ).forEach(function (m) {
+        moits.add(Number(m));
+      });
+    }
+
+    select.innerHTML = '';
+
+    Array.from(moits)
+      .sort(function (a, b) {
+        return a - b;
+      })
+      .forEach(function (m) {
+
+        const opt =
+          document.createElement(
+            'option'
+          );
+
+        opt.value = m;
+
+        const indicator =
+          typeof ITA_INDICATOR_BY_MOIT !==
+          'undefined'
+            ? (
+                ITA_INDICATOR_BY_MOIT[m] ||
+                ''
+              )
+            : '';
+
+        opt.textContent =
+          'MOIT ' +
+          m +
+          (
+            indicator
+              ? ' — ' + indicator
+              : ''
+          );
+
+        select.appendChild(opt);
+      });
+
+    if (current) {
+      select.value = current;
+    }
+  }
+
+  /* =====================================================
+     EFFECTIVE DYNAMIC ROWS
+  ====================================================== */
+
+  function getV37RowsForMoit() {
+
+    const moit =
+      Number(
+        document.getElementById(
+          'v37Moit'
+        )?.value || 0
+      );
+
+    return v37Rows
+      .filter(function (r) {
+        return Number(r.moit) === moit;
+      })
+      .sort(function (a, b) {
+
+        const sa =
+          Number(
+            a.sort_order || 0
+          );
+
+        const sb =
+          Number(
+            b.sort_order || 0
+          );
+
+        if (sa !== sb) {
+          return sa - sb;
+        }
+
+        return Number(a.id || 0) -
+          Number(b.id || 0);
+      });
+  }
+
+  window.renderV37Criteria =
+    function () {
+
+      const table =
+        document.getElementById(
+          'v37Table'
+        );
+
+      if (!table) return;
+
+      const rows =
+        getV37RowsForMoit();
+
+      if (!rows.length) {
+
+        table.innerHTML = `
+          <div class="alert alert-light border mb-0">
+
+            ยังไม่มีข้อ Dynamic
+            ที่บันทึกไว้ใน D1 สำหรับ MOIT นี้
+
+            <br>
+
+            <small class="text-muted">
+              สามารถเพิ่มข้อใหม่ได้จากปุ่ม
+              “เพิ่มข้อใหม่”
+            </small>
+
+          </div>
+        `;
+
+        return;
+      }
+
+      let html = `
+        <div class="table-responsive">
+
+          <table class="table table-hover align-middle mb-0">
+
+            <thead class="table-light">
+
+              <tr>
+
+                <th style="width:150px">
+                  ข้อ
+                </th>
+
+                <th>
+                  ชื่อหัวข้อ
+                </th>
+
+                <th style="width:100px">
+                  สถานะ
+                </th>
+
+                <th style="width:230px">
+                  จัดการ
+                </th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+      `;
+
+      rows.forEach(function (
+        row,
+        index
+      ) {
+
+        const inactive =
+          Number(
+            row.is_active
+          ) === 0;
+
+        const code =
+          String(
+            row.criterion_code || ''
+          );
+
+        html += `
+          <tr
+            class="${
+              inactive
+                ? 'table-secondary'
+                : ''
+            }"
+          >
+
+            <td>
+
+              <span
+                class="badge bg-light
+                       text-dark border"
+              >
+                ${v37Escape(
+                  row.criterion_label ||
+                  code
+                )}
+              </span>
+
+              ${
+                Number(
+                  row.is_custom
+                ) === 1
+                  ? `
+                    <div
+                      class="small text-warning
+                             mt-1 fw-bold"
+                    >
+                      Dynamic
+                    </div>
+                  `
+                  : `
+                    <div
+                      class="small text-muted
+                             mt-1"
+                    >
+                      Override
+                    </div>
+                  `
+              }
+
+            </td>
+
+
+            <td>
+
+              <div class="fw-semibold">
+                ${v37Escape(
+                  row.title || ''
+                )}
+              </div>
+
+              <div class="small text-muted mt-1">
+                ID:
+                ${v37Escape(code)}
+              </div>
+
+            </td>
+
+
+            <td>
+
+              ${
+                inactive
+                  ? `
+                    <span class="badge bg-secondary">
+                      ปิด
+                    </span>
+                  `
+                  : `
+                    <span class="badge bg-success">
+                      เปิด
+                    </span>
+                  `
+              }
+
+            </td>
+
+
+            <td>
+
+              <div
+                class="btn-group btn-group-sm"
+              >
+
+                <button
+                  class="btn btn-outline-primary"
+                  title="แก้ไข"
+                  onclick="editV37Criterion(
+                    '${code.replace(
+                      /'/g,
+                      "\\'"
+                    )}'
+                  )"
+                >
+                  <i class="fas fa-pen"></i>
+                </button>
+
+
+                <button
+                  class="btn btn-outline-secondary"
+                  title="เลื่อนขึ้น"
+                  ${
+                    index === 0
+                      ? 'disabled'
+                      : ''
+                  }
+                  onclick="moveV37Criterion(
+                    '${code.replace(
+                      /'/g,
+                      "\\'"
+                    )}',
+                    -1
+                  )"
+                >
+                  <i class="fas fa-arrow-up"></i>
+                </button>
+
+
+                <button
+                  class="btn btn-outline-secondary"
+                  title="เลื่อนลง"
+                  ${
+                    index ===
+                    rows.length - 1
+                      ? 'disabled'
+                      : ''
+                  }
+                  onclick="moveV37Criterion(
+                    '${code.replace(
+                      /'/g,
+                      "\\'"
+                    )}',
+                    1
+                  )"
+                >
+                  <i class="fas fa-arrow-down"></i>
+                </button>
+
+
+                <button
+                  class="btn ${
+                    inactive
+                      ? 'btn-outline-success'
+                      : 'btn-outline-danger'
+                  }"
+                  title="${
+                    inactive
+                      ? 'เปิด'
+                      : 'ปิด'
+                  }"
+                  onclick="toggleV37Criterion(
+                    '${code.replace(
+                      /'/g,
+                      "\\'"
+                    )}',
+                    ${
+                      inactive
+                        ? 1
+                        : 0
+                    }
+                  )"
+                >
+
+                  <i
+                    class="fas ${
+                      inactive
+                        ? 'fa-eye'
+                        : 'fa-eye-slash'
+                    }"
+                  ></i>
+
+                </button>
+
+              </div>
+
+            </td>
+
+          </tr>
+        `;
+      });
+
+      html += `
+            </tbody>
+          </table>
+        </div>
+      `;
+
+      table.innerHTML = html;
+    };
+
+  /* =====================================================
+     EDIT
+  ====================================================== */
+
+  window.editV37Criterion =
+    function (code) {
+
+      const row =
+        v37Rows.find(
+          function (r) {
+            return String(
+              r.criterion_code
+            ) === String(code);
+          }
+        );
+
+      if (!row) return;
+
+      document.getElementById(
+        'v37EditMode'
+      ).value = 'edit';
+
+      document.getElementById(
+        'v37EditCode'
+      ).value =
+        row.criterion_code || '';
+
+      document.getElementById(
+        'v37EditParent'
+      ).value =
+        row.parent_code || '';
+
+      document.getElementById(
+        'v37EditLevel'
+      ).value =
+        row.level || 1;
+
+      document.getElementById(
+        'v37EditLabel'
+      ).value =
+        row.criterion_label || '';
+
+      document.getElementById(
+        'v37EditTitle'
+      ).value =
+        row.title || '';
+
+      document.getElementById(
+        'v37ModalTitle'
+      ).innerText =
+        'แก้ไขหัวข้อ';
+
+      new bootstrap.Modal(
+        document.getElementById(
+          'v37EditModal'
+        )
+      ).show();
+    };
+
+
+  window.addV37Criterion =
+    function () {
+
+      const moit =
+        Number(
+          document.getElementById(
+            'v37Moit'
+          )?.value || 0
+        );
+
+      if (!moit) {
+        return alert(
+          'กรุณาเลือก MOIT ก่อน'
+        );
+      }
+
+      document.getElementById(
+        'v37EditMode'
+      ).value = 'add';
+
+      document.getElementById(
+        'v37EditCode'
+      ).value =
+        'custom-' +
+        Date.now();
+
+      document.getElementById(
+        'v37EditParent'
+      ).value = '';
+
+      document.getElementById(
+        'v37EditLevel'
+      ).value = 1;
+
+      document.getElementById(
+        'v37EditLabel'
+      ).value = '';
+
+      document.getElementById(
+        'v37EditTitle'
+      ).value = '';
+
+      document.getElementById(
+        'v37ModalTitle'
+      ).innerText =
+        'เพิ่มข้อใหม่';
+
+      new bootstrap.Modal(
+        document.getElementById(
+          'v37EditModal'
+        )
+      ).show();
+    };
+
+
+  window.saveV37Criterion =
+    async function () {
+
+      const moit =
+        Number(
+          document.getElementById(
+            'v37Moit'
+          ).value
+        );
+
+      const code =
+        document.getElementById(
+          'v37EditCode'
+        ).value;
+
+      const label =
+        document.getElementById(
+          'v37EditLabel'
+        ).value.trim();
+
+      const title =
+        document.getElementById(
+          'v37EditTitle'
+        ).value.trim();
+
+      const mode =
+        document.getElementById(
+          'v37EditMode'
+        ).value;
+
+      if (!label || !title) {
+
+        return alert(
+          'กรุณากรอกเลขข้อและชื่อหัวข้อ'
+        );
+      }
+
+      const old =
+        v37Rows.find(
+          function (r) {
+            return String(
+              r.criterion_code
+            ) === String(code);
+          }
+        );
+
+      try {
+
+        await v37Api(
+          'saveITACriterion',
+          {
+            password:
+              v37Pass(),
+
+            fiscal_year:
+              Number(
+                document.getElementById(
+                  'v37Year'
+                ).value
+              ),
+
+            round_code:
+              document.getElementById(
+                'v37Round'
+              ).value,
+
+            moit: moit,
+
+            criterion_code:
+              code,
+
+            criterion_label:
+              label,
+
+            title:
+              title,
+
+            parent_code:
+              document.getElementById(
+                'v37EditParent'
+              ).value,
+
+            level:
+              Number(
+                document.getElementById(
+                  'v37EditLevel'
+                ).value || 1
+              ),
+
+            sort_order:
+              old
+                ? Number(
+                    old.sort_order ||
+                    Date.now()
+                  )
+                : Date.now(),
+
+            is_custom:
+              mode === 'add'
+                ? 1
+                : Number(
+                    old?.is_custom || 0
+                  ),
+
+            is_active:
+              old &&
+              Number(
+                old.is_active
+              ) === 0
+                ? 0
+                : 1
+          }
+        );
+
+        const modal =
+          bootstrap.Modal.getInstance(
+            document.getElementById(
+              'v37EditModal'
+            )
+          );
+
+        if (modal) {
+          modal.hide();
+        }
+
+        await loadV37Criteria();
+
+        if (
+          typeof loadITACriteriaConfig ===
+          'function'
+        ) {
+          await loadITACriteriaConfig();
+        }
+
+        alert(
+          'บันทึกหัวข้อเรียบร้อย'
+        );
+
+      } catch (err) {
+
+        alert(
+          'บันทึกไม่สำเร็จ: ' +
+          (err.message || err)
+        );
+      }
+    };
+
+  /* =====================================================
+     ON / OFF
+  ====================================================== */
+
+  window.toggleV37Criterion =
+    async function (
+      code,
+      newState
+    ) {
+
+      const row =
+        v37Rows.find(
+          function (r) {
+            return String(
+              r.criterion_code
+            ) === String(code);
+          }
+        );
+
+      if (!row) return;
+
+      try {
+
+        await v37Api(
+          'setITACriterionActive',
+          {
+            password:
+              v37Pass(),
+
+            fiscal_year:
+              Number(
+                document.getElementById(
+                  'v37Year'
+                ).value
+              ),
+
+            round_code:
+              document.getElementById(
+                'v37Round'
+              ).value,
+
+            moit:
+              Number(row.moit),
+
+            criterion_code:
+              code,
+
+            is_active:
+              Number(newState)
+          }
+        );
+
+        await loadV37Criteria();
+
+        if (
+          typeof loadITACriteriaConfig ===
+          'function'
+        ) {
+          await loadITACriteriaConfig();
+        }
+
+      } catch (err) {
+
+        alert(
+          'เปลี่ยนสถานะไม่สำเร็จ: ' +
+          (err.message || err)
+        );
+      }
+    };
+
+  /* =====================================================
+     SORT
+  ====================================================== */
+
+  window.moveV37Criterion =
+    async function (
+      code,
+      direction
+    ) {
+
+      const rows =
+        getV37RowsForMoit();
+
+      const index =
+        rows.findIndex(
+          function (r) {
+            return String(
+              r.criterion_code
+            ) === String(code);
+          }
+        );
+
+      const otherIndex =
+        index + direction;
+
+      if (
+        index < 0 ||
+        otherIndex < 0 ||
+        otherIndex >= rows.length
+      ) {
+        return;
+      }
+
+      const a = rows[index];
+      const b = rows[otherIndex];
+
+      let sortA =
+        Number(
+          a.sort_order || 0
+        );
+
+      let sortB =
+        Number(
+          b.sort_order || 0
+        );
+
+      if (sortA === sortB) {
+
+        sortA =
+          (index + 1) * 100;
+
+        sortB =
+          (otherIndex + 1) * 100;
+      }
+
+      try {
+
+        await v37Api(
+          'updateITACriterionSort',
+          {
+            password:
+              v37Pass(),
+
+            fiscal_year:
+              Number(
+                document.getElementById(
+                  'v37Year'
+                ).value
+              ),
+
+            round_code:
+              document.getElementById(
+                'v37Round'
+              ).value,
+
+            moit:
+              Number(a.moit),
+
+            criterion_code:
+              a.criterion_code,
+
+            sort_order:
+              sortB
+          }
+        );
+
+
+        await v37Api(
+          'updateITACriterionSort',
+          {
+            password:
+              v37Pass(),
+
+            fiscal_year:
+              Number(
+                document.getElementById(
+                  'v37Year'
+                ).value
+              ),
+
+            round_code:
+              document.getElementById(
+                'v37Round'
+              ).value,
+
+            moit:
+              Number(b.moit),
+
+            criterion_code:
+              b.criterion_code,
+
+            sort_order:
+              sortA
+          }
+        );
+
+        await loadV37Criteria();
+
+      } catch (err) {
+
+        alert(
+          'เรียงลำดับไม่สำเร็จ: ' +
+          (err.message || err)
+        );
+      }
+    };
+
+  /* =====================================================
+     COPY YEAR
+  ====================================================== */
+
+  window.copyV37Year =
+    async function () {
+
+      const targetYear =
+        Number(
+          document.getElementById(
+            'v37TargetYear'
+          ).value
+        );
+
+      if (
+        !Number.isInteger(
+          targetYear
+        ) ||
+        targetYear < 2500 ||
+        targetYear > 3000
+      ) {
+
+        return alert(
+          'ปีงบประมาณไม่ถูกต้อง'
+        );
+      }
+
+      if (
+        !confirm(
+          'ยืนยันคัดลอกโครงสร้างไปปี ' +
+          targetYear +
+          ' ?\n\n' +
+          'ระบบจะไม่คัดลอกไฟล์หลักฐาน'
+        )
+      ) {
+        return;
+      }
+
+      try {
+
+        /*
+          รวมโครงสร้าง Dynamic ที่บันทึกใน D1
+          กับโครงสร้าง Master ปี 2569
+        */
+
+        const rows = [];
+
+        if (
+          typeof ITA_MASTER_12M !==
+          'undefined'
+        ) {
+
+          Object.keys(
+            ITA_MASTER_12M
+          ).forEach(function (
+            moitKey
+          ) {
+
+            const moit =
+              Number(moitKey);
+
+            const criteria =
+              ITA_MASTER_12M[
+                moitKey
+              ] || [];
+
+            criteria.forEach(
+              function (
+                c,
+                index
+              ) {
+
+                if (
+                  typeof isMOITTitleCriterion ===
+                  'function' &&
+                  isMOITTitleCriterion(
+                    c.title
+                  )
+                ) {
+                  return;
+                }
+
+                if (
+                  typeof getCriterionMeta !==
+                  'function'
+                ) {
+                  return;
+                }
+
+                const meta =
+                  getCriterionMeta(
+                    criteria,
+                    index
+                  );
+
+                const saved =
+                  v37Rows.find(
+                    function (r) {
+                      return (
+                        Number(r.moit) ===
+                          moit &&
+                        String(
+                          r.criterion_code
+                        ) ===
+                          String(
+                            meta.code
+                          )
+                      );
+                    }
+                  );
+
+                rows.push({
+                  moit: moit,
+
+                  criterion_code:
+                    meta.code,
+
+                  criterion_label:
+                    saved?.criterion_label ||
+                    meta.label,
+
+                  title:
+                    saved?.title ||
+                    c.title,
+
+                  parent_code:
+                    saved?.parent_code ||
+                    '',
+
+                  level:
+                    Number(
+                      saved?.level ||
+                      meta.level ||
+                      1
+                    ),
+
+                  sort_order:
+                    Number(
+                      saved?.sort_order ||
+                      (
+                        (
+                          index + 1
+                        ) * 100
+                      )
+                    ),
+
+                  is_custom: 0,
+
+                  is_active:
+                    Number(
+                      saved?.is_active
+                    ) === 0
+                      ? 0
+                      : 1
+                });
+              }
+            );
+          });
+        }
+
+        /*
+          เพิ่มข้อ Dynamic ที่ไม่ได้อยู่ใน Master
+        */
+
+        v37Rows.forEach(
+          function (r) {
+
+            if (
+              Number(
+                r.is_custom
+              ) !== 1
+            ) {
+              return;
+            }
+
+            if (
+              rows.some(
+                function (x) {
+                  return (
+                    Number(x.moit) ===
+                      Number(r.moit) &&
+                    String(
+                      x.criterion_code
+                    ) ===
+                      String(
+                        r.criterion_code
+                      )
+                  );
+                }
+              )
+            ) {
+              return;
+            }
+
+            rows.push({
+              moit:
+                Number(r.moit),
+
+              criterion_code:
+                r.criterion_code,
+
+              criterion_label:
+                r.criterion_label,
+
+              title:
+                r.title,
+
+              parent_code:
+                r.parent_code || '',
+
+              level:
+                Number(
+                  r.level || 1
+                ),
+
+              sort_order:
+                Number(
+                  r.sort_order ||
+                  Date.now()
+                ),
+
+              is_custom: 1,
+
+              is_active:
+                Number(
+                  r.is_active
+                ) === 0
+                  ? 0
+                  : 1
+            });
+          }
+        );
+
+        if (!rows.length) {
+
+          return alert(
+            'ไม่พบโครงสร้างสำหรับคัดลอก'
+          );
+        }
+
+        const result =
+          await v37Api(
+            'copyITACriteriaYear',
+            {
+              password:
+                v37Pass(),
+
+              target_year:
+                targetYear,
+
+              round_code:
+                document.getElementById(
+                  'v37Round'
+                ).value,
+
+              rows:
+                rows
+            }
+          );
+
+        alert(
+          'สร้างโครงสร้างปี ' +
+          targetYear +
+          ' สำเร็จ\n' +
+          'จำนวน ' +
+          Number(
+            result?.copied ||
+            rows.length
+          ) +
+          ' รายการ'
+        );
+
+      } catch (err) {
+
+        alert(
+          'คัดลอกไม่สำเร็จ: ' +
+          (err.message || err)
+        );
+      }
+    };
+
+  /* =====================================================
+     START V3.7
+  ====================================================== */
+
+  function startV37() {
+
+    v37CreatePage();
+    v37CreateModal();
+
+    /*
+      รอ Dashboard เดิมโหลด
+    */
+
+    let count = 0;
+
+    const timer =
+      setInterval(
+        function () {
+
+          count++;
+
+          v37CreateDashboardCard();
+
+          if (
+            document.getElementById(
+              'v37-structure-dashboard-card'
+            ) ||
+            count >= 20
+          ) {
+            clearInterval(timer);
+          }
+
+        },
+        500
+      );
+  }
+
+  if (
+    document.readyState ===
+    'loading'
+  ) {
+
+    document.addEventListener(
+      'DOMContentLoaded',
+      startV37
+    );
+
+  } else {
+
+    startV37();
+  }
+
+})();
+</script>
 </body>
 </html>
